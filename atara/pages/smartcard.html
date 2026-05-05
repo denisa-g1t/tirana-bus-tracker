@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATARA - Smart Card | Digital Payment</title>
+<link rel="stylesheet" href="../css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+.keypad { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 1rem; }
+.key { background: #111; border: 1px solid #333; color: #fff; font-family: 'Bebas Neue'; font-size: 1.2rem; padding: 1rem; text-align: center; cursor: pointer; }
+.key:active { background: #00ff41; color: #000; }
+.key-enter { background: #00ff41; color: #000; }
+.balance-large { font-family: 'Bebas Neue'; font-size: 3rem; color: #00ff41; text-align: center; }
+.qr-container { background: #000; padding: 1rem; text-align: center; margin-top: 1rem; border: 1px solid #00ff41; }
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav class="nav">
+  <div class="nav-logo">[ATARA]</div>
+  <div class="nav-links">
+    <a href="../../index.html" class="nav-link">HOME</a>
+    <a href="bus.html" class="nav-link">BUS TRACKER</a>
+    <a href="train.html" class="nav-link">TRAIN ALBANIA</a>
+    <a href="smartcard.html" class="nav-link active">SMART CARD</a>
+    <a href="safety.html" class="nav-link">SAFETY</a>
+  </div>
+  <div class="nav-time" id="navTime">--:--:--</div>
+</nav>
+
+<div class="page-layout">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">SMART CARD</div>
+      <div class="panel-sub">ATARA DIGITAL PAYMENT</div>
+    </div>
+    <div style="padding:2rem">
+      <div style="text-align:center;margin-bottom:2rem">
+        <div style="font-size:4rem">💳</div>
+        <div style="font-size:10px;color:#00ff41;letter-spacing:3px;margin:0.5rem 0">ENTER CARD NUMBER</div>
+        <input type="text" id="cardInput" placeholder="ATR-XXX" style="text-align:center;font-size:1.5rem;font-family:'Bebas Neue';background:#111;border:none;border-bottom:2px solid #00ff41;color:#00ff41;width:100%;padding:0.5rem">
+      </div>
+      
+      <div class="keypad">
+        <div class="key" onclick="addDigit('1')">1</div>
+        <div class="key" onclick="addDigit('2')">2</div>
+        <div class="key" onclick="addDigit('3')">3</div>
+        <div class="key" onclick="addDigit('A')">A</div>
+        <div class="key" onclick="addDigit('4')">4</div>
+        <div class="key" onclick="addDigit('5')">5</div>
+        <div class="key" onclick="addDigit('6')">6</div>
+        <div class="key" onclick="addDigit('B')">B</div>
+        <div class="key" onclick="addDigit('7')">7</div>
+        <div class="key" onclick="addDigit('8')">8</div>
+        <div class="key" onclick="addDigit('9')">9</div>
+        <div class="key" onclick="addDigit('C')">C</div>
+        <div class="key" style="color:#ff3333" onclick="clearCard()">CLR</div>
+        <div class="key" onclick="addDigit('0')">0</div>
+        <div class="key" onclick="addDigit('-')">-</div>
+        <div class="key key-enter" onclick="validateCard()">OK</div>
+      </div>
+      
+      <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="validateCard()">VALIDATE CARD</button>
+    </div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">CARD INFORMATION</div>
+      <div class="panel-sub">BALANCE & TARIFF</div>
+    </div>
+    <div id="cardResult" style="padding:1.5rem;display:none">
+      <div class="balance-large" id="balanceDisplay">0 ALL</div>
+      <div id="tariffDisplay" style="text-align:center;margin:0.5rem 0;font-size:11px;color:#888"></div>
+      <div class="qr-container" id="qrcode"></div>
+      <div style="font-size:10px;color:#666;text-align:center;margin-top:0.5rem">SCAN QR CODE AT VALIDATOR</div>
+    </div>
+    
+    <div class="panel-header">
+      <div class="panel-title" style="font-size:1rem">TEST CARDS</div>
+      <div class="panel-sub">DEMO ACCOUNTS</div>
+    </div>
+    <div id="testCards" style="padding:0.5rem 0"></div>
+    
+    <div class="panel-header">
+      <div class="panel-title" style="font-size:1rem">SCAN HISTORY</div>
+      <div class="panel-sub">RECENT VALIDATIONS</div>
+    </div>
+    <div id="historyLog" style="padding:0.5rem 0"></div>
+  </div>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+setInterval(() => document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8), 1000);
+
+function addDigit(d) {
+  const input = document.getElementById('cardInput');
+  input.value += d;
+}
+
+function clearCard() {
+  document.getElementById('cardInput').value = '';
+  document.getElementById('cardResult').style.display = 'none';
+}
+
+function validateCard() {
+  const cardId = document.getElementById('cardInput').value.trim().toUpperCase();
+  if (!cardId) return;
+  
+  const card = ATARA_RFID_DB[cardId];
+  const resultDiv = document.getElementById('cardResult');
+  const balanceDisplay = document.getElementById('balanceDisplay');
+  const tariffDisplay = document.getElementById('tariffDisplay');
+  const qrDiv = document.getElementById('qrcode');
+  
+  if (card && card.status === 'ACTIVE') {
+    resultDiv.style.display = 'block';
+    balanceDisplay.textContent = typeof card.balance === 'number' ? card.balance + ' ALL' : card.balance;
+    tariffDisplay.innerHTML = `${card.tariff}<br><span style="color:#888">Expires: ${card.expiry}</span>`;
+    
+    // Generate QR code
+    const qrData = `ATARA|${cardId}|${card.name}|${card.balance}|${card.tariff}`;
+    qrDiv.innerHTML = '';
+    new QRCode(qrDiv, {
+      text: qrData,
+      width: 150,
+      height: 150,
+      colorDark: "#00ff41",
+      colorLight: "#000000"
+    });
+    
+    // Add to history
+    addToHistory(cardId, 'ALLOW', card.balance);
+  } else {
+    resultDiv.style.display = 'block';
+    balanceDisplay.textContent = 'DENIED';
+    tariffDisplay.innerHTML = `<span style="color:#ff3333">CARD INACTIVE OR EXPIRED</span>`;
+    qrDiv.innerHTML = '<div style="padding:2rem;text-align:center;color:#ff3333">INVALID CARD</div>';
+    addToHistory(cardId, 'DENY', '0');
+  }
+}
+
+function addToHistory(cardId, status, balance) {
+  const history = document.getElementById('historyLog');
+  const time = new Date().toTimeString().slice(0,8);
+  history.innerHTML = `
+    <div class="stop-detail" style="padding:0.5rem 1rem">
+      <span style="color:#00ff41">${time}</span>
+      <span>${cardId}</span>
+      <span style="color:${status === 'ALLOW' ? '#00ff41' : '#ff3333'}">${status}</span>
+      <span>${balance}</span>
+    </div>
+  ` + history.innerHTML;
+  if (history.children.length > 10) history.lastElementChild.remove();
+}
+
+// Test cards
+const testContainer = document.getElementById('testCards');
+const testCards = [
+  {id: 'ATR-001', name: 'ANDI HOXHA', balance: 1250, tariff: 'STANDARD'},
+  {id: 'ATR-002', name: 'BESA DEMA', balance: 450, tariff: 'STUDENT'},
+  {id: 'ATR-003', name: 'GENTI BRAHO', balance: 800, tariff: 'STANDARD'},
+  {id: 'STU-001', name: 'SARA LEKA', balance: 'STUDENT', tariff: 'STUDENT'},
+  {id: 'PEN-001', name: 'GJERGJ PRIFTI', balance: 'FREE', tariff: 'PENSIONER'}
+];
+
+testCards.forEach(card => {
+  testContainer.innerHTML += `
+    <div class="route-item" onclick="document.getElementById('cardInput').value='${card.id}';validateCard()">
+      <div class="route-info">
+        <div class="route-name">${card.id}</div>
+        <div style="font-size:10px;color:#666">${card.name}</div>
+      </div>
+      <div style="color:#00ff41">${card.balance}</div>
+    </div>
+  `;
+});
+</script>
+</body>
+</html>

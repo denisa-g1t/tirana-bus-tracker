@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATARA - Train Albania | National Railway</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="scanline"></div>
+<nav class="nav">
+  <div class="nav-logo">[ATARA]</div>
+  <div class="nav-links">
+    <a href="../../index.html" class="nav-link">HOME</a>
+    <a href="bus.html" class="nav-link">BUS TRACKER</a>
+    <a href="train.html" class="nav-link active">TRAIN ALBANIA</a>
+    <a href="smartcard.html" class="nav-link">SMART CARD</a>
+    <a href="safety.html" class="nav-link">SAFETY</a>
+  </div>
+  <div class="nav-time" id="navTime">--:--:--</div>
+</nav>
+
+<div class="page-layout">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">DEPARTURES</div>
+      <div class="panel-sub">HSH - HEKURUDHA SHQIPTARE</div>
+    </div>
+    <div style="padding:1rem">
+      <input type="text" id="trainSearch" placeholder="SEARCH DESTINATION..." style="width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:monospace">
+    </div>
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr><th style="text-align:left;padding:0.8rem;color:#00ff41;font-size:10px">DEP</th>
+          <th style="text-align:left;padding:0.8rem;color:#00ff41;font-size:10px">ROUTE</th>
+          <th style="text-align:left;padding:0.8rem;color:#00ff41;font-size:10px">STATUS</th>
+          <th style="text-align:left;padding:0.8rem;color:#00ff41;font-size:10px">PLT</th>
+        </tr>
+      </thead>
+      <tbody id="trainTable"></tbody>
+    </table>
+  </div>
+  
+  <div class="panel map-panel" style="position:relative">
+    <div class="map-overlay">ALBANIA RAIL NETWORK</div>
+    <div id="trainMap"></div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">TRAIN DETAILS</div>
+      <div class="panel-sub" id="selectedTrain">CLICK A TRAIN</div>
+    </div>
+    <div id="trainDetail" style="padding:1.5rem;text-align:center;color:#666">SELECT A TRAIN FOR DETAILS</div>
+    
+    <div class="panel-header">
+      <div class="panel-title" style="font-size:1rem">MAIN STATIONS</div>
+      <div class="panel-sub">ALBANIA RAIL</div>
+    </div>
+    <div id="stationList" style="padding:0.5rem 0"></div>
+  </div>
+</div>
+
+<script src="../js/main.js"></script>
+<script>
+setInterval(() => document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8), 1000);
+
+// Initialize train map
+const trainMap = L.map('trainMap', {zoomControl: true}).setView([41.1, 20.0], 7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: 'OpenStreetMap',
+  maxZoom: 18
+}).addTo(trainMap);
+
+// Train stations
+const trainStations = [
+  {name: 'TIRANE', lat: 41.3368, lon: 19.8200, main: true},
+  {name: 'DURRES', lat: 41.3231, lon: 19.4541, main: true},
+  {name: 'SHKODER', lat: 42.0682, lon: 19.5125, main: true},
+  {name: 'VLORE', lat: 40.4656, lon: 19.4892, main: true},
+  {name: 'ELBASAN', lat: 41.1125, lon: 20.0822, main: true}
+];
+
+// Add stations to map
+trainStations.forEach(station => {
+  const icon = L.divIcon({
+    html: `<div style="background:${station.main ? '#00ff41' : '#fff'};color:#000;padding:2px 8px;font-size:10px;font-family:monospace;border:1px solid #000">${station.name}</div>`,
+    iconAnchor: [0, 20],
+    className: ''
+  });
+  L.marker([station.lat, station.lon], {icon}).addTo(trainMap);
+});
+
+// Draw rail lines
+const railLines = [
+  {stations: ['TIRANE', 'DURRES'], color: '#00ff41'},
+  {stations: ['TIRANE', 'SHKODER'], color: '#ffaa00'},
+  {stations: ['DURRES', 'VLORE'], color: '#ff4444'},
+  {stations: ['TIRANE', 'ELBASAN'], color: '#888'}
+];
+
+railLines.forEach(line => {
+  const coords = line.stations.map(name => {
+    const s = trainStations.find(st => st.name === name);
+    return s ? [s.lat, s.lon] : null;
+  }).filter(Boolean);
+  L.polyline(coords, {color: line.color, weight: 2, opacity: 0.8}).addTo(trainMap);
+});
+
+// Render train table
+function renderTrains(filter = '') {
+  const tbody = document.getElementById('trainTable');
+  tbody.innerHTML = '';
+  
+  ATARA_TRAINS.filter(t => {
+    return !filter || t.from.toLowerCase().includes(filter.toLowerCase()) || t.to.toLowerCase().includes(filter.toLowerCase());
+  }).forEach(train => {
+    const statusColor = train.status === 'ON TIME' ? '#00ff41' : (train.status === 'CANCELLED' ? '#ff3333' : '#ffaa00');
+    tbody.innerHTML += `
+      <tr onclick="showTrainDetail('${train.id}')" style="cursor:pointer">
+        <td style="padding:0.8rem;border-bottom:1px solid #1a1a1a;color:#00ff41;font-family:'Bebas Neue';font-size:1.2rem">${train.dep}</td>
+        <td style="padding:0.8rem;border-bottom:1px solid #1a1a1a;font-size:11px">${train.from}<br><span style="color:#666">→ ${train.to}</span></td>
+        <td style="padding:0.8rem;border-bottom:1px solid #1a1a1a;color:${statusColor}">${train.status}</td>
+        <td style="padding:0.8rem;border-bottom:1px solid #1a1a1a;text-align:center">${train.platform}</td>
+      </tr>
+    `;
+  });
+}
+
+function showTrainDetail(id) {
+  const train = ATARA_TRAINS.find(t => t.id === id);
+  if (!train) return;
+  
+  document.getElementById('selectedTrain').textContent = `TRAIN ${train.id}`;
+  const statusColor = train.status === 'ON TIME' ? '#00ff41' : (train.status === 'CANCELLED' ? '#ff3333' : '#ffaa00');
+  
+  document.getElementById('trainDetail').innerHTML = `
+    <div style="font-family:'Bebas Neue';font-size:2rem;margin-bottom:0.5rem">${train.from} → ${train.to}</div>
+    <div style="color:${statusColor};margin-bottom:1rem">${train.status}</div>
+    <div class="stop-detail"><span>DEPARTURE</span><span style="color:#00ff41">${train.dep}</span></div>
+    <div class="stop-detail"><span>ARRIVAL</span><span>${train.arr}</span></div>
+    <div class="stop-detail"><span>PLATFORM</span><span>${train.platform}</span></div>
+    <div class="stop-detail"><span>OPERATOR</span><span>HSH ALBANIA</span></div>
+  `;
+}
+
+// Station list
+const stationContainer = document.getElementById('stationList');
+trainStations.forEach(station => {
+  stationContainer.innerHTML += `
+    <div class="route-item" onclick="trainMap.setView([${station.lat}, ${station.lon}], 12)">
+      <div style="font-size:1.2rem">🚉</div>
+      <div class="route-info">
+        <div class="route-name">${station.name}</div>
+        <div style="font-size:10px;color:#666">${station.lat.toFixed(4)}°N · ${station.lon.toFixed(4)}°E</div>
+      </div>
+    </div>
+  `;
+});
+
+// Search
+document.getElementById('trainSearch').addEventListener('keyup', (e) => {
+  renderTrains(e.target.value);
+});
+
+renderTrains();
+</script>
+</body>
+</html>
