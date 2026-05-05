@@ -1,0 +1,301 @@
+timetable_id,route_id,direction_id,start_date,end_date,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_time,end_time,include_exceptions,timetable_label,service_notes,orientation,timetable_page_id,timetable_sequence,direction_name,show_trip_continuation
+1,1,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,1_1AB,1,nga Selitë deri ne Allias,0
+2,1,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,1_1AB,2,nga Selitë deri ne Allias,0
+3,1,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,1_1AB,3,nga Selitë deri ne Allias,0
+4,1,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,1_1AB,4,nga Allias deri ne Selitë,0
+5,1,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,1_1AB,5,nga Allias deri ne Selitë,0
+6,1,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,1_1AB,6,nga Allias deri ne Selitë,0
+7,1,0,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,1_1AB,7,nga Selitë deri ne Allias,0
+8,1,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,1_1AB,8,nga Selitë deri ne Allias,0
+9,1,1,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,1_1AB,9,nga Allias deri ne Selitë,0
+10,1,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,1_1AB,10,nga Allias deri ne Selitë,0
+11,1,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,1_1AB,11,nga Selitë deri ne Allias,0
+12,1,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,1_1AB,12,nga Selitë deri ne Allias,0
+13,1,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,1_1AB,13,nga Selitë deri ne Allias,0
+14,1,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,1_1AB,14,nga Allias deri ne Selitë,0
+15,1,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,1_1AB,15,nga Allias deri ne Selitë,0
+16,1,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,1_1AB,16,nga Allias deri ne Selitë,0
+17,2,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,2_2,1,nga TEG deri ne Shkencat e Natyrës,0
+18,2,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,2_2,2,nga TEG deri ne Shkencat e Natyrës,0
+19,2,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,2_2,3,nga Shkencat e Natyrës deri ne TEG,0
+20,2,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,2_2,4,nga Shkencat e Natyrës deri ne TEG,0
+21,2,0,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,2_2,5,nga TEG deri ne Shkencat e Natyrës,0
+22,2,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,2_2,6,nga TEG deri ne Shkencat e Natyrës,0
+23,2,1,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,2_2,7,nga Shkencat e Natyrës deri ne TEG,0
+24,2,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,2_2,8,nga Shkencat e Natyrës deri ne TEG,0
+25,2,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,2_2,9,nga TEG deri ne Shkencat e Natyrës,0
+26,2,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,2_2,10,nga TEG deri ne Shkencat e Natyrës,0
+27,2,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,2_2,11,nga Shkencat e Natyrës deri ne TEG,0
+28,2,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,2_2,12,nga Shkencat e Natyrës deri ne TEG,0
+29,3,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,3_3A,1,Kashar Orar,0
+30,3,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,3_3A,2,Kashar Orar,0
+31,3,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,3_3A,3,Kashar Orar,0
+32,4,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,4_3B,1,Kashar Antiorar,0
+33,4,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,4_3B,2,Kashar Antiorar,0
+34,4,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,4_3B,3,Kashar Antiorar,0
+35,5,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,5_4,1,nga Muzeu Kombëtar B deri ne City Park,0
+36,5,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,5_4,2,nga Muzeu Kombëtar B deri ne City Park,0
+37,5,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,5_4,3,nga City Park deri ne Muzeu Kombëtar B,0
+38,5,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,5_4,4,nga City Park deri ne Muzeu Kombëtar B,0
+39,5,0,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,5_4,5,nga Muzeu Kombëtar B deri ne City Park,0
+40,5,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,5_4,6,nga Muzeu Kombëtar B deri ne City Park,0
+41,5,1,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,5_4,7,nga City Park deri ne Muzeu Kombëtar B,0
+42,5,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,5_4,8,nga City Park deri ne Muzeu Kombëtar B,0
+43,5,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,5_4,9,nga Muzeu Kombëtar B deri ne City Park,0
+44,5,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,5_4,10,nga Muzeu Kombëtar B deri ne City Park,0
+45,5,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,5_4,11,nga City Park deri ne Muzeu Kombëtar B,0
+46,5,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,5_4,12,nga City Park deri ne Muzeu Kombëtar B,0
+47,6,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,6_5A,1,nga Autotraktorët deri ne 9 Katëshet B,0
+48,6,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,6_5A,2,nga Autotraktorët deri ne 9 Katëshet B,0
+49,6,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,6_5A,3,nga Autotraktorët deri ne 9 Katëshet B,0
+50,6,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,6_5A,4,nga 9 Katëshet B deri ne Autotraktorët,0
+51,6,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,6_5A,5,nga 9 Katëshet B deri ne Autotraktorët,0
+52,6,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,6_5A,6,nga 9 Katëshet B deri ne Autotraktorët,0
+53,6,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,6_5A,7,nga Autotraktorët deri ne 9 Katëshet B,0
+54,6,1,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,6_5A,8,nga 9 Katëshet B deri ne Autotraktorët,0
+55,6,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,6_5A,9,nga Autotraktorët deri ne 9 Katëshet B,0
+56,6,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,6_5A,10,nga Autotraktorët deri ne 9 Katëshet B,0
+57,6,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,6_5A,11,nga Autotraktorët deri ne 9 Katëshet B,0
+58,6,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,6_5A,12,nga 9 Katëshet B deri ne Autotraktorët,0
+59,6,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,6_5A,13,nga 9 Katëshet B deri ne Autotraktorët,0
+60,6,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,6_5A,14,nga 9 Katëshet B deri ne Autotraktorët,0
+61,7,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,7_5B,1,nga Instituti Bujqësor deri ne Gjethja,0
+62,7,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,7_5B,2,nga Instituti Bujqësor deri ne Gjethja,0
+63,7,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,7_5B,3,nga Gjethja deri ne Instituti Bujqësor,0
+64,7,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,7_5B,4,nga Gjethja deri ne Instituti Bujqësor,0
+65,7,0,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,7_5B,5,nga Instituti Bujqësor deri ne Gjethja,0
+66,7,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,7_5B,6,nga Instituti Bujqësor deri ne Gjethja,0
+67,7,1,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,7_5B,7,nga Gjethja deri ne Instituti Bujqësor,0
+68,7,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,7_5B,8,nga Gjethja deri ne Instituti Bujqësor,0
+69,7,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,7_5B,9,nga Instituti Bujqësor deri ne Gjethja,0
+70,7,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,7_5B,10,nga Instituti Bujqësor deri ne Gjethja,0
+71,7,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,7_5B,11,nga Gjethja deri ne Instituti Bujqësor,0
+72,7,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,7_5B,12,nga Gjethja deri ne Instituti Bujqësor,0
+73,10,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,10_8ABC,1,nga 9 Katëshet B deri ne Terminali Juglindor,0
+74,10,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,10_8ABC,2,nga 9 Katëshet B deri ne Terminali Juglindor,0
+75,10,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,10_8ABC,3,nga Terminali Juglindor deri ne 9 Katëshet B,0
+76,10,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,10_8ABC,4,nga Terminali Juglindor deri ne 9 Katëshet B,0
+77,10,0,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,10_8ABC,5,nga 9 Katëshet B deri ne Terminali Juglindor,0
+78,10,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,10_8ABC,6,nga 9 Katëshet B deri ne Terminali Juglindor,0
+79,10,1,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,10_8ABC,7,nga Terminali Juglindor deri ne 9 Katëshet B,0
+80,10,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,10_8ABC,8,nga Terminali Juglindor deri ne 9 Katëshet B,0
+81,10,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,10_8ABC,9,nga 9 Katëshet B deri ne Terminali Juglindor,0
+82,10,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,10_8ABC,10,nga 9 Katëshet B deri ne Terminali Juglindor,0
+83,10,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,10_8ABC,11,nga Terminali Juglindor deri ne 9 Katëshet B,0
+84,10,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,10_8ABC,12,nga Terminali Juglindor deri ne 9 Katëshet B,0
+85,11,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,11_8ABC,1,nga 9 Katëshet B deri ne Sanatorium,0
+86,11,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,11_8ABC,2,nga 9 Katëshet B deri ne Sanatorium,0
+87,11,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,11_8ABC,3,nga Sanatorium deri ne 9 Katëshet B,0
+88,11,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,11_8ABC,4,nga Sanatorium deri ne 9 Katëshet B,0
+89,11,0,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,11_8ABC,5,nga 9 Katëshet B deri ne Sanatorium,0
+90,11,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,11_8ABC,6,nga 9 Katëshet B deri ne Sanatorium,0
+91,11,1,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,11_8ABC,7,nga Sanatorium deri ne 9 Katëshet B,0
+92,11,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,11_8ABC,8,nga Sanatorium deri ne 9 Katëshet B,0
+93,11,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,11_8ABC,9,nga 9 Katëshet B deri ne Sanatorium,0
+94,11,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,11_8ABC,10,nga 9 Katëshet B deri ne Sanatorium,0
+95,11,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,11_8ABC,11,nga Sanatorium deri ne 9 Katëshet B,0
+96,11,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,11_8ABC,12,nga Sanatorium deri ne 9 Katëshet B,0
+97,12,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,12_8ABC,1,nga 9 Katëshet B deri ne Sauk i Vjeter,0
+98,12,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,12_8ABC,2,nga 9 Katëshet B deri ne Sauk i Vjeter,0
+99,12,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,12_8ABC,3,nga Sauk i Vjeter deri ne 9 Katëshet B,0
+100,12,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,12_8ABC,4,nga Sauk i Vjeter deri ne 9 Katëshet B,0
+101,12,0,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,12_8ABC,5,nga 9 Katëshet B deri ne Sauk i Vjeter,0
+102,12,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,12_8ABC,6,nga 9 Katëshet B deri ne Sauk i Vjeter,0
+103,12,1,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,12_8ABC,7,nga Sauk i Vjeter deri ne 9 Katëshet B,0
+104,12,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,12_8ABC,8,nga Sauk i Vjeter deri ne 9 Katëshet B,0
+105,12,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,12_8ABC,9,nga 9 Katëshet B deri ne Sauk i Vjeter,0
+106,12,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,12_8ABC,10,nga 9 Katëshet B deri ne Sauk i Vjeter,0
+107,12,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,12_8ABC,11,nga Sauk i Vjeter deri ne 9 Katëshet B,0
+108,12,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,12_8ABC,12,nga Sauk i Vjeter deri ne 9 Katëshet B,0
+109,13,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,13_9AB,1,nga Depo Ujit A deri ne Uzina Dinamo,0
+110,13,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,13_9AB,2,nga Depo Ujit A deri ne Uzina Dinamo,0
+111,13,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,13_9AB,3,nga Uzina Dinamo deri ne Depo Ujit A,0
+112,13,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,13_9AB,4,nga Uzina Dinamo deri ne Depo Ujit A,0
+113,13,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,13_9AB,5,nga Depo Ujit A deri ne Uzina Dinamo,0
+114,13,1,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,13_9AB,6,nga Uzina Dinamo deri ne Depo Ujit A,0
+115,13,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,13_9AB,7,nga Depo Ujit A deri ne Uzina Dinamo,0
+116,13,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,13_9AB,8,nga Depo Ujit A deri ne Uzina Dinamo,0
+117,13,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,13_9AB,9,nga Uzina Dinamo deri ne Depo Ujit A,0
+118,13,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,13_9AB,10,nga Uzina Dinamo deri ne Depo Ujit A,0
+119,14,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,14_9AB,1,nga Binak Alia deri ne Uzina Dinamo,0
+120,14,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,14_9AB,2,nga Binak Alia deri ne Uzina Dinamo,0
+121,14,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,14_9AB,3,nga Uzina Dinamo deri ne Binak Alia,0
+122,14,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,14_9AB,4,nga Uzina Dinamo deri ne Binak Alia,0
+123,14,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,14_9AB,5,nga Binak Alia deri ne Uzina Dinamo,0
+124,14,1,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,14_9AB,6,nga Uzina Dinamo deri ne Binak Alia,0
+125,14,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,14_9AB,7,nga Binak Alia deri ne Uzina Dinamo,0
+126,14,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,14_9AB,8,nga Binak Alia deri ne Uzina Dinamo,0
+127,14,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,14_9AB,9,nga Uzina Dinamo deri ne Binak Alia,0
+128,14,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,14_9AB,10,nga Uzina Dinamo deri ne Binak Alia,0
+129,15,0,20260101,20261231,t,t,t,t,t,t,t,"","",0,gjithë vitin,"",horizontal,15_,1,nga Depo Ujit B deri ne Dollari B,0
+130,15,1,20260101,20261231,t,t,t,t,t,t,t,"","",0,gjithë vitin,"",horizontal,15_,2,nga Dollari B deri ne Depo Ujit B,0
+131,15,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,15_,3,nga Depo Ujit B deri ne Dollari B,0
+132,15,1,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,15_,4,nga Dollari B deri ne Depo Ujit B,0
+133,16,0,20260101,20261231,t,t,t,t,t,t,t,"","",0,gjithë vitin,"",horizontal,16_,1,nga Çollakët deri ne Dollari B,0
+134,16,1,20260101,20261231,t,t,t,t,t,t,t,"","",0,gjithë vitin,"",horizontal,16_,2,nga Dollari B deri ne Çollakët,0
+135,16,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,16_,3,nga Çollakët deri ne Dollari B,0
+136,16,1,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,16_,4,nga Dollari B deri ne Çollakët,0
+137,17,0,20260101,20261231,t,t,t,t,t,f,f,"","",0,gjithë vitin,"",horizontal,17_,1,nga Shkozë deri ne Dhora Leka,0
+138,17,0,20260101,20261231,f,f,f,f,f,t,t,"","",0,gjithë vitin,"",horizontal,17_,2,nga Shkozë deri ne Dhora Leka,0
+139,17,1,20260101,20261231,t,t,t,t,t,f,f,"","",0,gjithë vitin,"",horizontal,17_,3,nga Dhora Leka deri ne Shkozë,0
+140,17,1,20260101,20261231,f,f,f,f,f,t,t,"","",0,gjithë vitin,"",horizontal,17_,4,nga Dhora Leka deri ne Shkozë,0
+141,17,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,17_,5,nga Shkozë deri ne Dhora Leka,0
+142,17,1,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,17_,6,nga Dhora Leka deri ne Shkozë,0
+143,18,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,18_16B,1,nga Thesari deri ne Biblioteka,0
+144,18,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,18_16B,2,nga Thesari deri ne Biblioteka,0
+145,18,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,18_16B,3,nga Thesari deri ne Biblioteka,0
+146,18,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,18_16B,4,nga Biblioteka deri ne Thesari,0
+147,18,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,18_16B,5,nga Biblioteka deri ne Thesari,0
+148,18,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,18_16B,6,nga Biblioteka deri ne Thesari,0
+149,18,0,20260701,20260731,f,f,f,f,f,t,f,"","",0,korrik,"",horizontal,18_16B,7,nga Thesari deri ne Biblioteka,0
+150,18,0,20260701,20260731,t,t,t,t,t,f,f,"","",0,korrik,"",horizontal,18_16B,8,nga Thesari deri ne Biblioteka,0
+151,18,0,20260701,20260731,f,f,f,f,f,f,t,"","",0,korrik,"",horizontal,18_16B,9,nga Thesari deri ne Biblioteka,0
+152,18,1,20260701,20260731,f,f,f,f,f,t,f,"","",0,korrik,"",horizontal,18_16B,10,nga Biblioteka deri ne Thesari,0
+153,18,1,20260701,20260731,t,t,t,t,t,f,f,"","",0,korrik,"",horizontal,18_16B,11,nga Biblioteka deri ne Thesari,0
+154,18,1,20260701,20260731,f,f,f,f,f,f,t,"","",0,korrik,"",horizontal,18_16B,12,nga Biblioteka deri ne Thesari,0
+155,18,0,20260801,20260831,f,f,f,f,f,t,f,"","",0,gusht,"",horizontal,18_16B,13,nga Thesari deri ne Biblioteka,0
+156,18,0,20260801,20260831,t,t,t,t,t,f,f,"","",0,gusht,"",horizontal,18_16B,14,nga Thesari deri ne Biblioteka,0
+157,18,0,20260801,20260831,f,f,f,f,f,f,t,"","",0,gusht,"",horizontal,18_16B,15,nga Thesari deri ne Biblioteka,0
+158,18,1,20260801,20260831,f,f,f,f,f,t,f,"","",0,gusht,"",horizontal,18_16B,16,nga Biblioteka deri ne Thesari,0
+159,18,1,20260801,20260831,t,t,t,t,t,f,f,"","",0,gusht,"",horizontal,18_16B,17,nga Biblioteka deri ne Thesari,0
+160,18,1,20260801,20260831,f,f,f,f,f,f,t,"","",0,gusht,"",horizontal,18_16B,18,nga Biblioteka deri ne Thesari,0
+161,18,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,18_16B,19,nga Thesari deri ne Biblioteka,0
+162,18,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,18_16B,20,nga Thesari deri ne Biblioteka,0
+163,18,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,18_16B,21,nga Thesari deri ne Biblioteka,0
+164,18,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,18_16B,22,nga Biblioteka deri ne Thesari,0
+165,18,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,18_16B,23,nga Biblioteka deri ne Thesari,0
+166,18,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,18_16B,24,nga Biblioteka deri ne Thesari,0
+167,20,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,20_13B,1,Tirana e re Antiorar,0
+168,20,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,20_13B,2,Tirana e re Antiorar,0
+169,20,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,20_13B,3,Tirana e re Antiorar,0
+170,20,0,20260701,20260831,f,f,f,f,f,f,t,"","",0,korrik dhe gusht,"",horizontal,20_13B,4,Tirana e re Antiorar,0
+171,20,0,20260701,20260831,t,t,t,t,t,t,f,"","",0,korrik dhe gusht,"",horizontal,20_13B,5,Tirana e re Antiorar,0
+172,20,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,20_13B,6,Tirana e re Antiorar,0
+173,20,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,20_13B,7,Tirana e re Antiorar,0
+174,20,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,20_13B,8,Tirana e re Antiorar,0
+175,22,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,22_15AB,1,nga Kombinat deri ne Aleksandër Moisiu,0
+176,22,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,22_15AB,2,nga Kombinat deri ne Aleksandër Moisiu,0
+177,22,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,22_15AB,3,nga Kombinat deri ne Aleksandër Moisiu,0
+178,22,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,22_15AB,4,nga Aleksandër Moisiu deri ne Kombinat,0
+179,22,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,22_15AB,5,nga Aleksandër Moisiu deri ne Kombinat,0
+180,22,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,22_15AB,6,nga Aleksandër Moisiu deri ne Kombinat,0
+181,22,0,20260701,20260831,f,f,f,f,f,f,t,"","",0,korrik dhe gusht,"",horizontal,22_15AB,7,nga Kombinat deri ne Aleksandër Moisiu,0
+182,22,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,22_15AB,8,nga Kombinat deri ne Aleksandër Moisiu,0
+183,22,0,20260701,20260831,f,f,f,f,f,t,f,"","",0,korrik dhe gusht,"",horizontal,22_15AB,9,nga Kombinat deri ne Aleksandër Moisiu,0
+184,22,1,20260701,20260831,f,f,f,f,f,f,t,"","",0,korrik dhe gusht,"",horizontal,22_15AB,10,nga Aleksandër Moisiu deri ne Kombinat,0
+185,22,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,22_15AB,11,nga Aleksandër Moisiu deri ne Kombinat,0
+186,22,1,20260701,20260831,f,f,f,f,f,t,f,"","",0,korrik dhe gusht,"",horizontal,22_15AB,12,nga Aleksandër Moisiu deri ne Kombinat,0
+187,22,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,22_15AB,13,nga Kombinat deri ne Aleksandër Moisiu,0
+188,22,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,22_15AB,14,nga Kombinat deri ne Aleksandër Moisiu,0
+189,22,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,22_15AB,15,nga Kombinat deri ne Aleksandër Moisiu,0
+190,22,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,22_15AB,16,nga Aleksandër Moisiu deri ne Kombinat,0
+191,22,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,22_15AB,17,nga Aleksandër Moisiu deri ne Kombinat,0
+192,22,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,22_15AB,18,nga Aleksandër Moisiu deri ne Kombinat,0
+193,23,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,23_15AB,1,nga Kombinat deri ne Rruga Arbërit,0
+194,23,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,23_15AB,2,nga Kombinat deri ne Rruga Arbërit,0
+195,23,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,23_15AB,3,nga Kombinat deri ne Rruga Arbërit,0
+196,23,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,23_15AB,4,nga Rruga Arbërit deri ne Kombinat,0
+197,23,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,23_15AB,5,nga Rruga Arbërit deri ne Kombinat,0
+198,23,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,23_15AB,6,nga Rruga Arbërit deri ne Kombinat,0
+199,23,0,20260701,20260831,f,f,f,f,f,f,t,"","",0,korrik dhe gusht,"",horizontal,23_15AB,7,nga Kombinat deri ne Rruga Arbërit,0
+200,23,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,23_15AB,8,nga Kombinat deri ne Rruga Arbërit,0
+201,23,0,20260701,20260831,f,f,f,f,f,t,f,"","",0,korrik dhe gusht,"",horizontal,23_15AB,9,nga Kombinat deri ne Rruga Arbërit,0
+202,23,1,20260701,20260831,f,f,f,f,f,f,t,"","",0,korrik dhe gusht,"",horizontal,23_15AB,10,nga Rruga Arbërit deri ne Kombinat,0
+203,23,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,23_15AB,11,nga Rruga Arbërit deri ne Kombinat,0
+204,23,1,20260701,20260831,f,f,f,f,f,t,f,"","",0,korrik dhe gusht,"",horizontal,23_15AB,12,nga Rruga Arbërit deri ne Kombinat,0
+205,23,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,23_15AB,13,nga Kombinat deri ne Rruga Arbërit,0
+206,23,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,23_15AB,14,nga Kombinat deri ne Rruga Arbërit,0
+207,23,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,23_15AB,15,nga Kombinat deri ne Rruga Arbërit,0
+208,23,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,23_15AB,16,nga Rruga Arbërit deri ne Kombinat,0
+209,23,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,23_15AB,17,nga Rruga Arbërit deri ne Kombinat,0
+210,23,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,23_15AB,18,nga Rruga Arbërit deri ne Kombinat,0
+211,24,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,24_16B,1,Linja e gjelbër Antiorar,0
+212,24,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,24_16B,2,Linja e gjelbër Antiorar,0
+213,24,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,24_16B,3,Linja e gjelbër Antiorar,0
+214,24,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,24_16B,4,Linja e gjelbër Antiorar,0
+215,24,0,20260701,20260831,f,f,f,f,f,t,f,"","",0,korrik dhe gusht,"",horizontal,24_16B,5,Linja e gjelbër Antiorar,0
+216,24,0,20260701,20260831,f,f,f,f,f,f,t,"","",0,korrik dhe gusht,"",horizontal,24_16B,6,Linja e gjelbër Antiorar,0
+217,24,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,24_16B,7,Linja e gjelbër Antiorar,0
+218,24,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,24_16B,8,Linja e gjelbër Antiorar,0
+219,24,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,24_16B,9,Linja e gjelbër Antiorar,0
+220,45,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,45_16A,1,Linja e gjelbër Orar,0
+221,45,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,45_16A,2,Linja e gjelbër Orar,0
+222,45,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,45_16A,3,Linja e gjelbër Orar,0
+223,45,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,45_16A,4,Linja e gjelbër Orar,0
+224,45,0,20260701,20260831,f,f,f,f,f,t,f,"","",0,korrik dhe gusht,"",horizontal,45_16A,5,Linja e gjelbër Orar,0
+225,45,0,20260701,20260831,f,f,f,f,f,f,t,"","",0,korrik dhe gusht,"",horizontal,45_16A,6,Linja e gjelbër Orar,0
+226,45,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,45_16A,7,Linja e gjelbër Orar,0
+227,45,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,45_16A,8,Linja e gjelbër Orar,0
+228,45,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,45_16A,9,Linja e gjelbër Orar,0
+229,46,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,46_13A,1,Tirana e re Orar,0
+230,46,0,20260101,20260630,t,f,f,f,f,f,f,"","",0,nga janari deri në qershor,"",horizontal,46_13A,2,Tirana e re Orar,0
+231,46,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,46_13A,3,Tirana e re Orar,0
+232,46,0,20260101,20260630,f,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,46_13A,4,Tirana e re Orar,0
+233,46,0,20260701,20260831,f,f,f,f,f,f,t,"","",0,korrik dhe gusht,"",horizontal,46_13A,5,Tirana e re Orar,0
+234,46,0,20260701,20260831,t,t,t,t,t,t,f,"","",0,korrik dhe gusht,"",horizontal,46_13A,6,Tirana e re Orar,0
+235,46,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,46_13A,7,Tirana e re Orar,0
+236,46,0,20260901,20261231,t,f,f,f,f,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,46_13A,8,Tirana e re Orar,0
+237,46,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,46_13A,9,Tirana e re Orar,0
+238,46,0,20260901,20261231,f,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,46_13A,10,Tirana e re Orar,0
+239,47,0,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,47_3C,1,nga 100 Vjetori deri ne Biblioteka,0
+240,47,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,47_3C,2,nga 100 Vjetori deri ne Biblioteka,0
+241,47,1,20260101,20260630,f,f,f,f,f,t,t,"","",0,nga janari deri në qershor,"",horizontal,47_3C,3,nga Biblioteka deri ne 100 Vjetori,0
+242,47,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,47_3C,4,nga Biblioteka deri ne 100 Vjetori,0
+243,47,0,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,47_3C,5,nga 100 Vjetori deri ne Biblioteka,0
+244,47,1,20260701,20260831,t,t,t,t,t,t,t,"","",0,korrik dhe gusht,"",horizontal,47_3C,6,nga Biblioteka deri ne 100 Vjetori,0
+245,47,0,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,47_3C,7,nga 100 Vjetori deri ne Biblioteka,0
+246,47,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,47_3C,8,nga 100 Vjetori deri ne Biblioteka,0
+247,47,1,20260901,20261231,f,f,f,f,f,t,t,"","",0,nga shtator deri në dhjetor,"",horizontal,47_3C,9,nga Biblioteka deri ne 100 Vjetori,0
+248,47,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,47_3C,10,nga Biblioteka deri ne 100 Vjetori,0
+249,48,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,48_1AB,1,nga Kodra Diellit 2 deri ne Allias,0
+250,48,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,48_1AB,2,nga Kodra Diellit 2 deri ne Allias,0
+251,48,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,48_1AB,3,nga Kodra Diellit 2 deri ne Allias,0
+252,48,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,48_1AB,4,nga Allias deri ne Kodra Diellit 2,0
+253,48,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,48_1AB,5,nga Allias deri ne Kodra Diellit 2,0
+254,48,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,48_1AB,6,nga Allias deri ne Kodra Diellit 2,0
+255,48,0,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,48_1AB,7,nga Kodra Diellit 2 deri ne Allias,0
+256,48,0,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,48_1AB,8,nga Kodra Diellit 2 deri ne Allias,0
+257,48,1,20260701,20260831,f,f,f,f,f,t,t,"","",0,korrik dhe gusht,"",horizontal,48_1AB,9,nga Allias deri ne Kodra Diellit 2,0
+258,48,1,20260701,20260831,t,t,t,t,t,f,f,"","",0,korrik dhe gusht,"",horizontal,48_1AB,10,nga Allias deri ne Kodra Diellit 2,0
+259,48,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,48_1AB,11,nga Kodra Diellit 2 deri ne Allias,0
+260,48,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,48_1AB,12,nga Kodra Diellit 2 deri ne Allias,0
+261,48,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,48_1AB,13,nga Kodra Diellit 2 deri ne Allias,0
+262,48,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,48_1AB,14,nga Allias deri ne Kodra Diellit 2,0
+263,48,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,48_1AB,15,nga Allias deri ne Kodra Diellit 2,0
+264,48,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,48_1AB,16,nga Allias deri ne Kodra Diellit 2,0
+265,70,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,70_,1,nga Kamëz deri ne Muzeu Kombëtar B,0
+266,70,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,70_,2,nga Kamëz deri ne Muzeu Kombëtar B,0
+267,70,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,70_,3,nga Kamëz deri ne Muzeu Kombëtar B,0
+268,70,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,70_,4,nga Muzeu Kombëtar B deri ne Kamëz,0
+269,70,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,70_,5,nga Muzeu Kombëtar B deri ne Kamëz,0
+270,70,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,70_,6,nga Muzeu Kombëtar B deri ne Kamëz,0
+271,70,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,70_,7,nga Kamëz deri ne Muzeu Kombëtar B,0
+272,70,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,70_,8,nga Kamëz deri ne Muzeu Kombëtar B,0
+273,70,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,70_,9,nga Kamëz deri ne Muzeu Kombëtar B,0
+274,70,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,70_,10,nga Muzeu Kombëtar B deri ne Kamëz,0
+275,70,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,70_,11,nga Muzeu Kombëtar B deri ne Kamëz,0
+276,70,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,70_,12,nga Muzeu Kombëtar B deri ne Kamëz,0
+277,71,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,71_,1,nga Uzina Dinamo deri ne Karburanti,0
+278,71,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,71_,2,nga Uzina Dinamo deri ne Karburanti,0
+279,71,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,71_,3,nga Uzina Dinamo deri ne Karburanti,0
+280,71,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,71_,4,nga Karburanti deri ne Uzina Dinamo,0
+281,71,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,71_,5,nga Karburanti deri ne Uzina Dinamo,0
+282,71,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,71_,6,nga Karburanti deri ne Uzina Dinamo,0
+283,71,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,71_,7,nga Uzina Dinamo deri ne Karburanti,0
+284,71,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,71_,8,nga Uzina Dinamo deri ne Karburanti,0
+285,71,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,71_,9,nga Uzina Dinamo deri ne Karburanti,0
+286,71,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,71_,10,nga Karburanti deri ne Uzina Dinamo,0
+287,71,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,71_,11,nga Karburanti deri ne Uzina Dinamo,0
+288,71,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,71_,12,nga Karburanti deri ne Uzina Dinamo,0
+289,72,0,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,72_,1,nga 5 Maji deri ne Karburanti,0
+290,72,0,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,72_,2,nga 5 Maji deri ne Karburanti,0
+291,72,0,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,72_,3,nga 5 Maji deri ne Karburanti,0
+292,72,1,20260101,20260630,f,f,f,f,f,f,t,"","",0,nga janari deri në qershor,"",horizontal,72_,4,nga Karburanti deri ne 5 Maji,0
+293,72,1,20260101,20260630,t,t,t,t,t,f,f,"","",0,nga janari deri në qershor,"",horizontal,72_,5,nga Karburanti deri ne 5 Maji,0
+294,72,1,20260101,20260630,f,f,f,f,f,t,f,"","",0,nga janari deri në qershor,"",horizontal,72_,6,nga Karburanti deri ne 5 Maji,0
+295,72,0,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,72_,7,nga 5 Maji deri ne Karburanti,0
+296,72,0,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,72_,8,nga 5 Maji deri ne Karburanti,0
+297,72,0,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,72_,9,nga 5 Maji deri ne Karburanti,0
+298,72,1,20260901,20261231,f,f,f,f,f,f,t,"","",0,nga shtator deri në dhjetor,"",horizontal,72_,10,nga Karburanti deri ne 5 Maji,0
+299,72,1,20260901,20261231,t,t,t,t,t,f,f,"","",0,nga shtator deri në dhjetor,"",horizontal,72_,11,nga Karburanti deri ne 5 Maji,0
+300,72,1,20260901,20261231,f,f,f,f,f,t,f,"","",0,nga shtator deri në dhjetor,"",horizontal,72_,12,nga Karburanti deri ne 5 Maji,0

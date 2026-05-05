@@ -1,0 +1,2 @@
+agency_id,agency_name,agency_url,agency_timezone,agency_lang,agency_phone,agency_fare_url,agency_email
+mot,Municipality of Tirana,https://tirana.al/uploads/2023/12/20231206123812_2023_12_05-final_urbani-map.pdf,Europe/Tirane,sq,,,

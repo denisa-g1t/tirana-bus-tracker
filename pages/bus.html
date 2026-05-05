@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUA — Tirana Bus Tracker</title>
+<link rel="stylesheet" href="../css/main.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+#map{width:100%;height:100%;min-height:400px;filter:grayscale(100%) invert(1) contrast(90%)}
+.map-panel{position:relative}
+.map-ovl{position:absolute;top:10px;left:10px;z-index:1000;background:rgba(0,0,0,0.85);border:1px solid #00ff41;padding:8px 12px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#00ff41;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav class="nav">
+  <div class="nav-logo">[TUA.TRANSIT]</div>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-link">HOME</a>
+    <a href="bus.html" class="nav-link active">🚌 BUS TIRANA</a>
+    <a href="train.html" class="nav-link">🚂 TRAIN ALBANIA</a>
+    <a href="rfid.html" class="nav-link">💳 RFID</a>
+  </div>
+  <div class="nav-time" id="navTime">--:--:--</div>
+</nav>
+<div class="page-layout">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">BUS LINES</div><div class="panel-sub">// TUA — TRANSPORTI URBAN TIRANE</div></div>
+    <div class="search-box">
+      <input class="search-input" id="srch" type="text" placeholder="Search line or stop...">
+      <button class="search-btn" onclick="renderRoutes(document.getElementById('srch').value)">SEARCH →</button>
+    </div>
+    <div id="routeList"></div>
+    <div class="panel-header"><div class="panel-title" style="font-size:1.1rem">BUY TICKET</div><div class="panel-sub">// QR GENERATION</div></div>
+    <div class="ticket-form">
+      <label class="form-label">FROM</label>
+      <select class="form-select" id="tFrom"><option value="">— Select —</option><option>Porcelan</option><option>Kombinat</option><option>Sheshi Willson</option><option>Blloku</option><option>Qendra</option><option>Stacioni i Trenit</option><option>Laprake</option><option>Selitë</option></select>
+      <label class="form-label">TO</label>
+      <select class="form-select" id="tTo"><option value="">— Select —</option><option>Porcelan</option><option>Kombinat</option><option>Sheshi Willson</option><option>Blloku</option><option>Qendra</option><option>Stacioni i Trenit</option><option>Laprake</option><option>Selitë</option></select>
+      <label class="form-label">LINE</label>
+      <select class="form-select" id="tLine"><option>Line 5</option><option>Line 7</option><option>Line 12</option><option>Line 2</option></select>
+      <button class="search-btn" onclick="genTicket()">GENERATE QR TICKET →</button>
+    </div>
+    <div class="qr-box" id="qrBox">
+      <div style="font-size:4rem">🎫</div>
+      <div style="font-family:'Share Tech Mono';font-size:11px;color:#00ff41;letter-spacing:1px;margin-top:0.5rem" id="qrInfo"></div>
+    </div>
+  </div>
+  <div class="panel map-panel" style="border-right:1px solid #333">
+    <div class="map-ovl" id="mapStatus">GPS ACTIVE ● LOADING...</div>
+    <div id="map"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">ARRIVALS</div><div class="panel-sub" id="selStop">// SELECT A LINE</div></div>
+    <div id="arrList"></div>
+    <div class="panel-header" style="margin-top:1rem"><div class="panel-title" style="font-size:1.1rem">DRIVER PANEL</div><div class="panel-sub">// TUA-501 — LINE 5</div></div>
+    <div style="padding:1rem 1.5rem">
+      <div class="result-row"><span class="result-key">SPEED</span><span id="dSpd" class="result-val">28 km/h</span></div>
+      <div class="result-row"><span class="result-key">NEXT STOP</span><span id="dNext" class="result-val">Sheshi Willson</span></div>
+      <div class="result-row"><span class="result-key">ETA NEXT</span><span id="dEta" class="result-val" style="color:#00ff41">2 min</span></div>
+      <div class="result-row"><span class="result-key">OCCUPANCY</span><span id="dOcc" class="result-val">67%</span></div>
+      <div class="result-row"><span class="result-key">GPS</span><span class="result-val" style="color:#00ff41">LIVE ●</span></div>
+    </div>
+    <div class="panel-header"><div class="panel-title" style="font-size:1.1rem">NETWORK</div><div class="panel-sub">// LIVE STATS</div></div>
+    <div style="padding:1rem 1.5rem">
+      <div class="result-row"><span class="result-key">ACTIVE</span><span id="stA" class="result-val" style="color:#00ff41">9</span></div>
+      <div class="result-row"><span class="result-key">DELAYED</span><span id="stD" class="result-val" style="color:#ff9900">2</span></div>
+      <div class="result-row"><span class="result-key">PASSENGERS</span><span id="stP" class="result-val">1,847</span></div>
+    </div>
+  </div>
+</div>
+<div class="announcement"><span>📢</span><span class="ann-text"></span><span class="ann-close" onclick="this.parentElement.classList.remove('show')">✕</span></div>
+<script src="../js/main.js"></script>
+<script>
+setInterval(()=>document.getElementById('navTime').textContent=new Date().toTimeString().slice(0,8),1000);
+const map=L.map('map',{zoomControl:true}).setView([41.3275,19.8189],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(map);
+function busIcon(n){return L.divIcon({html:`<div style="background:#00ff41;color:#000;font-family:'Bebas Neue',sans-serif;font-size:12px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:2px solid #000;box-shadow:0 0 8px #00ff41">${n}</div>`,iconSize:[32,32],iconAnchor:[16,16],className:''});}
+function stopIcon(){return L.divIcon({html:`<div style="background:#fff;width:10px;height:10px;border:2px solid #000;transform:rotate(45deg)"></div>`,iconSize:[10,10],iconAnchor:[5,5],className:''});}
+Object.values(TUA_STOPS).forEach(s=>L.marker([s.lat,s.lon],{icon:stopIcon()}).addTo(map).bindPopup(`<b style="font-family:monospace">${s.name}</b>`));
+const bMarkers={};
+BUS_LINES.forEach(line=>line.buses.forEach(bus=>{
+  const m=L.marker([bus.lat,bus.lon],{icon:busIcon(line.number)}).addTo(map).bindPopup(`<div style="font-family:monospace;font-size:12px"><b>${bus.id}</b><br>LINE ${line.number}: ${line.name}<br>Speed: ${bus.speed} km/h</div>`);
+  bMarkers[bus.id]={marker:m,bus,line};
+  simulateBusMovement(bus,line);
+}));
+setInterval(()=>{
+  Object.values(bMarkers).forEach(({marker,bus})=>marker.setLatLng([bus.lat,bus.lon]));
+  document.getElementById('mapStatus').textContent=`GPS ● ${Object.keys(bMarkers).length} BUSES — ${new Date().toTimeString().slice(0,8)}`;
+},1200);
+function renderRoutes(filter=''){
+  const list=document.getElementById('routeList');list.innerHTML='';
+  BUS_LINES.filter(l=>!filter||l.name.toLowerCase().includes(filter.toLowerCase())||l.number.includes(filter)).forEach(line=>{
+    const bus=line.buses[0],nxt=TUA_STOPS[line.stops[1]];
+    const eta=bus?calculateETA(bus.lat,bus.lon,nxt.lat,nxt.lon,bus.speed):'-';
+    list.innerHTML+=`<div class="route-item" onclick="focusBus('${line.id}')"><div class="route-badge">${line.number}</div><div class="route-info"><div class="route-name">${line.name}</div><div class="route-stops">${line.stops.length} stops · ${line.buses.length} bus(es)</div></div><div class="route-eta">${eta}m</div></div>`;
+  });
+}
+renderRoutes();
+document.getElementById('srch').addEventListener('keyup',e=>{if(e.key==='Enter')renderRoutes(e.target.value);});
+let currentLine=BUS_LINES[0];
+function focusBus(id){
+  currentLine=BUS_LINES.find(l=>l.id===id)||currentLine;
+  if(currentLine.buses[0])map.setView([currentLine.buses[0].lat,currentLine.buses[0].lon],15);
+  updateArrivals();
+}
+function updateArrivals(){
+  const line=currentLine,bus=line.buses[0],list=document.getElementById('arrList');
+  document.getElementById('selStop').textContent=`// LINE ${line.number}: ${line.name}`;
+  list.innerHTML='';
+  line.stops.forEach((k,i)=>{
+    const s=TUA_STOPS[k],eta=bus?calculateETA(bus.lat,bus.lon,s.lat,s.lon,bus.speed):randomBetween(2,20);
+    list.innerHTML+=`<div class="arrival-item"><div class="arrival-line"><span class="arrival-name">${i+1}. ${s.name}</span><span class="arrival-time">${eta}m</span></div><div class="arrival-status">ETA: ${timeNow(eta)}</div></div>`;
+  });
+  if(bus){
+    document.getElementById('dSpd').textContent=(bus.speed+randomBetween(-3,3))+' km/h';
+    const ns=TUA_STOPS[line.stops[1]];
+    document.getElementById('dNext').textContent=ns.name;
+    document.getElementById('dEta').textContent=calculateETA(bus.lat,bus.lon,ns.lat,ns.lon,bus.speed)+' min';
+    document.getElementById('dOcc').textContent=randomBetween(30,95)+'%';
+  }
+  document.getElementById('stP').textContent=(1847+randomBetween(0,10)).toLocaleString();
+}
+updateArrivals();
+setInterval(updateArrivals,3000);
+function genTicket(){
+  const f=document.getElementById('tFrom').value,t=document.getElementById('tTo').value;
+  if(!f||!t){alert('Select FROM and TO stops');return;}
+  const b=document.getElementById('qrBox'),id='TKT-'+Math.random().toString(36).slice(2,8).toUpperCase();
+  b.style.display='block';
+  document.getElementById('qrInfo').innerHTML=`${id}<br>${f} → ${t}<br>${document.getElementById('tLine').value} · ${timeNow()}<br>VALID 60 MIN`;
+}
+setInterval(showAnnouncement,12000);setTimeout(showAnnouncement,3000);
+</script>
+</body>
+</html>

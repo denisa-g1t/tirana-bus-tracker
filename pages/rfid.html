@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUA — RFID Validator</title>
+<link rel="stylesheet" href="../css/main.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+.scanner{width:180px;height:180px;border:2px solid #333;margin:1.5rem auto;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.scanner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#00ff41;box-shadow:0 0 10px #00ff41;animation:scan 2s linear infinite}
+@keyframes scan{0%{top:0}100%{top:100%}}
+.keypad{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:1rem}
+.key{background:#1a1a1a;border:1px solid #333;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;padding:1rem;cursor:pointer;text-align:center;transition:all 0.1s}
+.key:hover{background:#333}.key:active{background:#00ff41;color:#000}
+.key-enter{background:#00ff41;color:#000}
+</style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav class="nav">
+  <div class="nav-logo">[TUA.TRANSIT]</div>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-link">HOME</a>
+    <a href="bus.html" class="nav-link">🚌 BUS TIRANA</a>
+    <a href="train.html" class="nav-link">🚂 TRAIN ALBANIA</a>
+    <a href="rfid.html" class="nav-link active">💳 RFID</a>
+  </div>
+  <div class="nav-time" id="navTime">--:--:--</div>
+</nav>
+<div class="rfid-page">
+  <div class="rfid-panel">
+    <span style="font-family:'Share Tech Mono';font-size:10px;color:#00ff41;letter-spacing:3px">// RFID CARD VALIDATOR</span>
+    <h1 style="font-family:'Bebas Neue';font-size:3rem;letter-spacing:3px;color:#fff;margin:0.3rem 0">CARD SCANNER</h1>
+    <p style="font-size:12px;color:#666">Enter or scan your TUA smart card ID</p>
+    <div class="scanner"><span style="font-size:3.5rem">💳</span></div>
+    <div style="font-family:'Share Tech Mono';font-size:10px;color:#00ff41;letter-spacing:2px;margin-bottom:0.5rem">CARD ID:</div>
+    <input class="rfid-input" id="rfidIn" type="text" placeholder="SCAN OR TYPE..." maxlength="20" onkeydown="if(event.key==='Enter')validate()">
+    <div class="keypad">
+      <div class="key" onclick="kp('1')">1</div><div class="key" onclick="kp('2')">2</div><div class="key" onclick="kp('3')">3</div><div class="key" onclick="kp('A')">A</div>
+      <div class="key" onclick="kp('4')">4</div><div class="key" onclick="kp('5')">5</div><div class="key" onclick="kp('6')">6</div><div class="key" onclick="kp('B')">B</div>
+      <div class="key" onclick="kp('7')">7</div><div class="key" onclick="kp('8')">8</div><div class="key" onclick="kp('9')">9</div><div class="key" onclick="kp('C')">C</div>
+      <div class="key" style="color:#ff3333" onclick="document.getElementById('rfidIn').value='';document.getElementById('res').style.display='none'">CLR</div>
+      <div class="key" onclick="kp('0')">0</div><div class="key" onclick="kp('-')">-</div><div class="key key-enter" onclick="validate()">OK</div>
+    </div>
+    <button class="rfid-btn" onclick="validate()">VALIDATE CARD →</button>
+    <div class="rfid-result" id="res">
+      <div class="result-status" id="rStatus"></div>
+      <div id="rDetail"></div>
+    </div>
+  </div>
+  <div style="padding:3rem;overflow-y:auto">
+    <span style="font-family:'Share Tech Mono';font-size:10px;color:#00ff41;letter-spacing:3px">// TEST CARDS</span>
+    <h2 style="font-family:'Bebas Neue';font-size:2rem;letter-spacing:2px;color:#fff;margin:0.3rem 0 0.5rem">DEMO DATABASE</h2>
+    <p style="font-size:11px;color:#666;margin-bottom:1.5rem">Click any row to auto-fill and validate</p>
+    <div id="testCards"></div>
+    <div style="margin-top:2.5rem;margin-bottom:1rem"><span style="font-family:'Share Tech Mono';font-size:10px;color:#00ff41;letter-spacing:3px">// VALIDATION LOG</span></div>
+    <h2 style="font-family:'Bebas Neue';font-size:2rem;letter-spacing:2px;color:#fff;margin-bottom:1rem">RECENT SCANS</h2>
+    <div id="log"></div>
+    <div style="margin-top:2rem;padding:1.5rem;border:1px solid #333">
+      <div style="font-family:'Share Tech Mono';font-size:10px;color:#00ff41;letter-spacing:2px;margin-bottom:0.8rem">// VALIDATION LOGIC</div>
+      <div style="font-size:12px;color:#999;line-height:1.8">
+        <div style="color:#00ff41;font-family:'Share Tech Mono'">IF paid = true</div>
+        <div style="color:#fff;padding-left:1rem">AND expiry_valid = true</div>
+        <div style="color:#00ff41;font-family:'Share Tech Mono';margin-top:0.3rem">→ ACCESS GRANTED ✅</div>
+        <div style="margin-top:0.8rem;color:#ff3333;font-family:'Share Tech Mono'">ELSE → DENY + LOG ❌</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../js/main.js"></script>
+<script>
+setInterval(()=>document.getElementById('navTime').textContent=new Date().toTimeString().slice(0,8),1000);
+function kp(k){document.getElementById('rfidIn').value+=k;}
+// Render test cards
+const tc=document.getElementById('testCards');
+const cards=[
+  ['TEST1234','Andi Hoxha','ALL',true,false],
+  ['CARD-001-A','Besa Dema','L5',true,false],
+  ['CARD-002-B','Genti Braho','L7',true,false],
+  ['STUDENT-01','Sara Leka','ALL',true,false],
+  ['CARD-003-C','Mirela Koci','L12',false,false],
+  ['CARD-004-D','Artan Basha','L2',true,true],
+  ['FAKEID','Unknown','—',false,false],
+];
+tc.innerHTML='<div style="display:grid;grid-template-columns:1fr 1fr 0.5fr 1fr;gap:0;border-bottom:1px solid #333"><div style="font-family:\'Share Tech Mono\';font-size:10px;color:#00ff41;padding:0.6rem">CARD ID</div><div style="font-family:\'Share Tech Mono\';font-size:10px;color:#00ff41;padding:0.6rem">NAME</div><div style="font-family:\'Share Tech Mono\';font-size:10px;color:#00ff41;padding:0.6rem">LINE</div><div style="font-family:\'Share Tech Mono\';font-size:10px;color:#00ff41;padding:0.6rem">RESULT</div></div>';
+cards.forEach(([id,name,line,paid,expired])=>{
+  const ok=paid&&!expired&&id!=='FAKEID';
+  const reason=!paid?'UNPAID':expired?'EXPIRED':id==='FAKEID'?'NOT FOUND':'';
+  tc.innerHTML+=`<div class="test-card-item" onclick="autoTest('${id}')"><span class="card-id">${id}</span><span style="font-size:11px;color:#999">${name}</span><span style="font-size:11px;color:#999">${line}</span><span class="card-result ${ok?'card-ok':'card-bad'}">${ok?'✅ ALLOW':'❌ '+reason}</span></div>`;
+});
+// Log seed
+const log=document.getElementById('log');
+[['14:22:01','TEST1234',true,'ALLOW'],['14:21:38','CARD-003-C',false,'DENY — UNPAID'],['14:21:15','CARD-001-A',true,'ALLOW'],['14:20:54','FAKEID',false,'DENY — NOT FOUND']].forEach(([t,c,ok,msg])=>{
+  log.innerHTML+=`<div class="log-item"><span class="log-time">${t}</span><span style="color:#fff">${c}</span><span class="${ok?'log-ok':'log-bad'}">${msg}</span></div>`;
+});
+function autoTest(id){document.getElementById('rfidIn').value=id;validate();}
+function validate(){
+  const id=document.getElementById('rfidIn').value.trim().toUpperCase();if(!id)return;
+  const res=document.getElementById('res'),st=document.getElementById('rStatus'),det=document.getElementById('rDetail');
+  res.style.display='block';
+  const card=RFID_DB[id];const now=new Date();
+  const expired=card?new Date(card.expiry)<now:false;
+  const allow=card&&card.paid&&!expired;
+  let reason=!card?'NOT FOUND IN DATABASE':!card.paid?'PAYMENT NOT COMPLETE':expired?'CARD EXPIRED — RENEW REQUIRED':'';
+  res.className='rfid-result '+(allow?'result-ok':'result-fail');
+  st.className='result-status '+(allow?'status-allow':'status-deny');
+  st.textContent=allow?'✅ ACCESS GRANTED':'❌ ACCESS DENIED';
+  if(card){
+    det.innerHTML=`<div class="result-row"><span class="result-key">CARD ID</span><span class="result-val">${id}</span></div><div class="result-row"><span class="result-key">PASSENGER</span><span class="result-val">${card.name}</span></div><div class="result-row"><span class="result-key">PAID</span><span class="result-val" style="color:${card.paid?'#00ff41':'#ff3333'}">${card.paid?'YES':'NO'}</span></div><div class="result-row"><span class="result-key">LINE</span><span class="result-val">${card.line}</span></div><div class="result-row"><span class="result-key">EXPIRY</span><span class="result-val" style="color:${expired?'#ff3333':'#fff'}">${card.expiry}</span></div><div class="result-row"><span class="result-key">BALANCE</span><span class="result-val">${card.balance}</span></div>${!allow?`<div style="margin-top:1rem;padding:0.8rem;background:#1a0000;border:1px solid #ff3333;font-family:'Share Tech Mono';font-size:11px;color:#ff3333">REASON: ${reason}</div>`:''}`;
+  } else {
+    det.innerHTML=`<div style="margin-top:1rem;padding:0.8rem;background:#1a0000;border:1px solid #ff3333;font-family:'Share Tech Mono';font-size:11px;color:#ff3333">REASON: ${reason}</div>`;
+  }
+  const t=now.toTimeString().slice(0,8);
+  log.insertAdjacentHTML('afterbegin',`<div class="log-item"><span class="log-time">${t}</span><span style="color:#fff">${id}</span><span class="${allow?'log-ok':'log-bad'}">${allow?'ALLOW':'DENY — '+reason}</span></div>`);
+  if(log.children.length>15)log.lastElementChild.remove();
+}
+</script>
+</body>
+</html>

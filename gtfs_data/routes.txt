@@ -1,0 +1,28 @@
+route_id,agency_id,route_short_name,route_long_name,route_desc,route_type,route_url,route_color,route_text_color,route_sort_order,continuous_pickup,continuous_drop_off
+7,mot,5B,Institut – Qendër,,3,,2F835B,FFFFFF,,1,1
+45,mot,16A,Linja e gjelbër Orar,,3,,49B249,FFFFFF,,1,1
+20,mot,13B,Tirana e re Antiorar,,3,,B772B0,FFFFFF,,1,1
+71,mot,12A,Uzina Dinamo – Sharrë,,3,,91D0AE,000000,,1,1
+72,mot,12B,Uzina Dinamo – 5 Maji,,3,,91D0AE,000000,,1,1
+70,mot,6,Lapraka,,3,,EE3D7F,FFFFFF,,1,1
+24,mot,16B,Linja e gjelbër Antiorar,,3,,49B249,FFFFFF,,1,1
+46,mot,13A,Tirana e re Orar,,3,,B772B0,FFFFFF,,1,1
+10,mot,8A,Terminali Juglindor - Qendër,,3,,665AA7,FFFFFF,,1,1
+6,mot,5A,Uzina Autotraktori – Qendër,,3,,7F9B8B,FFFFFF,,1,1
+22,mot,15A,Kombinat – Kinostudio,,3,,EA7124,FFFFFF,,1,1
+15,mot,10A,Materniteti i ri – Qendër,,3,,FCB567,000000,,1,1
+3,mot,3A,Kashar Orar,,3,,80D4F7,000000,,1,1
+14,mot,9B,Vilat gjermane – Jordan Misja,,3,,86A33D,FFFFFF,,1,1
+47,mot,3C,Yrshek – Qendër,,3,,80D4F7,000000,,1,1
+23,mot,15B,Kombinat – Tufinë,,3,,F79655,FFFFFF,,1,1
+1,mot,1A,Selitë – Allias,,3,,F05131,FFFFFF,,1,1
+5,mot,4,City Park – Qendër,,3,,B3303B,FFFFFF,,1,1
+2,mot,2,Terminali Juglindor,,3,,ED8BB8,FFFFFF,,1,1
+4,mot,3B,Kashar Antiorar,,3,,7FA8D9,FFFFFF,,1,1
+12,mot,8C,Sauk i vjetër – Qendër,,3,,D7CDE6,000000,,1,1
+18,mot,11,Porcelan – Qendër,,3,,2F90CB,FFFFFF,,1,1
+48,mot,1B,Kodra e Diellit – Allias,,3,,F3797B,FFFFFF,,1,1
+16,mot,10B,Mihal Grameno – Qendër,,3,,D07448,FFFFFF,,1,1
+17,mot,10C,Rrethrrotullimi Shkozë – Ish-fusha e aviacionit,,3,,B28351,FFFFFF,,1,1
+11,mot,8B,Sanatorium – Qendër,,3,,B7A7D1,FFFFFF,,1,1
+13,mot,9A,Qytet Studenti – Jordan Misja,,3,,C1CB33,FFFFFF,,1,1

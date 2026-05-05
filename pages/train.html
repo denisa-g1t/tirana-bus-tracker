@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUA — Albania Train Tracker</title>
+<link rel="stylesheet" href="../css/main.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>#trainMap{width:100%;height:100%;min-height:400px;filter:grayscale(100%) invert(1) contrast(85%)}.map-panel{position:relative}.map-ovl{position:absolute;top:10px;left:10px;z-index:1000;background:rgba(0,0,0,0.85);border:1px solid #00ff41;padding:8px 12px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#00ff41;letter-spacing:1px}</style>
+</head>
+<body>
+<div class="scanline"></div>
+<nav class="nav">
+  <div class="nav-logo">[TUA.TRANSIT]</div>
+  <div class="nav-links">
+    <a href="../index.html" class="nav-link">HOME</a>
+    <a href="bus.html" class="nav-link">🚌 BUS TIRANA</a>
+    <a href="train.html" class="nav-link active">🚂 TRAIN ALBANIA</a>
+    <a href="rfid.html" class="nav-link">💳 RFID</a>
+  </div>
+  <div class="nav-time" id="navTime">--:--:--</div>
+</nav>
+<div class="page-layout">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">DEPARTURES</div><div class="panel-sub">// HSH — HEKURUDHA SHQIPTARE</div></div>
+    <div class="search-box">
+      <input class="search-input" id="tSrch" type="text" placeholder="Search destination...">
+      <button class="search-btn" onclick="renderTrains(document.getElementById('tSrch').value)">FILTER →</button>
+    </div>
+    <table class="departures-table"><thead><tr><th>DEP</th><th>ROUTE</th><th>STATUS</th><th>PLT</th></tr></thead><tbody id="tBody"></tbody></table>
+  </div>
+  <div class="panel map-panel" style="border-right:1px solid #333">
+    <div class="map-ovl">RAILWAY NETWORK — ALBANIA</div>
+    <div id="trainMap"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">DETAIL</div><div class="panel-sub" id="selTrain">// CLICK A TRAIN</div></div>
+    <div id="tDetail" style="padding:1.5rem;color:#333;font-family:'Share Tech Mono';font-size:11px;letter-spacing:2px;text-align:center;margin-top:2rem">SELECT A TRAIN</div>
+    <div class="panel-header"><div class="panel-title" style="font-size:1.1rem">MAIN STATIONS</div><div class="panel-sub">// ALBANIA RAIL</div></div>
+    <div id="stList"></div>
+    <div class="panel-header"><div class="panel-title" style="font-size:1.1rem">ALERTS</div><div class="panel-sub">// SERVICE NOTICES</div></div>
+    <div style="padding:1.5rem">
+      <div style="padding:0.8rem;border:1px solid #ff9900;margin-bottom:0.8rem"><div style="font-family:'Share Tech Mono';font-size:10px;color:#ff9900;letter-spacing:1px">⚠ DELAY</div><div style="font-size:11px;color:#fff;margin-top:4px">AL-03: +12 min — track maintenance near Vora.</div></div>
+      <div style="padding:0.8rem;border:1px solid #ff3333;margin-bottom:0.8rem"><div style="font-family:'Share Tech Mono';font-size:10px;color:#ff3333;letter-spacing:1px">✕ CANCELLED</div><div style="font-size:11px;color:#fff;margin-top:4px">AL-06 Tiranë→Elbasan cancelled. Use road transport.</div></div>
+      <div style="padding:0.8rem;border:1px solid #00ff41"><div style="font-family:'Share Tech Mono';font-size:10px;color:#00ff41;letter-spacing:1px">✓ UPDATE</div><div style="font-size:11px;color:#fff;margin-top:4px">All Tiranë↔Durrës services normal. Next: 17:00 Plt 1.</div></div>
+    </div>
+  </div>
+</div>
+<div class="announcement"><span>📢</span><span class="ann-text"></span><span class="ann-close" onclick="this.parentElement.classList.remove('show')">✕</span></div>
+<script src="../js/main.js"></script>
+<script>
+setInterval(()=>document.getElementById('navTime').textContent=new Date().toTimeString().slice(0,8),1000);
+const trainMap=L.map('trainMap',{zoomControl:true}).setView([41.1,20.0],7);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(trainMap);
+const TSTATIONS=[
+  {name:'Tiranë',lat:41.3368,lon:19.8200,main:true},
+  {name:'Durrës',lat:41.3231,lon:19.4541,main:true},
+  {name:'Shkodër',lat:42.0682,lon:19.5125,main:true},
+  {name:'Vlorë',lat:40.4656,lon:19.4892,main:true},
+  {name:'Elbasan',lat:41.1125,lon:20.0822,main:true},
+  {name:'Fier',lat:40.7239,lon:19.5564,main:false},
+  {name:'Lushnjë',lat:40.9419,lon:19.7050,main:false},
+  {name:'Rrogozhinë',lat:41.0731,lon:19.6614,main:false},
+  {name:'Vora',lat:41.3789,lon:19.6628,main:false},
+  {name:'Lezhë',lat:41.7861,lon:19.6439,main:false},
+];
+const RLINES=[
+  {s:['Tiranë','Vora','Durrës'],c:'#00ff41'},
+  {s:['Tiranë','Vora','Lezhë','Shkodër'],c:'#ffffff'},
+  {s:['Rrogozhinë','Lushnjë','Fier','Vlorë'],c:'#aaa'},
+  {s:['Rrogozhinë','Elbasan'],c:'#888'},
+];
+TSTATIONS.forEach(st=>{
+  const icon=L.divIcon({html:`<div style="background:${st.main?'#00ff41':'#fff'};color:#000;font-family:'Bebas Neue',sans-serif;font-size:10px;padding:2px 6px;white-space:nowrap;border:1px solid #000">${st.name}</div>`,className:'',iconAnchor:[0,10]});
+  L.marker([st.lat,st.lon],{icon}).addTo(trainMap);
+});
+RLINES.forEach(r=>{
+  const coords=r.s.map(n=>{const s=TSTATIONS.find(st=>st.name===n);return s?[s.lat,s.lon]:null;}).filter(Boolean);
+  L.polyline(coords,{color:r.c,weight:2,opacity:0.8}).addTo(trainMap);
+});
+let tp=0;
+const tir=TSTATIONS.find(s=>s.name==='Tiranë'),dur=TSTATIONS.find(s=>s.name==='Durrës');
+const tIcon=L.divIcon({html:`<div style="background:#000;color:#00ff41;font-size:14px;border:1px solid #00ff41;width:28px;height:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 8px #00ff41">🚂</div>`,iconSize:[28,28],iconAnchor:[14,14],className:''});
+const tMarker=L.marker([tir.lat,tir.lon],{icon:tIcon}).addTo(trainMap);
+setInterval(()=>{tp+=0.004;if(tp>1)tp=0;tMarker.setLatLng([tir.lat+(dur.lat-tir.lat)*tp,tir.lon+(dur.lon-tir.lon)*tp]);},1000);
+function renderTrains(filter=''){
+  const tb=document.getElementById('tBody');tb.innerHTML='';
+  TRAINS.filter(t=>!filter||t.to.toLowerCase().includes(filter.toLowerCase())||t.from.toLowerCase().includes(filter.toLowerCase())).forEach(t=>{
+    const sc=t.status==='ON TIME'?'td-ok':t.status==='CANCELLED'?'td-bad':'td-warn';
+    tb.innerHTML+=`<tr onclick="showDetail('${t.id}')" style="cursor:pointer"><td class="td-time">${t.dep}</td><td style="font-size:11px">${t.from}<br><span style="color:#666">→ ${t.to}</span></td><td class="${sc}">${t.status}</td><td style="text-align:center">${t.platform}</td></tr>`;
+  });
+}
+renderTrains();
+function showDetail(id){
+  const t=TRAINS.find(x=>x.id===id);if(!t)return;
+  document.getElementById('selTrain').textContent=`// TRAIN ${t.id}`;
+  const sc=t.status==='ON TIME'?'#00ff41':t.status==='CANCELLED'?'#ff3333':'#ff9900';
+  const [dh,dm]=t.dep.split(':').map(Number),[ah,am]=t.arr.split(':').map(Number),diff=(ah*60+am)-(dh*60+dm);
+  document.getElementById('tDetail').innerHTML=`<div style="font-family:'Bebas Neue';font-size:2rem;letter-spacing:2px;color:#fff;margin-bottom:0.5rem">${t.from} → ${t.to}</div><div style="font-family:'Share Tech Mono';font-size:1.2rem;color:${sc};margin-bottom:1rem">${t.status}</div><div class="result-row"><span class="result-key">TRAIN</span><span class="result-val">${t.id}</span></div><div class="result-row"><span class="result-key">DEP</span><span class="result-val" style="color:#00ff41">${t.dep}</span></div><div class="result-row"><span class="result-key">ARR</span><span class="result-val">${t.arr}</span></div><div class="result-row"><span class="result-key">PLATFORM</span><span class="result-val">${t.platform}</span></div><div class="result-row"><span class="result-key">DURATION</span><span class="result-val">${Math.floor(diff/60)}h ${diff%60}min</span></div><div class="result-row"><span class="result-key">OPERATOR</span><span class="result-val">HSH Albania</span></div>`;
+}
+const sl=document.getElementById('stList');
+TSTATIONS.filter(s=>s.main).forEach(s=>sl.innerHTML+=`<div class="route-item" onclick="trainMap.setView([${s.lat},${s.lon}],12)"><div style="font-size:1.2rem">🚉</div><div class="route-info"><div class="route-name">${s.name}</div><div class="route-stops">${s.lat.toFixed(4)}°N · ${s.lon.toFixed(4)}°E</div></div></div>`);
+const tann=['🚂 AL-01: Now boarding — Platform 1 — Tiranë→Durrës','⚠️ Track maintenance Vora — minor delays','🔔 AL-04: Boarding in 5 min — Platform 3'];
+let tai=0;
+function showTA(){const el=document.querySelector('.announcement');if(!el)return;el.querySelector('.ann-text').textContent=tann[tai%tann.length];el.classList.add('show');tai++;setTimeout(()=>el.classList.remove('show'),5000);}
+setInterval(showTA,14000);setTimeout(showTA,4000);
+</script>
+</body>
+</html>
