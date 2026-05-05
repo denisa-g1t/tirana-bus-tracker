@@ -3,44 +3,87 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATARA - Smart Transit Tirana</title>
-<style>
-body {
-  background: #0a0a0a;
-  color: #00ff41;
-  font-family: monospace;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
-.container {
-  text-align: center;
-  padding: 2rem;
-  border: 1px solid #00ff41;
-  background: #0a0a0a;
-}
-h1 {
-  font-size: 3rem;
-  letter-spacing: 4px;
-}
-a {
-  color: #00ff41;
-  display: block;
-  margin: 1rem 0;
-  font-size: 1.2rem;
-}
-</style>
+<title>ATARA - Smart Transit | Tirana</title>
+<link rel="stylesheet" href="atara/css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-  <h1>ATARA</h1>
-  <p>SMART TRANSIT SYSTEM - TIRANA</p>
-  <a href="atara/pages/bus.html">🚌 BUS TRACKER</a>
-  <a href="atara/pages/train.html">🚂 TRAIN ALBANIA</a>
-  <a href="atara/pages/smartcard.html">💳 SMART CARD</a>
-  <a href="atara/pages/safety.html">⚠️ SAFETY MAP</a>
-</div>
+<div class="scanline"></div>
+<nav class="nav">
+  <div class="nav-logo">[ATARA]</div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active">HOME</a>
+    <a href="atara/pages/bus.html" class="nav-link">BUS TRACKER</a>
+    <a href="atara/pages/train.html" class="nav-link">TRAIN</a>
+    <a href="atara/pages/smartcard.html" class="nav-link">SMART CARD</a>
+  </div>
+  <div class="nav-time" id="navTime">--:--:--</div>
+</nav>
+
+<main style="margin-top:60px">
+  <section style="padding:4rem 2rem;text-align:center;border-bottom:1px solid #1a1a1a">
+    <h1 style="font-family:'Bebas Neue';font-size:clamp(3rem,10vw,6rem)">ATARA<br><span style="color:#00ff41">SMART TRANSIT</span></h1>
+    <p style="color:#888;margin:1rem 0">Real-time bus tracking · Smart ETA · Traffic-adjusted timing</p>
+    <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem">
+      <a href="atara/pages/bus.html" class="btn-primary" style="text-decoration:none">TRACK BUSES</a>
+    </div>
+  </section>
+  
+  <div style="padding:2rem;border-bottom:1px solid #1a1a1a">
+    <div id="serviceStatus" style="text-align:center;padding:1rem;background:#111;font-size:12px">CHECKING SERVICE...</div>
+  </div>
+  
+  <div style="padding:2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem">
+    <div style="padding:1.5rem;border:1px solid #1a1a1a">
+      <div style="color:#00ff41;font-size:2rem">KAMEZ</div>
+      <div style="font-size:11px;color:#888">Terminal Station</div>
+    </div>
+    <div style="padding:1.5rem;border:1px solid #1a1a1a">
+      <div style="color:#00ff41;font-size:2rem">TEUTA</div>
+      <div style="font-size:11px;color:#888">North Zone</div>
+    </div>
+    <div style="padding:1.5rem;border:1px solid #1a1a1a">
+      <div style="color:#00ff41;font-size:2rem">PASKUGAN</div>
+      <div style="font-size:11px;color:#888">East Zone</div>
+    </div>
+    <div style="padding:1.5rem;border:1px solid #1a1a1a">
+      <div style="color:#00ff41;font-size:2rem">SHIRAZ</div>
+      <div style="font-size:11px;color:#888">Central Zone</div>
+    </div>
+    <div style="padding:1.5rem;border:1px solid #1a1a1a">
+      <div style="color:#00ff41;font-size:2rem">SUKO</div>
+      <div style="font-size:11px;color:#888">East Zone</div>
+    </div>
+    <div style="padding:1.5rem;border:1px solid #1a1a1a">
+      <div style="color:#00ff41;font-size:2rem">STACION</div>
+      <div style="font-size:11px;color:#888">Central Hub</div>
+    </div>
+  </div>
+</main>
+
+<footer style="padding:2rem;text-align:center;font-size:10px;color:#666;border-top:1px solid #1a1a1a">
+  ATARA SMART TRANSIT SYSTEM | POWERED BY OPEN DATA
+</footer>
+
+<script src="atara/js/main.js"></script>
+<script>
+setInterval(() => document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8), 1000);
+
+function updateServiceStatus() {
+  const status = getServiceStatus();
+  const div = document.getElementById('serviceStatus');
+  if (status.active) {
+    div.innerHTML = 'SERVICE ACTIVE - BUSES RUNNING';
+    div.style.color = '#00ff41';
+    div.style.background = '#001a00';
+  } else {
+    div.innerHTML = 'NO SERVICE - NIGHT HOURS (00:00 - 05:00)';
+    div.style.color = '#ff3333';
+    div.style.background = '#1a0000';
+  }
+}
+updateServiceStatus();
+setInterval(updateServiceStatus, 60000);
+</script>
 </body>
 </html>

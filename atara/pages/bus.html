@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATARA - Bus Tracker | Smart Transit Tirana</title>
+<title>ATARA - Bus Tracker | Real Road Lines</title>
 <link rel="stylesheet" href="../css/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -16,9 +16,8 @@
   <div class="nav-links">
     <a href="../../index.html" class="nav-link">HOME</a>
     <a href="bus.html" class="nav-link active">BUS TRACKER</a>
-    <a href="train.html" class="nav-link">TRAIN ALBANIA</a>
+    <a href="train.html" class="nav-link">TRAIN</a>
     <a href="smartcard.html" class="nav-link">SMART CARD</a>
-    <a href="safety.html" class="nav-link">SAFETY</a>
   </div>
   <div class="nav-time" id="navTime">--:--:--</div>
 </nav>
@@ -27,268 +26,183 @@
   <div class="panel">
     <div class="panel-header">
       <div class="panel-title">BUS LINES</div>
-      <div class="panel-sub">ATARA SMART TRANSIT</div>
+      <div class="panel-sub">REAL ROAD NETWORK</div>
     </div>
-    <div style="padding:1rem">
-      <input type="text" id="searchInput" placeholder="SEARCH LINE OR STATION..." style="width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:monospace">
-    </div>
-    <div id="routeList"></div>
+    <div id="serviceStatus" style="padding:0.8rem;background:#1a0000;color:#ffaa00;font-size:11px;text-align:center">CHECKING SERVICE...</div>
+    <div id="routeList" style="padding:0.5rem 0"></div>
     
     <div class="panel-header">
-      <div class="panel-title" style="font-size:1rem">SMART ETA</div>
-      <div class="panel-sub">REAL-TIME CALCULATION</div>
+      <div class="panel-title">SMART ETA</div>
+      <div class="panel-sub">TRAFFIC ADJUSTED</div>
     </div>
-    <div id="smartEtaPanel" style="padding:1rem;font-size:11px;color:#888">
-      SELECT A BUS LINE
-    </div>
+    <div id="etaPanel" style="padding:1rem;font-size:11px;color:#888">SELECT A BUS LINE</div>
   </div>
   
   <div class="panel map-panel" style="position:relative">
-    <div class="map-overlay" id="mapStatus">GPS ACTIVE</div>
-    <div id="map"></div>
+    <div class="map-overlay" id="mapStatus">LOADING MAP...</div>
+    <div id="busMap"></div>
   </div>
   
   <div class="panel">
     <div class="panel-header">
-      <div class="panel-title">STATION ARRIVALS</div>
+      <div class="panel-title">STATION LIST</div>
+      <div class="panel-sub">KAMEZ TO QENDER</div>
+    </div>
+    <div id="stationList" style="padding:0.5rem 0"></div>
+    
+    <div class="panel-header">
+      <div class="panel-title">ARRIVAL TIMES</div>
       <div class="panel-sub" id="selectedLine">SELECT A LINE</div>
     </div>
     <div id="arrivalsList" style="padding:0.5rem 0"></div>
-    
-    <div class="panel-header">
-      <div class="panel-title" style="font-size:1rem">ACCIDENT ALERT</div>
-      <div class="panel-sub">BLACK SPOT AHEAD</div>
-    </div>
-    <div id="safetyAlert" style="padding:1rem;background:#1a0000;border-left:3px solid #ff3333;margin:0.5rem;font-size:11px">
-      Loading safety data...
-    </div>
   </div>
 </div>
 
 <script src="../js/main.js"></script>
 <script>
-setInterval(() => document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8), 1000);
+let map, busMarkers = {}, roadLine;
+
+// Update clock
+setInterval(() => {
+  document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8);
+  updateServiceStatus();
+}, 1000);
+
+function updateServiceStatus() {
+  const status = getServiceStatus();
+  const statusDiv = document.getElementById('serviceStatus');
+  if (status.active) {
+    statusDiv.innerHTML = 'SERVICE ACTIVE ' + new Date().toTimeString().slice(0,5);
+    statusDiv.style.background = '#001a00';
+    statusDiv.style.color = '#00ff41';
+  } else {
+    statusDiv.innerHTML = 'NO SERVICE - NIGHT HOURS (00:00 - 05:00)';
+    statusDiv.style.background = '#1a0000';
+    statusDiv.style.color = '#ff3333';
+  }
+}
 
 // Initialize map
-const map = L.map('map', {zoomControl: true}).setView([41.3275, 19.8189], 12);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: 'OpenStreetMap',
-  maxZoom: 18
-}).addTo(map);
-
-// Bus icon function
-function getBusIcon(number, color) {
-  return L.divIcon({
-    html: `<div style="background:${color || '#00ff41'};color:#000;font-family:'Bebas Neue';font-size:14px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:2px solid #000;box-shadow:0 0 8px ${color || '#00ff41'}">${number}</div>`,
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
-    className: ''
-  });
-}
-
-// Stop icon
-function getStopIcon() {
-  return L.divIcon({
-    html: `<div style="background:#fff;width:8px;height:8px;border:2px solid #000;transform:rotate(45deg)"></div>`,
-    iconSize: [8, 8],
-    iconAnchor: [4, 4],
-    className: ''
-  });
-}
-
-// Add all stations to map
-Object.values(ATARA_STATIONS).forEach(station => {
-  L.marker([station.lat, station.lon], {icon: getStopIcon()})
-    .addTo(map)
-    .bindPopup(`<b>${station.name}</b><br>Zone: ${station.zone}<br>Code: ${station.code}`);
-});
-
-// Add accident black spots to map
-ACCIDENT_BLACK_SPOTS.forEach(spot => {
-  const color = spot.severity === 'HIGH' ? '#ff3333' : '#ffaa00';
-  const icon = L.divIcon({
-    html: `<div style="background:${color};width:16px;height:16px;border-radius:50%;border:2px solid #000;box-shadow:0 0 8px ${color}"></div>`,
-    iconSize: [16, 16],
-    iconAnchor: [8, 8],
-    className: ''
-  });
-  L.marker([spot.lat, spot.lon], {icon: icon})
-    .addTo(map)
-    .bindPopup(`<b>BLACK SPOT: ${spot.name}</b><br>Incidents: ${spot.incidents}<br>Warning: ${spot.warning}`);
-});
-
-// Bus markers
-const busMarkers = {};
-ATARA_BUS_LINES.forEach(line => {
-  line.buses.forEach(bus => {
-    const marker = L.marker([bus.lat, bus.lon], {icon: getBusIcon(line.number, line.color)})
-      .addTo(map)
-      .bindPopup(`
-        <b>${bus.id}</b><br>
-        LINE ${line.number}: ${line.name}<br>
-        SPEED: ${bus.speed} km/h
-      `);
-    busMarkers[bus.id] = {marker, bus, line};
-    simulateBusMovement(bus, line);
-  });
-});
-
-// Update bus positions
-setInterval(() => {
-  Object.values(busMarkers).forEach(({marker, bus}) => {
-    marker.setLatLng([bus.lat, bus.lon]);
-  });
-  document.getElementById('mapStatus').textContent = `GPS ACTIVE - ${Object.keys(busMarkers).length} BUSES - ${new Date().toTimeString().slice(0,8)}`;
-}, 1200);
-
-// Render route list
-function renderRoutes(filter = '') {
-  const container = document.getElementById('routeList');
-  container.innerHTML = '';
+function initMap() {
+  map = L.map('busMap').setView([41.35, 19.81], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'OpenStreetMap',
+    maxZoom: 18
+  }).addTo(map);
   
-  ATARA_BUS_LINES.filter(line => {
-    return !filter || line.name.toLowerCase().includes(filter.toLowerCase()) || line.number.includes(filter);
-  }).forEach(line => {
-    const bus = line.buses[0];
-    const firstStop = ATARA_STATIONS[line.stations[1]];
-    let eta = '--';
-    if (bus && firstStop) {
-      const dist = calculateDistance(bus.lat, bus.lon, firstStop.lat, firstStop.lon);
-      eta = Math.ceil((dist / line.avgSpeed) * 60);
-    }
-    
-    container.innerHTML += `
-      <div class="route-item" onclick="selectLine('${line.id}')">
-        <div class="route-badge" style="background:${line.color}">${line.number}</div>
-        <div class="route-info">
-          <div class="route-name">${line.name}</div>
-          <div style="font-size:10px;color:#666">${line.stations.length} stations · ${line.buses.length} active buses</div>
-        </div>
-        <div class="route-eta">${eta}m</div>
+  // Draw REAL ROAD LINE connecting all stations
+  const roadCoordinates = [
+    [41.3812, 19.7721],  // KAMEZ
+    [41.3520, 19.8010],  // TEUTA
+    [41.3650, 19.8120],  // PASKUGAN
+    [41.3380, 19.8280],  // SHIRAZ
+    [41.3420, 19.8410],  // SUKO
+    [41.3368, 19.8200],  // STACION
+    [41.3275, 19.8189]   // QENDER
+  ];
+  
+  roadLine = L.polyline(roadCoordinates, {
+    color: '#00ff41',
+    weight: 4,
+    opacity: 0.9,
+    dashArray: '10, 10'
+  }).addTo(map);
+  
+  // Add markers for each station
+  Object.values(ATARA_STATIONS).forEach(station => {
+    const icon = L.divIcon({
+      html: `<div style="background:#fff;width:10px;height:10px;border:2px solid #000;transform:rotate(45deg)"></div>`,
+      iconSize: [10, 10],
+      iconAnchor: [5, 5]
+    });
+    L.marker([station.lat, station.lon], {icon})
+      .addTo(map)
+      .bindPopup(`<b>${station.name}</b><br>Zone: ${station.zone}`);
+  });
+  
+  // Add bus marker
+  const bus = ATARA_BUS_LINES[0].buses[0];
+  const busIcon = L.divIcon({
+    html: `<div style="background:#00ff41;color:#000;font-family:'Bebas Neue';font-size:14px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:2px solid #000;box-shadow:0 0 8px #00ff41">1</div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16]
+  });
+  const marker = L.marker([bus.lat, bus.lon], {icon: busIcon}).addTo(map);
+  busMarkers[bus.id] = {marker, bus, line: ATARA_BUS_LINES[0]};
+  simulateBusMovement(bus, ATARA_BUS_LINES[0]);
+  
+  // Animate bus
+  setInterval(() => {
+    Object.values(busMarkers).forEach(({marker, bus}) => {
+      marker.setLatLng([bus.lat, bus.lon]);
+    });
+    const status = getServiceStatus();
+    document.getElementById('mapStatus').innerHTML = status.active ? `GPS ACTIVE - ${new Date().toTimeString().slice(0,8)}` : 'NO SERVICE - NIGHT HOURS';
+    updateETAs();
+  }, 1000);
+  
+  // Display station list
+  const stationContainer = document.getElementById('stationList');
+  Object.values(ATARA_STATIONS).sort((a,b) => a.order - b.order).forEach(station => {
+    stationContainer.innerHTML += `
+      <div class="stop-detail">
+        <span>${station.order}. ${station.name}</span>
+        <span style="color:#00ff41">${station.zone}</span>
       </div>
     `;
   });
 }
 
-// Select line and show smart ETA
-let currentLine = ATARA_BUS_LINES[0];
-
-function selectLine(lineId) {
-  currentLine = ATARA_BUS_LINES.find(l => l.id === lineId) || currentLine;
-  const bus = currentLine.buses[0];
-  
-  if (bus) {
-    map.setView([bus.lat, bus.lon], 14);
-    updateSmartETA();
-  }
-}
-
-function updateSmartETA() {
-  const bus = currentLine.buses[0];
-  if (!bus) return;
-  
-  // Find current station index
-  let currentIndex = 0;
-  let minDist = Infinity;
-  currentLine.stations.forEach((stationId, idx) => {
-    const station = ATARA_STATIONS[stationId];
-    if (station) {
-      const dist = calculateDistance(bus.lat, bus.lon, station.lat, station.lon);
-      if (dist < minDist) {
-        minDist = dist;
-        currentIndex = idx;
-      }
-    }
-  });
-  
-  // Calculate ETAs for remaining stations
-  const etas = [];
-  let cumulativeTime = 0;
-  
-  for (let i = currentIndex; i < currentLine.stations.length - 1; i++) {
-    const current = ATARA_STATIONS[currentLine.stations[i]];
-    const next = ATARA_STATIONS[currentLine.stations[i + 1]];
-    if (current && next) {
-      const dist = calculateDistance(current.lat, current.lon, next.lat, next.lon);
-      const travelTime = (dist / currentLine.avgSpeed) * 60;
-      cumulativeTime += travelTime;
-      etas.push({
-        station: next,
-        eta: Math.ceil(cumulativeTime)
-      });
-      cumulativeTime += currentLine.stopDuration / 60;
-    }
-  }
-  
-  // Update arrivals panel
+function updateETAs() {
+  const bus = ATARA_BUS_LINES[0].buses[0];
+  const status = getServiceStatus();
+  const etaPanel = document.getElementById('etaPanel');
   const arrivalsContainer = document.getElementById('arrivalsList');
-  document.getElementById('selectedLine').textContent = `LINE ${currentLine.number}: ${currentLine.name}`;
-  arrivalsContainer.innerHTML = '';
   
-  currentLine.stations.forEach((stationId, idx) => {
-    const station = ATARA_STATIONS[stationId];
-    if (station) {
-      const eta = etas.find(e => e.station.name === station.name);
-      arrivalsContainer.innerHTML += `
-        <div class="stop-detail">
-          <span>${idx + 1}. ${station.name}</span>
-          <span class="eta-smart">${eta ? eta.eta + ' min' : (idx <= currentIndex ? 'NOW' : '--')}</span>
-        </div>
-      `;
-    }
-  });
+  if (!status.active) {
+    etaPanel.innerHTML = '<div style="color:#ff3333">NO SERVICE AT NIGHT</div>';
+    arrivalsContainer.innerHTML = '<div style="padding:1rem;color:#ff3333;text-align:center">SERVICE RESUMES AT 05:00</div>';
+    return;
+  }
   
-  // Update smart ETA panel
-  const etaPanel = document.getElementById('smartEtaPanel');
+  const { etas, currentStation } = calculateAllETAs(bus.lat, bus.lon, ATARA_BUS_LINES[0].stations, ATARA_BUS_LINES[0].baseSpeed);
+  
+  // Update ETA panel
   etaPanel.innerHTML = `
-    <div style="color:#00ff41;margin-bottom:8px">LINE ${currentLine.number} - ${currentLine.name}</div>
-    <div class="stop-detail"><span>AVG SPEED</span><span>${currentLine.avgSpeed} km/h</span></div>
-    <div class="stop-detail"><span>STOP DURATION</span><span>${currentLine.stopDuration} sec</span></div>
-    <div class="stop-detail"><span>ACTIVE BUSES</span><span>${currentLine.buses.length}</span></div>
-    <div class="stop-detail"><span>CURRENT BUS</span><span>${currentLine.buses[0]?.id || 'N/A'}</span></div>
-    ${etas[0] ? `<div style="margin-top:10px;padding-top:8px;border-top:1px solid #333"><span>NEXT STOP ETA</span><span style="color:#00ff41;font-size:1.2rem">${etas[0].eta} MIN</span></div>` : ''}
+    <div style="color:#00ff41;margin-bottom:8px">LINE 1 - KAMEZ TO QENDER</div>
+    <div class="stop-detail"><span>CURRENT POSITION</span><span>${ATARA_STATIONS[currentStation]?.name || 'IN TRANSIT'}</span></div>
+    <div class="stop-detail"><span>SPEED</span><span>${bus.speed} km/h</span></div>
+    <div class="stop-detail"><span>TRAFFIC FACTOR</span><span>${getTrafficFactor()?.toFixed(1) || 'N/A'}x</span></div>
+    ${etas[0] ? `<div style="margin-top:10px;padding:8px;background:#111;border:1px solid #00ff41"><span>NEXT STOP ETA</span><span style="color:#00ff41;font-size:1.3rem;margin-left:10px">${etas[0].etaMinutes} MIN</span></div>` : ''}
   `;
   
-  // Update safety alert
-  const safetyContainer = document.getElementById('safetyAlert');
-  const nearbyHotspots = ACCIDENT_BLACK_SPOTS.filter(spot => {
-    const dist = calculateDistance(bus.lat, bus.lon, spot.lat, spot.lon);
-    return dist < 1.5;
+  // Update arrivals list with ETAs
+  arrivalsContainer.innerHTML = '<div class="stop-detail"><span>STATION</span><span>ETA</span></div>';
+  etas.forEach(eta => {
+    arrivalsContainer.innerHTML += `
+      <div class="stop-detail">
+        <span>${eta.station.name}</span>
+        <span style="color:#00ff41">${eta.etaMinutes} min</span>
+      </div>
+    `;
   });
   
-  if (nearbyHotspots.length > 0) {
-    safetyContainer.innerHTML = `
-      <div style="color:#ff3333;margin-bottom:4px">⚠ BLACK SPOT AHEAD</div>
-      <div>${nearbyHotspots[0].name} - ${nearbyHotspots[0].warning}</div>
-      <div style="font-size:9px;color:#888;margin-top:4px">${nearbyHotspots[0].incidents} incidents reported</div>
-    `;
-    safetyContainer.style.background = '#1a0000';
-    safetyContainer.style.borderLeftColor = '#ff3333';
-  } else {
-    safetyContainer.innerHTML = `
-      <div style="color:#00ff41;margin-bottom:4px">✓ SAFE ZONE</div>
-      <div>No black spots detected on current route</div>
-      <div style="font-size:9px;color:#888;margin-top:4px">Continue safe driving</div>
-    `;
-    safetyContainer.style.background = '#001a00';
-    safetyContainer.style.borderLeftColor = '#00ff41';
+  if (etas.length === 0) {
+    arrivalsContainer.innerHTML += '<div style="padding:1rem;color:#888;text-align:center">ARRIVED AT DESTINATION</div>';
   }
 }
 
-// Search functionality
-document.getElementById('searchInput').addEventListener('keyup', (e) => {
-  renderRoutes(e.target.value);
-});
+function renderRoutes() {
+  const container = document.getElementById('routeList');
+  container.innerHTML = '<div class="route-item" onclick="map.setView([41.35,19.81],11);roadLine.setStyle({color:\'#00ff41\'})"><div class="route-badge">1</div><div class="route-info"><div class="route-name">KAMEZ TO QENDER</div><div style="font-size:10px;color:#666">7 stations · 12.5 km</div></div></div>';
+}
 
-// Auto-refresh ETA every 5 seconds
-renderRoutes();
-setInterval(updateSmartETA, 5000);
-setTimeout(updateSmartETA, 1000);
-
-// Safety alert rotation
-setInterval(() => {
-  if (typeof showSafetyAlert === 'function') showSafetyAlert();
-}, 15000);
+// Initialize everything
+setTimeout(() => {
+  initMap();
+  renderRoutes();
+  setInterval(updateETAs, 3000);
+}, 500);
 </script>
 </body>
 </html>
