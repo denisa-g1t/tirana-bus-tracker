@@ -3,176 +3,292 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sustainable Tirana - Urban Transit System</title>
-<link rel="stylesheet" href="css/main.css">
+<title>ATARA - Bus Tracker | Smart Transit Tirana</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="scanline"></div>
-
-<!-- Navigation Bar -->
 <nav class="nav">
-  <div class="nav-logo">[TUA.SUSTAINABLE]</div>
+  <div class="nav-logo">[ATARA]</div>
   <div class="nav-links">
-    <a href="index.html" class="nav-link active">HOME</a>
-    <a href="pages/bus.html" class="nav-link">BUS TIRANA</a>
-    <a href="pages/train.html" class="nav-link">TRAIN ALBANIA</a>
-    <a href="pages/rfid.html" class="nav-link">SMART CARD</a>
+    <a href="../../index.html" class="nav-link">HOME</a>
+    <a href="bus.html" class="nav-link active">BUS TRACKER</a>
+    <a href="train.html" class="nav-link">TRAIN ALBANIA</a>
+    <a href="smartcard.html" class="nav-link">SMART CARD</a>
+    <a href="safety.html" class="nav-link">SAFETY</a>
   </div>
   <div class="nav-time" id="navTime">--:--:--</div>
 </nav>
 
-<!-- Hero Section -->
-<section class="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-tag">SUSTAINABLE URBAN TRANSIT SYSTEM - TIRANA 2025</div>
-  <h1 class="hero-title">
-    <span class="title-line">SUSTAINABLE</span>
-    <span class="title-line accent">TIRANA</span>
-    <span class="title-line">TRANSIT</span>
-  </h1>
-  <p class="hero-sub">Real-time bus tracking · Smart card validation · Live arrivals<br>Tirana city buses + Albania national trains</p>
-  <div class="hero-cta">
-    <a href="pages/bus.html" class="btn btn-primary">TRACK BUSES</a>
-    <a href="pages/train.html" class="btn btn-secondary">TRACK TRAINS</a>
-  </div>
-  <div class="hero-stats">
-    <div class="stat-box">
-      <div class="stat-num" id="s1">24</div>
-      <div class="stat-label">BUSES ACTIVE</div>
+<div class="page-layout">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">BUS LINES</div>
+      <div class="panel-sub">ATARA SMART TRANSIT</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-num" id="s2">12</div>
-      <div class="stat-label">LINES RUNNING</div>
+    <div style="padding:1rem">
+      <input type="text" id="searchInput" placeholder="SEARCH LINE OR STATION..." style="width:100%;background:#111;border:1px solid #333;color:#fff;padding:8px;font-family:monospace">
     </div>
-    <div class="stat-box">
-      <div class="stat-num" id="s3">1847</div>
-      <div class="stat-label">PASSENGERS TODAY</div>
+    <div id="routeList"></div>
+    
+    <div class="panel-header">
+      <div class="panel-title" style="font-size:1rem">SMART ETA</div>
+      <div class="panel-sub">REAL-TIME CALCULATION</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-num">0.3s</div>
-      <div class="stat-label">GPS REFRESH</div>
+    <div id="smartEtaPanel" style="padding:1rem;font-size:11px;color:#888">
+      SELECT A BUS LINE
     </div>
   </div>
-</section>
-
-<!-- Live Ticker -->
-<div class="ticker-wrapper">
-  <div class="ticker-label">LIVE</div>
-  <div class="ticker-track">
-    <div class="ticker-content">LINE 5: PORCELAN TO QENDER - ON TIME | LINE 7: KOMBINAT TO STACIONI - 3 MIN DELAY | LINE 12: SELITE TO SHESHI SKENDERBEJ - ON TIME | TRAIN AL-01: TIRANE TO DURRES - DEPARTING | LINE 2: LAPRAKE TO QENDER - ON TIME | TRAIN AL-04: TIRANE TO SHKODER - DELAYED 12 MIN |</div>
+  
+  <div class="panel map-panel" style="position:relative">
+    <div class="map-overlay" id="mapStatus">GPS ACTIVE</div>
+    <div id="map"></div>
+  </div>
+  
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">STATION ARRIVALS</div>
+      <div class="panel-sub" id="selectedLine">SELECT A LINE</div>
+    </div>
+    <div id="arrivalsList" style="padding:0.5rem 0"></div>
+    
+    <div class="panel-header">
+      <div class="panel-title" style="font-size:1rem">ACCIDENT ALERT</div>
+      <div class="panel-sub">BLACK SPOT AHEAD</div>
+    </div>
+    <div id="safetyAlert" style="padding:1rem;background:#1a0000;border-left:3px solid #ff3333;margin:0.5rem;font-size:11px">
+      Loading safety data...
+    </div>
   </div>
 </div>
 
-<!-- Services Section -->
-<section class="services">
-  <div class="section-header">
-    <span class="section-tag">AVAILABLE SERVICES</span>
-    <h2 class="section-title">CHOOSE YOUR SYSTEM</h2>
-  </div>
-  <div class="services-grid">
-    <a href="pages/bus.html" class="service-card">
-      <div class="card-icon">BUS</div>
-      <div class="card-number">01</div>
-      <h3 class="card-title">TIRANA BUS</h3>
-      <p class="card-desc">Live GPS tracking for all TUA urban bus lines. Real-time positions, ETAs, stop arrivals and digital ticketing.</p>
-      <ul class="card-features">
-        <li>Line 5: Porcelan to Qender</li>
-        <li>Line 7: Kombinat to Stacioni</li>
-        <li>Line 12: Selite to Sheshi</li>
-        <li>12 total active lines</li>
-      </ul>
-      <div class="card-cta">OPEN MAP</div>
-    </a>
-    <a href="pages/train.html" class="service-card">
-      <div class="card-icon">TRAIN</div>
-      <div class="card-number">02</div>
-      <h3 class="card-title">ALBANIA TRAIN</h3>
-      <p class="card-desc">National railway tracking for HSH routes across Albania. Live departure boards and station map.</p>
-      <ul class="card-features">
-        <li>Tirane to Durres</li>
-        <li>Tirane to Shkoder</li>
-        <li>Tirane to Vlore</li>
-        <li>All national routes</li>
-      </ul>
-      <div class="card-cta">OPEN DEPARTURES</div>
-    </a>
-    <a href="pages/rfid.html" class="service-card">
-      <div class="card-icon">CARD</div>
-      <div class="card-number">03</div>
-      <h3 class="card-title">SMART CARD</h3>
-      <p class="card-desc">Smart card validation with QR code. Check payment status, line access, expiry and balance.</p>
-      <ul class="card-features">
-        <li>Instant card lookup</li>
-        <li>Payment status check</li>
-        <li>Line match validation</li>
-        <li>Expiry verification</li>
-      </ul>
-      <div class="card-cta">VALIDATE CARD</div>
-    </a>
-  </div>
-</section>
-
-<!-- Network Status Section -->
-<section class="network-status">
-  <div class="section-header">
-    <span class="section-tag">NETWORK STATUS</span>
-    <h2 class="section-title">SYSTEM OVERVIEW</h2>
-  </div>
-  <div class="status-grid" id="statusGrid"></div>
-</section>
-
-<!-- Footer -->
-<footer class="footer">
-  <div>
-    <div class="footer-logo">[TUA.SUSTAINABLE]</div>
-    <div class="footer-desc">Sustainable Urban Transit Tracker - Tirana<br>Research and demonstration purposes</div>
-  </div>
-  <div>
-    <div class="footer-links">
-      <a href="index.html">Home</a>
-      <a href="pages/bus.html">Bus</a>
-      <a href="pages/train.html">Train</a>
-      <a href="pages/rfid.html">Smart Card</a>
-    </div>
-    <div class="footer-copy">2025 TUA Sustainable Transit System</div>
-  </div>
-</footer>
-
-<script src="js/main.js"></script>
+<script src="../js/main.js"></script>
 <script>
-// Live clock update
-setInterval(function() {
-  document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8);
-}, 1000);
+setInterval(() => document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8), 1000);
 
-// Network status data
-var lines = [
-  {name:'LINE 5 - PORCELAN TO QENDER', ok:true, status:'ON TIME'},
-  {name:'LINE 7 - KOMBINAT TO STACIONI', ok:false, status:'3 MIN DELAY'},
-  {name:'LINE 12 - SELITE TO SHESHI', ok:true, status:'ON TIME'},
-  {name:'LINE 2 - LAPRAKE TO QENDER', ok:true, status:'ON TIME'},
-  {name:'LINE 9 - KAMEZ TO SHESHI', ok:true, status:'ON TIME'},
-  {name:'LINE 3 - KOMBINAT TO STACIONI', ok:false, status:'8 MIN DELAY'},
-];
+// Initialize map
+const map = L.map('map', {zoomControl: true}).setView([41.3275, 19.8189], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: 'OpenStreetMap',
+  maxZoom: 18
+}).addTo(map);
 
-var statusGrid = document.getElementById('statusGrid');
-for(var i = 0; i < lines.length; i++) {
-  var l = lines[i];
-  statusGrid.innerHTML += '<div class="status-row">' +
-    '<span class="status-dot ' + (l.ok ? 'dot-ok' : 'dot-warn') + '"></span>' +
-    '<span class="status-name">' + l.name + '</span>' +
-    '<span class="status-badge ' + (l.ok ? 'badge-ok' : 'badge-warn') + '">' + l.status + '</span>' +
-    '</div>';
+// Bus icon function
+function getBusIcon(number, color) {
+  return L.divIcon({
+    html: `<div style="background:${color || '#00ff41'};color:#000;font-family:'Bebas Neue';font-size:14px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border:2px solid #000;box-shadow:0 0 8px ${color || '#00ff41'}">${number}</div>`,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    className: ''
+  });
 }
 
-// Random stats update
-setInterval(function() {
-  var activeBuses = Math.floor(Math.random() * 10) + 20;
-  var passengers = Math.floor(Math.random() * 200) + 1700;
-  document.getElementById('s1').textContent = activeBuses;
-  document.getElementById('s3').textContent = passengers;
-}, 30000);
+// Stop icon
+function getStopIcon() {
+  return L.divIcon({
+    html: `<div style="background:#fff;width:8px;height:8px;border:2px solid #000;transform:rotate(45deg)"></div>`,
+    iconSize: [8, 8],
+    iconAnchor: [4, 4],
+    className: ''
+  });
+}
+
+// Add all stations to map
+Object.values(ATARA_STATIONS).forEach(station => {
+  L.marker([station.lat, station.lon], {icon: getStopIcon()})
+    .addTo(map)
+    .bindPopup(`<b>${station.name}</b><br>Zone: ${station.zone}<br>Code: ${station.code}`);
+});
+
+// Add accident black spots to map
+ACCIDENT_BLACK_SPOTS.forEach(spot => {
+  const color = spot.severity === 'HIGH' ? '#ff3333' : '#ffaa00';
+  const icon = L.divIcon({
+    html: `<div style="background:${color};width:16px;height:16px;border-radius:50%;border:2px solid #000;box-shadow:0 0 8px ${color}"></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+    className: ''
+  });
+  L.marker([spot.lat, spot.lon], {icon: icon})
+    .addTo(map)
+    .bindPopup(`<b>BLACK SPOT: ${spot.name}</b><br>Incidents: ${spot.incidents}<br>Warning: ${spot.warning}`);
+});
+
+// Bus markers
+const busMarkers = {};
+ATARA_BUS_LINES.forEach(line => {
+  line.buses.forEach(bus => {
+    const marker = L.marker([bus.lat, bus.lon], {icon: getBusIcon(line.number, line.color)})
+      .addTo(map)
+      .bindPopup(`
+        <b>${bus.id}</b><br>
+        LINE ${line.number}: ${line.name}<br>
+        SPEED: ${bus.speed} km/h
+      `);
+    busMarkers[bus.id] = {marker, bus, line};
+    simulateBusMovement(bus, line);
+  });
+});
+
+// Update bus positions
+setInterval(() => {
+  Object.values(busMarkers).forEach(({marker, bus}) => {
+    marker.setLatLng([bus.lat, bus.lon]);
+  });
+  document.getElementById('mapStatus').textContent = `GPS ACTIVE - ${Object.keys(busMarkers).length} BUSES - ${new Date().toTimeString().slice(0,8)}`;
+}, 1200);
+
+// Render route list
+function renderRoutes(filter = '') {
+  const container = document.getElementById('routeList');
+  container.innerHTML = '';
+  
+  ATARA_BUS_LINES.filter(line => {
+    return !filter || line.name.toLowerCase().includes(filter.toLowerCase()) || line.number.includes(filter);
+  }).forEach(line => {
+    const bus = line.buses[0];
+    const firstStop = ATARA_STATIONS[line.stations[1]];
+    let eta = '--';
+    if (bus && firstStop) {
+      const dist = calculateDistance(bus.lat, bus.lon, firstStop.lat, firstStop.lon);
+      eta = Math.ceil((dist / line.avgSpeed) * 60);
+    }
+    
+    container.innerHTML += `
+      <div class="route-item" onclick="selectLine('${line.id}')">
+        <div class="route-badge" style="background:${line.color}">${line.number}</div>
+        <div class="route-info">
+          <div class="route-name">${line.name}</div>
+          <div style="font-size:10px;color:#666">${line.stations.length} stations · ${line.buses.length} active buses</div>
+        </div>
+        <div class="route-eta">${eta}m</div>
+      </div>
+    `;
+  });
+}
+
+// Select line and show smart ETA
+let currentLine = ATARA_BUS_LINES[0];
+
+function selectLine(lineId) {
+  currentLine = ATARA_BUS_LINES.find(l => l.id === lineId) || currentLine;
+  const bus = currentLine.buses[0];
+  
+  if (bus) {
+    map.setView([bus.lat, bus.lon], 14);
+    updateSmartETA();
+  }
+}
+
+function updateSmartETA() {
+  const bus = currentLine.buses[0];
+  if (!bus) return;
+  
+  // Find current station index
+  let currentIndex = 0;
+  let minDist = Infinity;
+  currentLine.stations.forEach((stationId, idx) => {
+    const station = ATARA_STATIONS[stationId];
+    if (station) {
+      const dist = calculateDistance(bus.lat, bus.lon, station.lat, station.lon);
+      if (dist < minDist) {
+        minDist = dist;
+        currentIndex = idx;
+      }
+    }
+  });
+  
+  // Calculate ETAs for remaining stations
+  const etas = [];
+  let cumulativeTime = 0;
+  
+  for (let i = currentIndex; i < currentLine.stations.length - 1; i++) {
+    const current = ATARA_STATIONS[currentLine.stations[i]];
+    const next = ATARA_STATIONS[currentLine.stations[i + 1]];
+    if (current && next) {
+      const dist = calculateDistance(current.lat, current.lon, next.lat, next.lon);
+      const travelTime = (dist / currentLine.avgSpeed) * 60;
+      cumulativeTime += travelTime;
+      etas.push({
+        station: next,
+        eta: Math.ceil(cumulativeTime)
+      });
+      cumulativeTime += currentLine.stopDuration / 60;
+    }
+  }
+  
+  // Update arrivals panel
+  const arrivalsContainer = document.getElementById('arrivalsList');
+  document.getElementById('selectedLine').textContent = `LINE ${currentLine.number}: ${currentLine.name}`;
+  arrivalsContainer.innerHTML = '';
+  
+  currentLine.stations.forEach((stationId, idx) => {
+    const station = ATARA_STATIONS[stationId];
+    if (station) {
+      const eta = etas.find(e => e.station.name === station.name);
+      arrivalsContainer.innerHTML += `
+        <div class="stop-detail">
+          <span>${idx + 1}. ${station.name}</span>
+          <span class="eta-smart">${eta ? eta.eta + ' min' : (idx <= currentIndex ? 'NOW' : '--')}</span>
+        </div>
+      `;
+    }
+  });
+  
+  // Update smart ETA panel
+  const etaPanel = document.getElementById('smartEtaPanel');
+  etaPanel.innerHTML = `
+    <div style="color:#00ff41;margin-bottom:8px">LINE ${currentLine.number} - ${currentLine.name}</div>
+    <div class="stop-detail"><span>AVG SPEED</span><span>${currentLine.avgSpeed} km/h</span></div>
+    <div class="stop-detail"><span>STOP DURATION</span><span>${currentLine.stopDuration} sec</span></div>
+    <div class="stop-detail"><span>ACTIVE BUSES</span><span>${currentLine.buses.length}</span></div>
+    <div class="stop-detail"><span>CURRENT BUS</span><span>${currentLine.buses[0]?.id || 'N/A'}</span></div>
+    ${etas[0] ? `<div style="margin-top:10px;padding-top:8px;border-top:1px solid #333"><span>NEXT STOP ETA</span><span style="color:#00ff41;font-size:1.2rem">${etas[0].eta} MIN</span></div>` : ''}
+  `;
+  
+  // Update safety alert
+  const safetyContainer = document.getElementById('safetyAlert');
+  const nearbyHotspots = ACCIDENT_BLACK_SPOTS.filter(spot => {
+    const dist = calculateDistance(bus.lat, bus.lon, spot.lat, spot.lon);
+    return dist < 1.5;
+  });
+  
+  if (nearbyHotspots.length > 0) {
+    safetyContainer.innerHTML = `
+      <div style="color:#ff3333;margin-bottom:4px">⚠ BLACK SPOT AHEAD</div>
+      <div>${nearbyHotspots[0].name} - ${nearbyHotspots[0].warning}</div>
+      <div style="font-size:9px;color:#888;margin-top:4px">${nearbyHotspots[0].incidents} incidents reported</div>
+    `;
+    safetyContainer.style.background = '#1a0000';
+    safetyContainer.style.borderLeftColor = '#ff3333';
+  } else {
+    safetyContainer.innerHTML = `
+      <div style="color:#00ff41;margin-bottom:4px">✓ SAFE ZONE</div>
+      <div>No black spots detected on current route</div>
+      <div style="font-size:9px;color:#888;margin-top:4px">Continue safe driving</div>
+    `;
+    safetyContainer.style.background = '#001a00';
+    safetyContainer.style.borderLeftColor = '#00ff41';
+  }
+}
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('keyup', (e) => {
+  renderRoutes(e.target.value);
+});
+
+// Auto-refresh ETA every 5 seconds
+renderRoutes();
+setInterval(updateSmartETA, 5000);
+setTimeout(updateSmartETA, 1000);
+
+// Safety alert rotation
+setInterval(() => {
+  if (typeof showSafetyAlert === 'function') showSafetyAlert();
+}, 15000);
 </script>
 </body>
 </html>
