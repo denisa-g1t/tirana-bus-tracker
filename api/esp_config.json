@@ -1,0 +1,39 @@
+{
+  "server": "denisa-g1t.github.io",
+  "api_endpoint": "/tirana-bus-tracker/api/esp_receiver.php",
+  "ports": {
+    "websocket": 8080,
+    "mqtt": 1883,
+    "http": 80,
+    "https": 443,
+    "tcp_raw": 5555,
+    "udp": 5556
+  },
+  "bus_lines": {
+    "L5": {
+      "port": 8081,
+      "device_ids": ["TUA-501", "TUA-502"],
+      "color": "#00ff41"
+    },
+    "L7": {
+      "port": 8082,
+      "device_ids": ["TUA-701", "TUA-702"],
+      "color": "#ff4444"
+    },
+    "L12": {
+      "port": 8083,
+      "device_ids": ["TUA-1201"],
+      "color": "#ffaa00"
+    },
+    "L2": {
+      "port": 8084,
+      "device_ids": ["TUA-201", "TUA-202"],
+      "color": "#44aaff"
+    },
+    "L9": {
+      "port": 8085,
+      "device_ids": ["TUA-901"],
+      "color": "#aa44ff"
+    }
+  }
+}
