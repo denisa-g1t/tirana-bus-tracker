@@ -1,239 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TUA — Tirana Bus Tracker with ESP Support</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tirana Sustainable City - Bus Network</title>
 <link rel="stylesheet" href="../css/main.css">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-#map{width:100%;height:100%;min-height:400px;filter:grayscale(100%) invert(1) contrast(90%)}
-.map-panel{position:relative}
-.map-ovl{position:absolute;top:10px;left:10px;z-index:1000;background:rgba(0,0,0,0.85);border:1px solid #00ff41;padding:8px 12px;font-family:'Share Tech Mono',monospace;font-size:11px;color:#00ff41;letter-spacing:1px}
-.esp-panel{background:#0a0a0a;border-left:3px solid #00ff41;padding:1rem;margin:0.5rem 0}
-.esp-port{font-family:'Share Tech Mono';font-size:10px;color:#00ff41;background:#1a1a1a;padding:2px 6px;display:inline-block;margin:2px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;color:#fff;font-family:'IBM Plex Mono',monospace;overflow:hidden}
+.scanline{position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.012) 2px,rgba(0,255,65,0.012) 4px)}
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;height:52px;background:#000;border-bottom:1px solid #00ff41}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;color:#00ff41;padding:0 1.5rem;border-right:1px solid #333;height:100%;display:flex;align-items:center;white-space:nowrap}
+.nav-links{display:flex;flex:1;height:100%}
+.nav-link{color:#555;text-decoration:none;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;padding:0 1.2rem;height:100%;display:flex;align-items:center;border-right:1px solid #222;text-transform:uppercase;transition:all 0.15s}
+.nav-link:hover,.nav-link.active{color:#00ff41;background:rgba(0,255,65,0.05)}
+.nav-time{font-family:'Share Tech Mono',monospace;font-size:12px;color:#00ff41;letter-spacing:2px;padding:0 1.5rem;border-left:1px solid #333;height:100%;display:flex;align-items:center}
+.layout{margin-top:52px;display:grid;grid-template-columns:300px 1fr 260px;height:calc(100vh - 52px)}
+.panel{border-right:1px solid #222;overflow-y:auto;display:flex;flex-direction:column}
+.panel:last-child{border-right:none;border-left:1px solid #222}
+.ph{padding:10px 12px;border-bottom:1px solid #222;background:#000;position:sticky;top:0;z-index:10}
+.pt{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:2px}
+.ps{font-family:'Share Tech Mono',monospace;font-size:9px;color:#00ff41;letter-spacing:1px;margin-top:2px}
+.map-wrap{position:relative}
+#map{width:100%;height:100%;filter:grayscale(100%) invert(1) contrast(88%)}
+.mbadge{position:absolute;top:8px;left:8px;z-index:1000;background:rgba(0,0,0,0.9);border:1px solid #00ff41;padding:4px 10px;font-size:9px;color:#00ff41;letter-spacing:1px;pointer-events:none;font-family:'Share Tech Mono',monospace}
+.line-item{padding:8px 12px;border-bottom:1px solid #1a1a1a;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background 0.12s}
+.line-item:hover,.line-item.sel{background:rgba(0,255,65,0.04)}
+.kv{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #111;font-size:10px}
+.kk{color:#555;font-family:'Share Tech Mono',monospace}
+.station-item{padding:6px 12px;border-bottom:1px solid #111;display:flex;align-items:center;gap:6px}
+.alert-bar{position:fixed;bottom:0;left:0;right:0;background:#c80000;color:#fff;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;padding:8px 1.5rem;display:flex;align-items:center;gap:1rem;z-index:2000;transform:translateY(100%);transition:transform 0.3s}
+.alert-bar.show{transform:translateY(0)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#000}::-webkit-scrollbar-thumb{background:#222}
 </style>
 </head>
 <body>
 <div class="scanline"></div>
 <nav class="nav">
-  <div class="nav-logo">[TUA.SUSTAINABLE]</div>
+  <div class="nav-logo">TIRANA SUSTAINABLE CITY</div>
   <div class="nav-links">
     <a href="../index.html" class="nav-link">HOME</a>
-    <a href="bus.html" class="nav-link active">BUS TIRANA</a>
-    <a href="train.html" class="nav-link">TRAIN ALBANIA</a>
+    <a href="bus.html" class="nav-link active">BUS NETWORK</a>
+    <a href="train.html" class="nav-link">TRAIN</a>
     <a href="rfid.html" class="nav-link">SMART CARD</a>
   </div>
   <div class="nav-time" id="navTime">--:--:--</div>
 </nav>
-<div class="page-layout">
+<div class="layout">
   <div class="panel">
-    <div class="panel-header"><div class="panel-title">BUS LINES</div><div class="panel-sub">TUA - TRANSPORTI URBAN TIRANE</div></div>
-    
-    <!-- ESP PORTS SECTION -->
-    <div class="esp-panel">
-      <div style="font-family:'Share Tech Mono';font-size:10px;color:#00ff41;letter-spacing:2px">ESP DEVICE PORTS</div>
-      <div style="margin-top:8px">
-        <span class="esp-port">Line 5: Port 8081</span>
-        <span class="esp-port">Line 7: Port 8082</span>
-        <span class="esp-port">Line 12: Port 8083</span>
-        <span class="esp-port">Line 2: Port 8084</span>
-        <span class="esp-port">Line 9: Port 8085</span>
-        <span class="esp-port">WebSocket: Port 8080</span>
-        <span class="esp-port">TCP Raw: Port 5555</span>
-        <span class="esp-port">UDP: Port 5556</span>
-      </div>
-      <div style="font-size:10px;color:#666;margin-top:8px">
-        ESP32/ESP8266 devices send GPS data to these ports
-      </div>
+    <div class="ph"><div class="pt">BUS LINES</div><div class="ps">// TUA — TRANSPORTI URBAN TIRANE</div></div>
+    <div style="padding:8px 12px;border-bottom:1px solid #1a1a1a">
+      <div style="font-size:9px;color:#00ff41;letter-spacing:1.5px;margin-bottom:5px;font-family:'Share Tech Mono',monospace">LINE COLORS</div>
+      <div id="legend"></div>
     </div>
-    
-    <div class="search-box">
-      <input class="search-input" id="srch" type="text" placeholder="Search line or stop...">
-      <button class="search-btn" onclick="renderRoutes(document.getElementById('srch').value)">SEARCH</button>
-    </div>
-    <div id="routeList"></div>
-    
-    <div class="panel-header"><div class="panel-title" style="font-size:1.1rem">ESP CONNECTION STATUS</div><div class="panel-sub">REAL-TIME DEVICE TRACKING</div></div>
-    <div id="espStatus" style="padding:0.8rem 1.5rem;font-size:11px"></div>
-    
-    <div class="panel-header"><div class="panel-title" style="font-size:1.1rem">DIGITAL TICKET</div><div class="panel-sub">QR GENERATION</div></div>
-    <div class="ticket-form">
-      <label class="form-label">FROM</label>
-      <select class="form-select" id="tFrom">
-        <option value="">SELECT</option>
-        <option>Porcelan</option><option>Kombinat</option><option>Sheshi Willson</option>
-        <option>Blloku</option><option>Qendra</option><option>Stacioni i Trenit</option>
-        <option>Laprake</option><option>Selite</option>
-      </select>
-      <label class="form-label">TO</label>
-      <select class="form-select" id="tTo">
-        <option value="">SELECT</option>
-        <option>Porcelan</option><option>Kombinat</option><option>Sheshi Willson</option>
-        <option>Blloku</option><option>Qendra</option><option>Stacioni i Trenit</option>
-        <option>Laprake</option><option>Selite</option>
-      </select>
-      <label class="form-label">LINE</label>
-      <select class="form-select" id="tLine"><option>Line 5</option><option>Line 7</option><option>Line 12</option><option>Line 2</option></select>
-      <button class="search-btn" onclick="genTicket()">GENERATE QR TICKET</button>
-    </div>
-    <div class="qr-box" id="qrBox">
-      <div style="font-size:4rem">TICKET</div>
-      <div style="font-family:'Share Tech Mono';font-size:11px;color:#00ff41;letter-spacing:1px;margin-top:0.5rem" id="qrInfo"></div>
+    <div id="lineList"></div>
+    <div style="margin-top:auto;padding:8px 12px;border-top:1px solid #222">
+      <div style="font-size:9px;color:#00ff41;letter-spacing:1px;margin-bottom:6px;font-family:'Share Tech Mono',monospace">LIVE STATS</div>
+      <div class="kv"><span class="kk">ACTIVE BUSES</span><span style="color:#fff" id="sB">9</span></div>
+      <div class="kv"><span class="kk">PASSENGERS TODAY</span><span style="color:#fff" id="sP">1,847</span></div>
+      <div class="kv"><span class="kk">LINES OPERATIONAL</span><span style="color:#00ff41">7 / 7</span></div>
+      <div class="kv"><span class="kk">CO2 SAVED TODAY</span><span style="color:#00ff41" id="sC">4.2 T</span></div>
     </div>
   </div>
-  
-  <div class="panel map-panel" style="border-right:1px solid #333">
-    <div class="map-ovl" id="mapStatus">GPS ACTIVE - ESP DEVICES READY</div>
+  <div class="map-wrap">
+    <div class="mbadge" id="mbadge">GPS ACTIVE</div>
     <div id="map"></div>
   </div>
-  
   <div class="panel">
-    <div class="panel-header"><div class="panel-title">ARRIVALS</div><div class="panel-sub" id="selStop">SELECT A LINE</div></div>
-    <div id="arrList"></div>
-    <div class="panel-header" style="margin-top:1rem"><div class="panel-title" style="font-size:1.1rem">DRIVER PANEL</div><div class="panel-sub">REAL-TIME VEHICLE DATA</div></div>
-    <div style="padding:1rem 1.5rem">
-      <div class="result-row"><span class="result-key">SPEED</span><span id="dSpd" class="result-val">-- km/h</span></div>
-      <div class="result-row"><span class="result-key">NEXT STOP</span><span id="dNext" class="result-val">--</span></div>
-      <div class="result-row"><span class="result-key">ETA NEXT</span><span id="dEta" class="result-val">-- min</span></div>
-      <div class="result-row"><span class="result-key">OCCUPANCY</span><span id="dOcc" class="result-val">--%</span></div>
-      <div class="result-row"><span class="result-key">ESP STATUS</span><span id="espStat" class="result-val" style="color:#00ff41">READY</span></div>
+    <div class="ph"><div class="pt" style="font-size:1rem">STATION ARRIVALS</div><div class="ps" id="selLbl">// SELECT A LINE</div></div>
+    <div id="stList"></div>
+    <div class="ph"><div class="pt" style="font-size:1rem">BUS STATUS</div><div class="ps" id="busLbl">// LIVE DATA</div></div>
+    <div style="padding:8px 12px">
+      <div class="kv"><span class="kk">SPEED</span><span style="color:#fff" id="dSpd">— km/h</span></div>
+      <div class="kv"><span class="kk">NEXT STOP</span><span style="color:#fff;font-size:9px" id="dNext">—</span></div>
+      <div class="kv"><span class="kk">ETA NEXT STOP</span><span style="color:#00ff41" id="dEta">— min</span></div>
+      <div class="kv"><span class="kk">OCCUPANCY</span><span style="color:#fff" id="dOcc">—%</span></div>
+      <div class="kv"><span class="kk">GPS SIGNAL</span><span style="color:#00ff41">LIVE</span></div>
     </div>
-    <div class="panel-header"><div class="panel-title" style="font-size:1.1rem">NETWORK</div><div class="panel-sub">LIVE STATS</div></div>
-    <div style="padding:1rem 1.5rem">
-      <div class="result-row"><span class="result-key">ACTIVE BUSES</span><span id="stA" class="result-val" style="color:#00ff41">7</span></div>
-      <div class="result-row"><span class="result-key">ESP DEVICES</span><span id="stEsp" class="result-val" style="color:#00ff41">0</span></div>
-      <div class="result-row"><span class="result-key">PASSENGERS</span><span id="stP" class="result-val">1,847</span></div>
-    </div>
+    <div class="ph"><div class="pt" style="font-size:1rem;color:#ff2222">ACCIDENT ZONES</div><div class="ps">// CLICK TO ZOOM</div></div>
+    <div id="hotList"></div>
   </div>
 </div>
-<div class="announcement"><span>INFO</span><span class="ann-text"></span><span class="ann-close" onclick="this.parentElement.classList.remove('show')">X</span></div>
-
+<div class="alert-bar" id="alertBar">
+  <span>SAFETY ALERT</span><span id="alertText"></span>
+  <span style="cursor:pointer;margin-left:auto;font-weight:700" onclick="document.getElementById('alertBar').classList.remove('show')">X</span>
+</div>
 <script src="../js/main.js"></script>
 <script>
-setInterval(()=>document.getElementById('navTime').textContent=new Date().toTimeString().slice(0,8),1000);
-
-// Initialize map
-const map = L.map('map', {zoomControl:true}).setView([41.3275,19.8189],13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'OpenStreetMap', maxZoom:18}).addTo(map);
-
-// Bus icon generator with colors
-function busIcon(n, color){
-  return L.divIcon({
-    html: `<div style="background:${color || '#00ff41'};color:#000;font-family:'Bebas Neue',sans-serif;font-size:12px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border:2px solid #000;box-shadow:0 0 8px ${color || '#00ff41'}">${n}</div>`,
-    iconSize:[32,32], iconAnchor:[16,16], className:''
-  });
-}
-
-function stopIcon(){
-  return L.divIcon({
-    html: `<div style="background:#fff;width:10px;height:10px;border:2px solid #000;transform:rotate(45deg)"></div>`,
-    iconSize:[10,10], iconAnchor:[5,5], className:''
-  });
-}
-
-// Add stops to map
-Object.values(TUA_STOPS).forEach(s => {
-  L.marker([s.lat,s.lon], {icon:stopIcon()}).addTo(map).bindPopup(`<b style="font-family:monospace">${s.name}</b>`);
+const SPEED=18,DWELL=25;
+const ROUTES=[
+  {id:'L5B',n:'5B',name:'Institut - Qender',color:'#2F835B',stops:[{name:'Institut',lat:41.3089,lon:19.7934},{name:'Kombinat',lat:41.3110,lon:19.7980},{name:'Sheshi Willson',lat:41.3207,lon:19.7978},{name:'Blloku',lat:41.3230,lon:19.8090},{name:'Qendra',lat:41.3265,lon:19.8175},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193}],path:[[41.3089,19.7934],[41.3150,19.7978],[41.3207,19.7978],[41.3230,19.8090],[41.3265,19.8175],[41.3285,19.8193]]},
+  {id:'L16A',n:'16A',name:'Linja e Gjelbrer',color:'#49B249',stops:[{name:'Dispanseria',lat:41.3377,lon:19.8212},{name:'Tregu 5 Maji',lat:41.3400,lon:19.8254},{name:'Materniteti',lat:41.3347,lon:19.8168},{name:'15 Kateshi',lat:41.3305,lon:19.8189},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193}],path:[[41.3377,19.8212],[41.3400,19.8254],[41.3370,19.8210],[41.3347,19.8168],[41.3305,19.8189],[41.3285,19.8193]]},
+  {id:'L13B',n:'13B',name:'Tirana e Re',color:'#B772B0',stops:[{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193},{name:'Stacioni i Trenit',lat:41.3368,lon:19.8200},{name:'Laprake',lat:41.3421,lon:19.8312},{name:'Tirana e Re',lat:41.3510,lon:19.8380},{name:'Kamez Qender',lat:41.3620,lon:19.8120}],path:[[41.3285,19.8193],[41.3368,19.8200],[41.3421,19.8312],[41.3510,19.8380],[41.3620,19.8120]]},
+  {id:'L12A',n:'12A',name:'Uzina - Sharre',color:'#91D0AE',stops:[{name:'Uzina Dinamo',lat:41.3320,lon:19.8420},{name:'Selite',lat:41.3198,lon:19.8389},{name:'Blloku',lat:41.3230,lon:19.8090},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193},{name:'Sharre',lat:41.3050,lon:19.8500}],path:[[41.3320,19.8420],[41.3198,19.8389],[41.3230,19.8090],[41.3265,19.8175],[41.3285,19.8193],[41.3200,19.8350],[41.3050,19.8500]]},
+  {id:'L6',n:'6',name:'Lapraka - Qender',color:'#EE3D7F',stops:[{name:'Laprake',lat:41.3421,lon:19.8312},{name:'Stacioni i Trenit',lat:41.3368,lon:19.8200},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193},{name:'Qendra',lat:41.3265,lon:19.8175},{name:'Blloku',lat:41.3230,lon:19.8090}],path:[[41.3421,19.8312],[41.3368,19.8200],[41.3310,19.8195],[41.3285,19.8193],[41.3265,19.8175],[41.3230,19.8090]]},
+  {id:'L8A',n:'8A',name:'Terminali Juglindor',color:'#665AA7',stops:[{name:'Terminali Juglindor',lat:41.2980,lon:19.8420},{name:'Kombinat Jugor',lat:41.3040,lon:19.8350},{name:'Qendra',lat:41.3265,lon:19.8175},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193}],path:[[41.2980,19.8420],[41.3040,19.8350],[41.3150,19.8280],[41.3265,19.8175],[41.3285,19.8193]]},
+  {id:'L9',n:'9',name:'Kamez - Skenderbej',color:'#E8A020',stops:[{name:'Kamez',lat:41.3812,lon:19.7721},{name:'Fark e Vogel',lat:41.3650,lon:19.7850},{name:'Koder Kamez',lat:41.3540,lon:19.7920},{name:'Stacioni i Trenit',lat:41.3368,lon:19.8200},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193}],path:[[41.3812,19.7721],[41.3650,19.7850],[41.3540,19.7920],[41.3420,19.8060],[41.3368,19.8200],[41.3285,19.8193]]},
+];
+const HOTSPOTS=[
+  {lat:41.3285,lon:19.8193,name:'Sheshi Skenderbej',sev:'HIGH',n:24},
+  {lat:41.3207,lon:19.7978,name:'Sheshi Willson',sev:'HIGH',n:18},
+  {lat:41.3368,lon:19.8200,name:'Stacioni i Trenit',sev:'MEDIUM',n:12},
+  {lat:41.3400,lon:19.8254,name:'Tregu 5 Maji',sev:'HIGH',n:21},
+  {lat:41.3089,lon:19.7934,name:'Kombinat / Institut',sev:'HIGH',n:32},
+  {lat:41.3421,lon:19.8312,name:'Laprake',sev:'MEDIUM',n:14},
+  {lat:41.3812,lon:19.7721,name:'Kamez',sev:'HIGH',n:19},
+];
+const ALERTS=['REDUCE SPEED — Sheshi Skenderbej: high pedestrian traffic (24 incidents)','CAUTION — Kombinat / Institut: heavy trucks, limited visibility','SCHOOL ZONE — 15 Kateshi: speed limit 30 km/h active 07:30-15:30','POOR LIGHTING — Stacioni i Trenit: sharp curve ahead','PEDESTRIAN CROSSING — Tregu 5 Maji: market traffic, always yield','SPEEDING — Kamez main road: reduce to posted limit'];
+function hkm(a,b,c,d){const R=6371,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180,x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+function etas(stops){const e=[0];for(let i=1;i<stops.length;i++){const d=hkm(stops[i-1].lat,stops[i-1].lon,stops[i].lat,stops[i].lon);e.push(e[i-1]+(d/SPEED)*60+DWELL/60);}return e.map(m=>Math.round(m));}
+const map=L.map('map',{zoomControl:true}).setView([41.3285,19.8200],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(map);
+ROUTES.forEach(r=>{
+  L.polyline(r.path,{color:r.color,weight:4,opacity:0.85}).addTo(map).bindTooltip('<b style="font-family:monospace">LINE '+r.n+'</b><br>'+r.name,{sticky:true});
+  const e=etas(r.stops);
+  r.stops.forEach((s,i)=>{L.circleMarker([s.lat,s.lon],{radius:i===0||i===r.stops.length-1?7:5,fillColor:r.color,color:'#000',weight:1.5,fillOpacity:0.95}).addTo(map).bindPopup('<div style="font-family:monospace;font-size:12px"><b style="color:'+r.color+'">'+s.name+'</b><br>Line '+r.n+' — Stop '+(i+1)+' of '+r.stops.length+'<br>From terminus: <b>'+e[i]+' min</b></div>');});
 });
-
-// Bus markers
-const bMarkers = {};
-BUS_LINES.forEach(line => {
-  line.buses.forEach(bus => {
-    const m = L.marker([bus.lat,bus.lon], {icon:busIcon(line.number, line.color)}).addTo(map);
-    m.bindPopup(`<div style="font-family:monospace;font-size:12px"><b>${bus.id}</b><br>LINE ${line.number}: ${line.name}<br>Speed: ${bus.speed} km/h</div>`);
-    bMarkers[bus.id] = {marker:m, bus:bus, line:line};
-    simulateBusMovement(bus, line);
-  });
+HOTSPOTS.forEach(h=>{const c=h.sev==='HIGH'?'#ff2222':h.sev==='MEDIUM'?'#ff9900':'#ffdd00';L.circleMarker([h.lat,h.lon],{radius:h.sev==='HIGH'?14:10,fillColor:c,color:'#000',weight:1,fillOpacity:0.3}).addTo(map).bindPopup('<div style="font-family:monospace;font-size:11px"><b style="color:'+c+'">'+h.sev+' RISK</b><br>'+h.name+'<br>'+h.n+' incidents</div>');});
+const busState={};
+ROUTES.forEach(r=>{
+  const icon=L.divIcon({html:'<div style="background:'+r.color+';color:#000;font-family:monospace;font-size:10px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:2px solid #000;border-radius:3px;font-weight:bold">'+r.n+'</div>',iconSize:[26,26],iconAnchor:[13,13],className:''});
+  const mk=L.marker([r.stops[0].lat,r.stops[0].lon],{icon}).addTo(map);
+  const b={lat:r.stops[0].lat,lon:r.stops[0].lon,speed:14+Math.random()*8,occ:Math.floor(Math.random()*70)+20,seg:0,prog:Math.random()*0.6};
+  busState[r.id]={mk,b,r};
+  setInterval(()=>{const p=r.path;b.prog+=0.005+Math.random()*0.004;if(b.prog>=1){b.prog=0;b.seg=(b.seg+1)%(p.length-1);}const f=p[b.seg],t=p[Math.min(b.seg+1,p.length-1)];b.lat=f[0]+(t[0]-f[0])*b.prog;b.lon=f[1]+(t[1]-f[1])*b.prog;b.speed=+(13+Math.random()*9).toFixed(1);mk.setLatLng([b.lat,b.lon]);},1400);
 });
-
-// Update markers animation
-setInterval(() => {
-  Object.values(bMarkers).forEach(({marker, bus}) => marker.setLatLng([bus.lat, bus.lon]));
-  document.getElementById('mapStatus').textContent = `GPS ACTIVE - ${Object.keys(bMarkers).length} BUSES - ${new Date().toTimeString().slice(0,8)}`;
-  document.getElementById('stEsp').textContent = Math.floor(Math.random() * 5) + 1;
-}, 1200);
-
-function renderRoutes(filter=''){
-  const list = document.getElementById('routeList');
-  list.innerHTML = '';
-  BUS_LINES.filter(l => !filter || l.name.toLowerCase().includes(filter.toLowerCase()) || l.number.includes(filter)).forEach(line => {
-    const bus = line.buses[0];
-    const nxt = TUA_STOPS[line.stops[1]];
-    const eta = bus ? calculateETA(bus.lat,bus.lon,nxt.lat,nxt.lon,bus.speed) : '-';
-    list.innerHTML += `<div class="route-item" onclick="focusBus('${line.id}')">
-      <div class="route-badge" style="background:${line.color}">${line.number}</div>
-      <div class="route-info">
-        <div class="route-name">${line.name}</div>
-        <div class="route-stops">${line.stops.length} stops · ${line.buses.length} bus(es)</div>
-      </div>
-      <div class="route-eta">${eta}m</div>
-    </div>`;
-  });
+const leg=document.getElementById('legend'),ll=document.getElementById('lineList');
+let sel=ROUTES[0];
+ROUTES.forEach(r=>{
+  const tot=etas(r.stops).slice(-1)[0];
+  leg.innerHTML+='<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><div style="width:22px;height:3px;background:'+r.color+';border-radius:2px"></div><span style="font-size:9px;color:#888;font-family:\'Share Tech Mono\',monospace">LINE '+r.n+'</span></div>';
+  const el=document.createElement('div');el.className='line-item';el.id='li-'+r.id;
+  el.innerHTML='<div style="width:10px;height:10px;border-radius:50%;background:'+r.color+';flex-shrink:0"></div><div style="min-width:26px;font-family:\'Share Tech Mono\',monospace;font-size:11px">'+r.n+'</div><div style="flex:1"><div style="font-size:9px;color:#ccc;font-family:\'Share Tech Mono\',monospace">'+r.name+'</div><div style="font-size:8px;color:#555;margin-top:1px">'+r.stops.length+' stops</div></div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:'+r.color+'">'+tot+'m</div>';
+  el.addEventListener('click',()=>selectRoute(r));
+  ll.appendChild(el);
+});
+function selectRoute(r){
+  sel=r;
+  document.querySelectorAll('.line-item').forEach(e=>e.classList.remove('sel'));
+  const el=document.getElementById('li-'+r.id);if(el)el.classList.add('sel');
+  map.flyTo([r.stops[0].lat,r.stops[0].lon],14,{duration:1});
+  document.getElementById('selLbl').textContent='// LINE '+r.n+': '+r.name;
+  document.getElementById('busLbl').textContent='// BUS ON LINE '+r.n;
+  const e=etas(r.stops);const now=new Date();const sl=document.getElementById('stList');sl.innerHTML='';
+  r.stops.forEach((s,i)=>{const arr=new Date(now.getTime()+e[i]*60000);const hh=arr.getHours().toString().padStart(2,'0'),mm=arr.getMinutes().toString().padStart(2,'0');sl.innerHTML+='<div class="station-item"><div style="width:6px;height:6px;border-radius:50%;background:'+r.color+';flex-shrink:0"></div><div style="flex:1"><div style="font-size:10px;color:#ccc;font-family:\'Share Tech Mono\',monospace">'+s.name+'</div><div style="font-size:8px;color:#555">Arrives '+hh+':'+mm+'</div></div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;color:'+r.color+'">'+e[i]+'m</div></div>';});
+  const bd=busState[r.id];
+  if(bd){document.getElementById('dSpd').textContent=bd.b.speed.toFixed(0)+' km/h';document.getElementById('dNext').textContent=r.stops[1]?r.stops[1].name:'—';document.getElementById('dEta').textContent=e[1]+' min';document.getElementById('dOcc').textContent=bd.b.occ+'%';}
 }
-renderRoutes();
-
-document.getElementById('srch').addEventListener('keyup', e => { if(e.key === 'Enter') renderRoutes(e.target.value); });
-
-let currentLine = BUS_LINES[0];
-function focusBus(id){
-  currentLine = BUS_LINES.find(l => l.id === id) || currentLine;
-  if(currentLine.buses[0]) map.setView([currentLine.buses[0].lat, currentLine.buses[0].lon], 15);
-  updateArrivals();
-}
-
-function updateArrivals(){
-  const line = currentLine, bus = line.buses[0];
-  const list = document.getElementById('arrList');
-  document.getElementById('selStop').textContent = `LINE ${line.number}: ${line.name}`;
-  list.innerHTML = '';
-  line.stops.forEach((k,i) => {
-    const s = TUA_STOPS[k];
-    const eta = bus ? calculateETA(bus.lat,bus.lon,s.lat,s.lon,bus.speed) : randomBetween(2,20);
-    list.innerHTML += `<div class="arrival-item">
-      <div class="arrival-line">
-        <span class="arrival-name">${i+1}. ${s.name}</span>
-        <span class="arrival-time">${eta}m</span>
-      </div>
-      <div class="arrival-status">ETA: ${timeNow(eta)}</div>
-    </div>`;
-  });
-  if(bus){
-    document.getElementById('dSpd').textContent = (bus.speed + randomBetween(-3,3)) + ' km/h';
-    const ns = TUA_STOPS[line.stops[1]];
-    document.getElementById('dNext').textContent = ns.name;
-    document.getElementById('dEta').textContent = calculateETA(bus.lat,bus.lon,ns.lat,ns.lon,bus.speed) + ' min';
-    document.getElementById('dOcc').textContent = randomBetween(30,95) + '%';
-  }
-  document.getElementById('stP').textContent = (1847 + randomBetween(0,10)).toLocaleString();
-}
-updateArrivals();
-setInterval(updateArrivals, 3000);
-
-function genTicket(){
-  const f = document.getElementById('tFrom').value;
-  const t = document.getElementById('tTo').value;
-  if(!f || !t){ alert('Select FROM and TO stops'); return; }
-  const b = document.getElementById('qrBox');
-  const id = 'TKT-' + Math.random().toString(36).slice(2,8).toUpperCase();
-  b.style.display = 'block';
-  document.getElementById('qrInfo').innerHTML = `${id}<br>${f} to ${t}<br>${document.getElementById('tLine').value} · ${timeNow()}<br>VALID 60 MIN`;
-}
-
-// ESP Status display
-const espStatusDiv = document.getElementById('espStatus');
-espStatusDiv.innerHTML = `
-  <div class="result-row"><span class="result-key">WebSocket Port</span><span class="result-val">8080</span></div>
-  <div class="result-row"><span class="result-key">MQTT Port</span><span class="result-val">1883</span></div>
-  <div class="result-row"><span class="result-key">TCP Raw Port</span><span class="result-val">5555</span></div>
-  <div class="result-row"><span class="result-key">UDP Port</span><span class="result-val">5556</span></div>
-  <div class="result-row"><span class="result-key">Status</span><span class="result-val" style="color:#00ff41">LISTENING</span></div>
-`;
-
-setInterval(showAnnouncement, 12000);
-setTimeout(showAnnouncement, 3000);
+const hl=document.getElementById('hotList');
+HOTSPOTS.forEach(h=>{const c=h.sev==='HIGH'?'#ff2222':h.sev==='MEDIUM'?'#ff9900':'#ffdd00';hl.innerHTML+='<div style="padding:5px 12px;border-bottom:1px solid #111;cursor:pointer" onclick="map.flyTo(['+h.lat+','+h.lon+'],16)"><div style="font-size:8px;color:'+c+';letter-spacing:1px;font-family:\'Share Tech Mono\',monospace">'+h.sev+' — '+h.n+' incidents</div><div style="font-size:10px;color:#bbb;margin-top:1px">'+h.name+'</div></div>';});
+selectRoute(ROUTES[0]);
+setInterval(()=>selectRoute(sel),5000);
+setInterval(()=>{const t=new Date().toTimeString().slice(0,8);document.getElementById('navTime').textContent=t;document.getElementById('mbadge').textContent='GPS ACTIVE — '+ROUTES.length+' ROUTES — '+t;document.getElementById('sP').textContent=(1847+Math.floor(Math.random()*12)).toLocaleString();},1000);
+let ai=0;function showAlert(){const b=document.getElementById('alertBar');document.getElementById('alertText').textContent=ALERTS[ai%ALERTS.length];b.classList.add('show');ai++;setTimeout(()=>b.classList.remove('show'),5500);}
+setTimeout(showAlert,4000);setInterval(showAlert,14000);
 </script>
 </body>
 </html>
