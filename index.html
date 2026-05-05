@@ -3,87 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATARA - Smart Transit | Tirana</title>
-<link rel="stylesheet" href="atara/css/style.css">
+<title>Sustainable Tirana - Urban Transit System</title>
+<link rel="stylesheet" href="css/main.css">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="scanline"></div>
+
+<!-- Navigation Bar -->
 <nav class="nav">
-  <div class="nav-logo">[ATARA]</div>
+  <div class="nav-logo">[TUA.SUSTAINABLE]</div>
   <div class="nav-links">
     <a href="index.html" class="nav-link active">HOME</a>
-    <a href="atara/pages/bus.html" class="nav-link">BUS TRACKER</a>
-    <a href="atara/pages/train.html" class="nav-link">TRAIN</a>
-    <a href="atara/pages/smartcard.html" class="nav-link">SMART CARD</a>
+    <a href="pages/bus.html" class="nav-link">BUS TIRANA</a>
+    <a href="pages/train.html" class="nav-link">TRAIN ALBANIA</a>
+    <a href="pages/rfid.html" class="nav-link">SMART CARD</a>
   </div>
   <div class="nav-time" id="navTime">--:--:--</div>
 </nav>
 
-<main style="margin-top:60px">
-  <section style="padding:4rem 2rem;text-align:center;border-bottom:1px solid #1a1a1a">
-    <h1 style="font-family:'Bebas Neue';font-size:clamp(3rem,10vw,6rem)">ATARA<br><span style="color:#00ff41">SMART TRANSIT</span></h1>
-    <p style="color:#888;margin:1rem 0">Real-time bus tracking · Smart ETA · Traffic-adjusted timing</p>
-    <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem">
-      <a href="atara/pages/bus.html" class="btn-primary" style="text-decoration:none">TRACK BUSES</a>
-    </div>
-  </section>
-  
-  <div style="padding:2rem;border-bottom:1px solid #1a1a1a">
-    <div id="serviceStatus" style="text-align:center;padding:1rem;background:#111;font-size:12px">CHECKING SERVICE...</div>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-tag">SUSTAINABLE URBAN TRANSIT SYSTEM - TIRANA 2025</div>
+  <h1 class="hero-title">
+    <span class="title-line">SUSTAINABLE</span>
+    <span class="title-line accent">TIRANA</span>
+    <span class="title-line">TRANSIT</span>
+  </h1>
+  <p class="hero-sub">Real-time bus tracking · Smart card validation · Live arrivals<br>Tirana city buses + Albania national trains</p>
+  <div class="hero-cta">
+    <a href="pages/bus.html" class="btn btn-primary">TRACK BUSES</a>
+    <a href="pages/train.html" class="btn btn-secondary">TRACK TRAINS</a>
   </div>
-  
-  <div style="padding:2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem">
-    <div style="padding:1.5rem;border:1px solid #1a1a1a">
-      <div style="color:#00ff41;font-size:2rem">KAMEZ</div>
-      <div style="font-size:11px;color:#888">Terminal Station</div>
+  <div class="hero-stats">
+    <div class="stat-box">
+      <div class="stat-num" id="s1">24</div>
+      <div class="stat-label">BUSES ACTIVE</div>
     </div>
-    <div style="padding:1.5rem;border:1px solid #1a1a1a">
-      <div style="color:#00ff41;font-size:2rem">TEUTA</div>
-      <div style="font-size:11px;color:#888">North Zone</div>
+    <div class="stat-box">
+      <div class="stat-num" id="s2">12</div>
+      <div class="stat-label">LINES RUNNING</div>
     </div>
-    <div style="padding:1.5rem;border:1px solid #1a1a1a">
-      <div style="color:#00ff41;font-size:2rem">PASKUGAN</div>
-      <div style="font-size:11px;color:#888">East Zone</div>
+    <div class="stat-box">
+      <div class="stat-num" id="s3">1847</div>
+      <div class="stat-label">PASSENGERS TODAY</div>
     </div>
-    <div style="padding:1.5rem;border:1px solid #1a1a1a">
-      <div style="color:#00ff41;font-size:2rem">SHIRAZ</div>
-      <div style="font-size:11px;color:#888">Central Zone</div>
-    </div>
-    <div style="padding:1.5rem;border:1px solid #1a1a1a">
-      <div style="color:#00ff41;font-size:2rem">SUKO</div>
-      <div style="font-size:11px;color:#888">East Zone</div>
-    </div>
-    <div style="padding:1.5rem;border:1px solid #1a1a1a">
-      <div style="color:#00ff41;font-size:2rem">STACION</div>
-      <div style="font-size:11px;color:#888">Central Hub</div>
+    <div class="stat-box">
+      <div class="stat-num">0.3s</div>
+      <div class="stat-label">GPS REFRESH</div>
     </div>
   </div>
-</main>
+</section>
 
-<footer style="padding:2rem;text-align:center;font-size:10px;color:#666;border-top:1px solid #1a1a1a">
-  ATARA SMART TRANSIT SYSTEM | POWERED BY OPEN DATA
+<!-- Live Ticker -->
+<div class="ticker-wrapper">
+  <div class="ticker-label">LIVE</div>
+  <div class="ticker-track">
+    <div class="ticker-content">LINE 5: PORCELAN TO QENDER - ON TIME | LINE 7: KOMBINAT TO STACIONI - 3 MIN DELAY | LINE 12: SELITE TO SHESHI SKENDERBEJ - ON TIME | TRAIN AL-01: TIRANE TO DURRES - DEPARTING | LINE 2: LAPRAKE TO QENDER - ON TIME | TRAIN AL-04: TIRANE TO SHKODER - DELAYED 12 MIN |</div>
+  </div>
+</div>
+
+<!-- Services Section -->
+<section class="services">
+  <div class="section-header">
+    <span class="section-tag">AVAILABLE SERVICES</span>
+    <h2 class="section-title">CHOOSE YOUR SYSTEM</h2>
+  </div>
+  <div class="services-grid">
+    <a href="pages/bus.html" class="service-card">
+      <div class="card-icon">BUS</div>
+      <div class="card-number">01</div>
+      <h3 class="card-title">TIRANA BUS</h3>
+      <p class="card-desc">Live GPS tracking for all TUA urban bus lines. Real-time positions, ETAs, stop arrivals and digital ticketing.</p>
+      <ul class="card-features">
+        <li>Line 5: Porcelan to Qender</li>
+        <li>Line 7: Kombinat to Stacioni</li>
+        <li>Line 12: Selite to Sheshi</li>
+        <li>12 total active lines</li>
+      </ul>
+      <div class="card-cta">OPEN MAP</div>
+    </a>
+    <a href="pages/train.html" class="service-card">
+      <div class="card-icon">TRAIN</div>
+      <div class="card-number">02</div>
+      <h3 class="card-title">ALBANIA TRAIN</h3>
+      <p class="card-desc">National railway tracking for HSH routes across Albania. Live departure boards and station map.</p>
+      <ul class="card-features">
+        <li>Tirane to Durres</li>
+        <li>Tirane to Shkoder</li>
+        <li>Tirane to Vlore</li>
+        <li>All national routes</li>
+      </ul>
+      <div class="card-cta">OPEN DEPARTURES</div>
+    </a>
+    <a href="pages/rfid.html" class="service-card">
+      <div class="card-icon">CARD</div>
+      <div class="card-number">03</div>
+      <h3 class="card-title">SMART CARD</h3>
+      <p class="card-desc">Smart card validation with QR code. Check payment status, line access, expiry and balance.</p>
+      <ul class="card-features">
+        <li>Instant card lookup</li>
+        <li>Payment status check</li>
+        <li>Line match validation</li>
+        <li>Expiry verification</li>
+      </ul>
+      <div class="card-cta">VALIDATE CARD</div>
+    </a>
+  </div>
+</section>
+
+<!-- Network Status Section -->
+<section class="network-status">
+  <div class="section-header">
+    <span class="section-tag">NETWORK STATUS</span>
+    <h2 class="section-title">SYSTEM OVERVIEW</h2>
+  </div>
+  <div class="status-grid" id="statusGrid"></div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div>
+    <div class="footer-logo">[TUA.SUSTAINABLE]</div>
+    <div class="footer-desc">Sustainable Urban Transit Tracker - Tirana<br>Research and demonstration purposes</div>
+  </div>
+  <div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="pages/bus.html">Bus</a>
+      <a href="pages/train.html">Train</a>
+      <a href="pages/rfid.html">Smart Card</a>
+    </div>
+    <div class="footer-copy">2025 TUA Sustainable Transit System</div>
+  </div>
 </footer>
 
-<script src="atara/js/main.js"></script>
+<script src="js/main.js"></script>
 <script>
-setInterval(() => document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8), 1000);
+// Live clock update
+setInterval(function() {
+  document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8);
+}, 1000);
 
-function updateServiceStatus() {
-  const status = getServiceStatus();
-  const div = document.getElementById('serviceStatus');
-  if (status.active) {
-    div.innerHTML = 'SERVICE ACTIVE - BUSES RUNNING';
-    div.style.color = '#00ff41';
-    div.style.background = '#001a00';
-  } else {
-    div.innerHTML = 'NO SERVICE - NIGHT HOURS (00:00 - 05:00)';
-    div.style.color = '#ff3333';
-    div.style.background = '#1a0000';
-  }
+// Network status data
+var lines = [
+  {name:'LINE 5 - PORCELAN TO QENDER', ok:true, status:'ON TIME'},
+  {name:'LINE 7 - KOMBINAT TO STACIONI', ok:false, status:'3 MIN DELAY'},
+  {name:'LINE 12 - SELITE TO SHESHI', ok:true, status:'ON TIME'},
+  {name:'LINE 2 - LAPRAKE TO QENDER', ok:true, status:'ON TIME'},
+  {name:'LINE 9 - KAMEZ TO SHESHI', ok:true, status:'ON TIME'},
+  {name:'LINE 3 - KOMBINAT TO STACIONI', ok:false, status:'8 MIN DELAY'},
+];
+
+var statusGrid = document.getElementById('statusGrid');
+for(var i = 0; i < lines.length; i++) {
+  var l = lines[i];
+  statusGrid.innerHTML += '<div class="status-row">' +
+    '<span class="status-dot ' + (l.ok ? 'dot-ok' : 'dot-warn') + '"></span>' +
+    '<span class="status-name">' + l.name + '</span>' +
+    '<span class="status-badge ' + (l.ok ? 'badge-ok' : 'badge-warn') + '">' + l.status + '</span>' +
+    '</div>';
 }
-updateServiceStatus();
-setInterval(updateServiceStatus, 60000);
+
+// Random stats update
+setInterval(function() {
+  var activeBuses = Math.floor(Math.random() * 10) + 20;
+  var passengers = Math.floor(Math.random() * 200) + 1700;
+  document.getElementById('s1').textContent = activeBuses;
+  document.getElementById('s3').textContent = passengers;
+}, 30000);
 </script>
 </body>
 </html>
