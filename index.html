@@ -3,93 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TUA Transit — Tirana & Albania</title>
+<title>Sustainable Tirana - Urban Transit System</title>
 <link rel="stylesheet" href="css/main.css">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="scanline"></div>
+
+<!-- Navigation Bar -->
 <nav class="nav">
-  <div class="nav-logo">[TUA.TRANSIT]</div>
+  <div class="nav-logo">[TUA.SUSTAINABLE]</div>
   <div class="nav-links">
     <a href="index.html" class="nav-link active">HOME</a>
-    <a href="pages/bus.html" class="nav-link">🚌 BUS TIRANA</a>
-    <a href="pages/train.html" class="nav-link">🚂 TRAIN ALBANIA</a>
-    <a href="pages/rfid.html" class="nav-link">💳 RFID</a>
+    <a href="pages/bus.html" class="nav-link">BUS TIRANA</a>
+    <a href="pages/train.html" class="nav-link">TRAIN ALBANIA</a>
+    <a href="pages/rfid.html" class="nav-link">SMART CARD</a>
   </div>
   <div class="nav-time" id="navTime">--:--:--</div>
 </nav>
+
+<!-- Hero Section -->
 <section class="hero">
   <div class="hero-grid"></div>
-  <div class="hero-tag">// LIVE TRANSIT SYSTEM — PROTOTYPE v1.0</div>
+  <div class="hero-tag">SUSTAINABLE URBAN TRANSIT SYSTEM - TIRANA 2025</div>
   <h1 class="hero-title">
-    <span class="title-line">TIRANA</span>
-    <span class="title-line accent">URBAN</span>
+    <span class="title-line">SUSTAINABLE</span>
+    <span class="title-line accent">TIRANA</span>
     <span class="title-line">TRANSIT</span>
   </h1>
-  <p class="hero-sub">Real-time bus tracking · RFID validation · Live arrivals<br>Tirana city buses + Albania national trains</p>
+  <p class="hero-sub">Real-time bus tracking · Smart card validation · Live arrivals<br>Tirana city buses + Albania national trains</p>
   <div class="hero-cta">
-    <a href="pages/bus.html" class="btn btn-primary">TRACK BUSES →</a>
-    <a href="pages/train.html" class="btn btn-secondary">TRACK TRAINS →</a>
+    <a href="pages/bus.html" class="btn btn-primary">TRACK BUSES</a>
+    <a href="pages/train.html" class="btn btn-secondary">TRACK TRAINS</a>
   </div>
   <div class="hero-stats">
-    <div class="stat-box"><div class="stat-num" id="s1">24</div><div class="stat-label">BUSES ACTIVE</div></div>
-    <div class="stat-box"><div class="stat-num" id="s2">12</div><div class="stat-label">LINES RUNNING</div></div>
-    <div class="stat-box"><div class="stat-num" id="s3">1847</div><div class="stat-label">PASSENGERS TODAY</div></div>
-    <div class="stat-box"><div class="stat-num">0.3s</div><div class="stat-label">GPS REFRESH</div></div>
+    <div class="stat-box">
+      <div class="stat-num" id="s1">24</div>
+      <div class="stat-label">BUSES ACTIVE</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="s2">12</div>
+      <div class="stat-label">LINES RUNNING</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num" id="s3">1847</div>
+      <div class="stat-label">PASSENGERS TODAY</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">0.3s</div>
+      <div class="stat-label">GPS REFRESH</div>
+    </div>
   </div>
 </section>
+
+<!-- Live Ticker -->
 <div class="ticker-wrapper">
-  <div class="ticker-label">LIVE ●</div>
-  <div class="ticker-track"><div class="ticker-content">LINE 5: PORCELAN → QENDER — ON TIME &nbsp;|&nbsp; LINE 7: KOMBINAT → STACIONI — 3 MIN DELAY &nbsp;|&nbsp; LINE 12: SELITE → SHESHI SKENDERBEJ — ON TIME &nbsp;|&nbsp; TRAIN AL-01: TIRANE → DURRES — DEPARTING 14:35 &nbsp;|&nbsp; LINE 2: LAPRAKE → QENDER — ON TIME &nbsp;|&nbsp; TRAIN AL-04: TIRANE → SHKODER — DELAYED 12 MIN &nbsp;|&nbsp;</div></div>
+  <div class="ticker-label">LIVE</div>
+  <div class="ticker-track">
+    <div class="ticker-content">LINE 5: PORCELAN TO QENDER - ON TIME | LINE 7: KOMBINAT TO STACIONI - 3 MIN DELAY | LINE 12: SELITE TO SHESHI SKENDERBEJ - ON TIME | TRAIN AL-01: TIRANE TO DURRES - DEPARTING | LINE 2: LAPRAKE TO QENDER - ON TIME | TRAIN AL-04: TIRANE TO SHKODER - DELAYED 12 MIN |</div>
+  </div>
 </div>
+
+<!-- Services Section -->
 <section class="services">
-  <div class="section-header"><span class="section-tag">// AVAILABLE SERVICES</span><h2 class="section-title">CHOOSE YOUR SYSTEM</h2></div>
+  <div class="section-header">
+    <span class="section-tag">AVAILABLE SERVICES</span>
+    <h2 class="section-title">CHOOSE YOUR SYSTEM</h2>
+  </div>
   <div class="services-grid">
     <a href="pages/bus.html" class="service-card">
-      <div class="card-icon">🚌</div><div class="card-number">01</div>
+      <div class="card-icon">BUS</div>
+      <div class="card-number">01</div>
       <h3 class="card-title">TIRANA BUS</h3>
-      <p class="card-desc">Live GPS tracking for all TUA urban bus lines. Real-time positions, ETAs, stop arrivals and ticket purchase.</p>
-      <ul class="card-features"><li>→ Line 5: Porcelan ↔ Qender</li><li>→ Line 7: Kombinat ↔ Stacioni</li><li>→ Line 12: Selitë ↔ Sheshi</li><li>→ 12 total active lines</li></ul>
-      <div class="card-cta">OPEN MAP →</div>
+      <p class="card-desc">Live GPS tracking for all TUA urban bus lines. Real-time positions, ETAs, stop arrivals and digital ticketing.</p>
+      <ul class="card-features">
+        <li>Line 5: Porcelan to Qender</li>
+        <li>Line 7: Kombinat to Stacioni</li>
+        <li>Line 12: Selite to Sheshi</li>
+        <li>12 total active lines</li>
+      </ul>
+      <div class="card-cta">OPEN MAP</div>
     </a>
     <a href="pages/train.html" class="service-card">
-      <div class="card-icon">🚂</div><div class="card-number">02</div>
+      <div class="card-icon">TRAIN</div>
+      <div class="card-number">02</div>
       <h3 class="card-title">ALBANIA TRAIN</h3>
       <p class="card-desc">National railway tracking for HSH routes across Albania. Live departure boards and station map.</p>
-      <ul class="card-features"><li>→ Tiranë ↔ Durrës</li><li>→ Tiranë ↔ Shkodër</li><li>→ Tiranë ↔ Vlorë</li><li>→ All national routes</li></ul>
-      <div class="card-cta">OPEN DEPARTURES →</div>
+      <ul class="card-features">
+        <li>Tirane to Durres</li>
+        <li>Tirane to Shkoder</li>
+        <li>Tirane to Vlore</li>
+        <li>All national routes</li>
+      </ul>
+      <div class="card-cta">OPEN DEPARTURES</div>
     </a>
     <a href="pages/rfid.html" class="service-card">
-      <div class="card-icon">💳</div><div class="card-number">03</div>
-      <h3 class="card-title">RFID VALIDATOR</h3>
-      <p class="card-desc">Smart card validation. Enter a card ID to check payment status, line access and expiry.</p>
-      <ul class="card-features"><li>→ Instant card lookup</li><li>→ Payment status check</li><li>→ Line match validation</li><li>→ Expiry verification</li></ul>
-      <div class="card-cta">VALIDATE CARD →</div>
+      <div class="card-icon">CARD</div>
+      <div class="card-number">03</div>
+      <h3 class="card-title">SMART CARD</h3>
+      <p class="card-desc">Smart card validation with QR code. Check payment status, line access, expiry and balance.</p>
+      <ul class="card-features">
+        <li>Instant card lookup</li>
+        <li>Payment status check</li>
+        <li>Line match validation</li>
+        <li>Expiry verification</li>
+      </ul>
+      <div class="card-cta">VALIDATE CARD</div>
     </a>
   </div>
 </section>
+
+<!-- Network Status Section -->
 <section class="network-status">
-  <div class="section-header"><span class="section-tag">// NETWORK STATUS</span><h2 class="section-title">SYSTEM OVERVIEW</h2></div>
+  <div class="section-header">
+    <span class="section-tag">NETWORK STATUS</span>
+    <h2 class="section-title">SYSTEM OVERVIEW</h2>
+  </div>
   <div class="status-grid" id="statusGrid"></div>
 </section>
+
+<!-- Footer -->
 <footer class="footer">
-  <div><div class="footer-logo">[TUA.TRANSIT]</div><div class="footer-desc">Prototype — Tirana Urban Transit Tracker<br>Research & demonstration purposes.</div></div>
-  <div><div class="footer-links"><a href="index.html">Home</a><a href="pages/bus.html">Bus</a><a href="pages/train.html">Train</a><a href="pages/rfid.html">RFID</a></div><div class="footer-copy">© 2025 TUA Transit Prototype</div></div>
+  <div>
+    <div class="footer-logo">[TUA.SUSTAINABLE]</div>
+    <div class="footer-desc">Sustainable Urban Transit Tracker - Tirana<br>Research and demonstration purposes</div>
+  </div>
+  <div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="pages/bus.html">Bus</a>
+      <a href="pages/train.html">Train</a>
+      <a href="pages/rfid.html">Smart Card</a>
+    </div>
+    <div class="footer-copy">2025 TUA Sustainable Transit System</div>
+  </div>
 </footer>
+
 <script src="js/main.js"></script>
 <script>
-setInterval(()=>document.getElementById('navTime').textContent=new Date().toTimeString().slice(0,8),1000);
-const lines=[
-  {name:'LINE 5 — PORCELAN → QENDER',ok:true,status:'ON TIME'},
-  {name:'LINE 7 — KOMBINAT → STACIONI',ok:false,status:'3 MIN DELAY'},
-  {name:'LINE 12 — SELITË → SHESHI',ok:true,status:'ON TIME'},
-  {name:'LINE 2 — LAPRAKE → QENDER',ok:true,status:'ON TIME'},
-  {name:'LINE 9 — KAMËZ → SHESHI',ok:true,status:'ON TIME'},
-  {name:'LINE 3 — KOMBINAT → STACIONI',ok:false,status:'8 MIN DELAY'},
+// Live clock update
+setInterval(function() {
+  document.getElementById('navTime').textContent = new Date().toTimeString().slice(0,8);
+}, 1000);
+
+// Network status data
+var lines = [
+  {name:'LINE 5 - PORCELAN TO QENDER', ok:true, status:'ON TIME'},
+  {name:'LINE 7 - KOMBINAT TO STACIONI', ok:false, status:'3 MIN DELAY'},
+  {name:'LINE 12 - SELITE TO SHESHI', ok:true, status:'ON TIME'},
+  {name:'LINE 2 - LAPRAKE TO QENDER', ok:true, status:'ON TIME'},
+  {name:'LINE 9 - KAMEZ TO SHESHI', ok:true, status:'ON TIME'},
+  {name:'LINE 3 - KOMBINAT TO STACIONI', ok:false, status:'8 MIN DELAY'},
 ];
-const g=document.getElementById('statusGrid');
-lines.forEach(l=>g.innerHTML+=`<div class="status-row"><span class="status-dot ${l.ok?'dot-ok':'dot-warn'}"></span><span class="status-name">${l.name}</span><span class="status-badge ${l.ok?'badge-ok':'badge-warn'}">${l.status}</span></div>`);
+
+var statusGrid = document.getElementById('statusGrid');
+for(var i = 0; i < lines.length; i++) {
+  var l = lines[i];
+  statusGrid.innerHTML += '<div class="status-row">' +
+    '<span class="status-dot ' + (l.ok ? 'dot-ok' : 'dot-warn') + '"></span>' +
+    '<span class="status-name">' + l.name + '</span>' +
+    '<span class="status-badge ' + (l.ok ? 'badge-ok' : 'badge-warn') + '">' + l.status + '</span>' +
+    '</div>';
+}
+
+// Random stats update
+setInterval(function() {
+  var activeBuses = Math.floor(Math.random() * 10) + 20;
+  var passengers = Math.floor(Math.random() * 200) + 1700;
+  document.getElementById('s1').textContent = activeBuses;
+  document.getElementById('s3').textContent = passengers;
+}, 30000);
 </script>
 </body>
 </html>
