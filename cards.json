@@ -1,0 +1,22 @@
+{
+  "A3 B2 C1 D4": {
+    "name": "Elena Hoxha",
+    "balance": 850,
+    "status": "active"
+  },
+  "1A 2B 3C 4D": {
+    "name": "Mark Gjoni",
+    "balance": 1200,
+    "status": "active"
+  },
+  "F9 E8 D7 C6": {
+    "name": "Sara Bregu",
+    "balance": 450,
+    "status": "active"
+  },
+  "55 66 77 88": {
+    "name": "Guest User",
+    "balance": 2100,
+    "status": "active"
+  }
+}
