@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TUA RFID Live Reader — ESP32</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+
+    :root {
+      --green: #00ff88;
+      --green-dim: #00bb66;
+      --green-dark: #003322;
+      --amber: #ffaa00;
+      --red: #ff3355;
+      --bg: #040f08;
+      --panel: #081510;
+      --border: #00ff8844;
+      --text: #00ff88cc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--green);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* CRT scanline overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.15) 2px,
+        rgba(0,0,0,0.15) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: var(--green);
+    }
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 2px;
+      margin-left: 20px;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--green); }
+    #clock {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--green-dim);
+    }
+
+    /* HEADER */
+    .page-header {
+      padding: 28px 24px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-header h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 4px;
+    }
+    .page-header p {
+      font-size: 11px;
+      color: var(--text);
+      letter-spacing: 2px;
+      margin-top: 6px;
+    }
+
+    /* MAIN GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 16px;
+      padding: 16px 24px;
+      max-width: 1200px;
+    }
+
+    /* PANELS */
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 16px;
+    }
+    .panel-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--green-dim);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    /* CONNECTION PANEL */
+    .field-group { margin-bottom: 12px; }
+    .field-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--green-dim);
+      margin-bottom: 4px;
+    }
+    .field-row {
+      display: flex;
+      gap: 8px;
+    }
+    input[type="text"], input[type="number"] {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--green);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 13px;
+      padding: 7px 10px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus { border-color: var(--green); }
+
+    .btn {
+      background: transparent;
+      border: 1px solid var(--green);
+      color: var(--green);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: var(--green); color: var(--bg); }
+    .btn.danger { border-color: var(--red); color: var(--red); }
+    .btn.danger:hover { background: var(--red); color: var(--bg); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* STATUS INDICATOR */
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+    .status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--red);
+      flex-shrink: 0;
+      box-shadow: 0 0 6px var(--red);
+      transition: all 0.3s;
+    }
+    .status-dot.connected {
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    .status-dot.connecting {
+      background: var(--amber);
+      box-shadow: 0 0 8px var(--amber);
+      animation: pulse 0.5s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+    #status-text {
+      font-size: 11px;
+      letter-spacing: 2px;
+    }
+
+    /* LAST SCAN CARD */
+    .scan-card {
+      border: 1px solid var(--border);
+      padding: 14px;
+      margin-bottom: 12px;
+      position: relative;
+      min-height: 130px;
+    }
+    .scan-card.active {
+      border-color: var(--green);
+      box-shadow: 0 0 16px #00ff8822;
+      animation: scanFlash 0.5s ease;
+    }
+    @keyframes scanFlash {
+      0% { background: #00ff8833; }
+      100% { background: transparent; }
+    }
+    .uid-display {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      margin-bottom: 8px;
+      word-break: break-all;
+    }
+    .uid-display.empty { color: var(--green-dark); }
+    .scan-meta {
+      font-size: 10px;
+      color: var(--text);
+      letter-spacing: 2px;
+    }
+    .scan-meta span { color: var(--green); }
+    .scan-badge {
+      position: absolute;
+      top: 10px; right: 10px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 3px 8px;
+      border: 1px solid;
+    }
+    .scan-badge.granted { border-color: var(--green); color: var(--green); }
+    .scan-badge.denied { border-color: var(--red); color: var(--red); }
+    .scan-badge.unknown { border-color: var(--amber); color: var(--amber); }
+
+    /* STATS */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .stat-box {
+      border: 1px solid var(--border);
+      padding: 10px;
+      text-align: center;
+    }
+    .stat-val {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+    }
+    .stat-lbl {
+      font-size: 9px;
+      color: var(--text);
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+
+    /* TERMINAL LOG */
+    .log-panel {
+      display: flex;
+      flex-direction: column;
+    }
+    #log {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 12px;
+      height: 460px;
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.8;
+    }
+    #log::-webkit-scrollbar { width: 4px; }
+    #log::-webkit-scrollbar-track { background: var(--bg); }
+    #log::-webkit-scrollbar-thumb { background: var(--green-dark); }
+    .log-line { display: flex; gap: 10px; }
+    .log-time { color: var(--green-dim); flex-shrink: 0; }
+    .log-uid { color: var(--amber); font-weight: bold; }
+    .log-ok { color: var(--green); }
+    .log-err { color: var(--red); }
+    .log-info { color: var(--text); }
+    .log-sys { color: #888; font-style: italic; }
+    .log-cursor {
+      display: inline-block;
+      width: 8px; height: 14px;
+      background: var(--green);
+      animation: blink 1s infinite;
+      vertical-align: middle;
+    }
+    @keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+
+    /* SCAN TABLE */
+    .scan-table-wrap {
+      border: 1px solid var(--border);
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    th {
+      background: var(--green-dark);
+      color: var(--green-dim);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #0a2018;
+      color: var(--text);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr.new-scan td { animation: rowFlash 1s ease; }
+    @keyframes rowFlash {
+      0% { background: #00ff8822; }
+      100% { background: transparent; }
+    }
+    .badge {
+      font-size: 9px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 2px 7px;
+      border: 1px solid;
+      display: inline-block;
+    }
+    .badge.ok { border-color: var(--green); color: var(--green); }
+    .badge.deny { border-color: var(--red); color: var(--red); }
+    .badge.unk { border-color: var(--amber); color: var(--amber); }
+
+    /* MODE TOGGLE */
+    .mode-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .mode-btn {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .mode-btn.active {
+      background: var(--green-dark);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* DEMO/SIMULATION */
+    .demo-notice {
+      font-size: 10px;
+      color: var(--amber);
+      letter-spacing: 2px;
+      padding: 8px 10px;
+      border: 1px solid #ffaa0044;
+      margin-bottom: 12px;
+    }
+
+    /* TICKER */
+    .ticker {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 0;
+      margin-bottom: 16px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-inner {
+      display: inline-block;
+      animation: ticker 30s linear infinite;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text);
+    }
+    @keyframes ticker {
+      0% { transform: translateX(100vw); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .section-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--green-dim);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .right-col { display: flex; flex-direction: column; gap: 16px; }
+
+    @media (max-width: 800px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">[TUA.SUSTAINABLE]</div>
+  <div class="nav-links">
+    <a href="https://denisa-g1t.github.io/tirana-bus-tracker/index.html">HOME</a>
+    <a href="https://denisa-g1t.github.io/tirana-bus-tracker/pages/bus.html">BUS TIRANA</a>
+    <a href="https://denisa-g1t.github.io/tirana-bus-tracker/pages/train.html">TRAIN ALBANIA</a>
+    <a href="#" class="active">RFID LIVE</a>
+  </div>
+  <div id="clock">--:--:--</div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <span class="ticker-inner">
+    RFID READER ONLINE · ESP32 NodeMCU-32S · MFRC522 MODULE · REAL-TIME CARD DETECTION ·
+    TUA SMART CARD SYSTEM · WEBSOCKET BRIDGE ACTIVE · TIRANA URBAN TRANSIT 2025 ·
+    SCAN YOUR CARD TO VALIDATE · LIVE DATA STREAM ·
+  </span>
+</div>
+
+<!-- HEADER -->
+<div class="page-header">
+  <h1>RFID LIVE READER</h1>
+  <p>ESP32 NodeMCU-32S + MFRC522 · Real-time card detection · WebSocket / HTTP bridge</p>
+</div>
+
+<!-- MAIN GRID -->
+<div class="grid">
+
+  <!-- LEFT: CONNECTION + STATUS -->
+  <div class="left-col">
+
+    <!-- Connection Panel -->
+    <div class="panel" style="margin-bottom:16px;">
+      <div class="panel-title">ESP32 CONNECTION</div>
+
+      <div class="mode-row">
+        <button class="mode-btn active" id="mode-ws" onclick="setMode('ws')">WEBSOCKET</button>
+        <button class="mode-btn" id="mode-http" onclick="setMode('http')">HTTP POLL</button>
+        <button class="mode-btn" id="mode-demo" onclick="setMode('demo')">DEMO MODE</button>
+      </div>
+
+      <div id="demo-notice" class="demo-notice" style="display:none;">
+        ⚠ DEMO MODE — simulated scans. Connect your ESP32 to use live data.
+      </div>
+
+      <div class="field-group">
+        <div class="field-label">ESP32 IP ADDRESS</div>
+        <div class="field-row">
+          <input type="text" id="esp-ip" value="192.168.1.100" placeholder="e.g. 192.168.1.100" />
+        </div>
+      </div>
+
+      <div class="field-group" id="port-row">
+        <div class="field-label">PORT</div>
+        <div class="field-row">
+          <input type="number" id="esp-port" value="81" style="width:80px;" />
+        </div>
+      </div>
+
+      <div class="status-row">
+        <div class="status-dot" id="status-dot"></div>
+        <span id="status-text">DISCONNECTED</span>
+      </div>
+
+      <div class="field-row">
+        <button class="btn" id="connect-btn" onclick="connect()">CONNECT</button>
+        <button class="btn danger" id="disconnect-btn" onclick="disconnect()" disabled>DISCONNECT</button>
+      </div>
+    </div>
+
+    <!-- Last Scan -->
+    <div class="panel" style="margin-bottom:16px;">
+      <div class="panel-title">LAST DETECTED CARD</div>
+      <div class="scan-card" id="scan-card">
+        <div class="uid-display empty" id="uid-display">-- -- -- --</div>
+        <div class="scan-meta">TIME: <span id="scan-time">--:--:--</span></div>
+        <div class="scan-meta">TYPE: <span id="scan-type">--</span></div>
+        <div class="scan-meta">LINE ACCESS: <span id="scan-line">--</span></div>
+        <div class="scan-badge unknown" id="scan-badge">WAITING</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="panel">
+      <div class="panel-title">SESSION STATS</div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-total">0</div>
+          <div class="stat-lbl">TOTAL SCANS</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-granted" style="color:var(--green)">0</div>
+          <div class="stat-lbl">GRANTED</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-denied" style="color:var(--red)">0</div>
+          <div class="stat-lbl">DENIED</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: LOG + TABLE -->
+  <div class="right-col">
+
+    <!-- Terminal Log -->
+    <div class="panel log-panel">
+      <div class="panel-title">LIVE TERMINAL LOG</div>
+      <div id="log">
+        <div class="log-line"><span class="log-time">00:00:00</span><span class="log-sys">&gt; TUA RFID System v2.0 — NodeMCU-32S</span></div>
+        <div class="log-line"><span class="log-time">00:00:00</span><span class="log-sys">&gt; Waiting for ESP32 connection...</span></div>
+        <div class="log-line"><span class="log-time">00:00:00</span><span class="log-info">&gt; <span class="log-cursor"></span></span></div>
+      </div>
+    </div>
+
+    <!-- Scan History Table -->
+    <div class="panel">
+      <div class="panel-title">SCAN HISTORY</div>
+      <div class="scan-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>UID</th>
+              <th>TIME</th>
+              <th>TYPE</th>
+              <th>LINE</th>
+              <th>STATUS</th>
+            </tr>
+          </thead>
+          <tbody id="scan-tbody">
+            <tr><td colspan="6" style="text-align:center;color:#333;padding:20px;">NO SCANS YET</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== SCRIPT ===================== -->
+<script>
+// ─── STATE ───────────────────────────────────────────
+let mode = 'ws';
+let ws = null;
+let pollTimer = null;
+let demoTimer = null;
+let scanCount = 0, grantedCount = 0, deniedCount = 0;
+const scans = [];
+
+// Known cards DB (demo + your real UIDs)
+const knownCards = {
+  'A1B2C3D4': { name: 'CARD-001', type: 'MONTHLY', line: 'ALL LINES', status: 'granted' },
+  'DE AD BE EF': { name: 'CARD-002', type: 'DAILY',   line: 'LINE 5, 7', status: 'granted' },
+  'FF 00 12 34': { name: 'CARD-003', type: 'EXPIRED',  line: 'NONE',      status: 'denied'  },
+  '12345678':    { name: 'CARD-004', type: 'STUDENT',  line: 'LINE 12',   status: 'granted' },
+};
+
+const demoUIDs = ['A1B2C3D4','DE AD BE EF','FF 00 12 34','12345678','CAFE BABE','0A1B2C3D'];
+
+// ─── CLOCK ───────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const t = [now.getHours(), now.getMinutes(), now.getSeconds()]
+    .map(n => String(n).padStart(2,'0')).join(':');
+  document.getElementById('clock').textContent = t;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── MODE ────────────────────────────────────────────
+function setMode(m) {
+  mode = m;
+  ['ws','http','demo'].forEach(k => {
+    document.getElementById('mode-' + k).classList.toggle('active', k === m);
+  });
+  document.getElementById('demo-notice').style.display = m === 'demo' ? 'block' : 'none';
+  document.getElementById('port-row').style.display = m === 'ws' ? 'block' : (m === 'http' ? 'block' : 'none');
+  document.getElementById('esp-port').value = m === 'ws' ? '81' : '80';
+  disconnect();
+}
+
+// ─── LOG ─────────────────────────────────────────────
+function addLog(msg, cls='log-info') {
+  const log = document.getElementById('log');
+  const t = new Date();
+  const ts = [t.getHours(), t.getMinutes(), t.getSeconds()].map(n => String(n).padStart(2,'0')).join(':');
+  // Remove cursor line
+  const cursor = log.querySelector('.log-cursor');
+  if (cursor) cursor.closest('.log-line')?.remove();
+  const line = document.createElement('div');
+  line.className = 'log-line';
+  line.innerHTML = `<span class="log-time">${ts}</span><span class="${cls}">&gt; ${msg}</span>`;
+  log.appendChild(line);
+  // Re-add cursor
+  const cl = document.createElement('div');
+  cl.className = 'log-line';
+  cl.innerHTML = `<span class="log-time">${ts}</span><span class="log-info">&gt; <span class="log-cursor"></span></span>`;
+  log.appendChild(cl);
+  log.scrollTop = log.scrollHeight;
+}
+
+// ─── SCAN PROCESSING ─────────────────────────────────
+function processScan(uid) {
+  uid = uid.toString().trim().toUpperCase();
+  const now = new Date();
+  const ts = [now.getHours(), now.getMinutes(), now.getSeconds()].map(n => String(n).padStart(2,'0')).join(':');
+
+  const card = knownCards[uid] || null;
+  const status = card ? card.status : 'unknown';
+  const cardName = card ? card.name : 'UNKNOWN';
+  const cardType = card ? card.type : 'UNREGISTERED';
+  const cardLine = card ? card.line : 'N/A';
+
+  // Update stats
+  scanCount++;
+  if (status === 'granted') grantedCount++;
+  else if (status === 'denied') deniedCount++;
+
+  document.getElementById('stat-total').textContent = scanCount;
+  document.getElementById('stat-granted').textContent = grantedCount;
+  document.getElementById('stat-denied').textContent = deniedCount;
+
+  // Update scan card
+  const sc = document.getElementById('scan-card');
+  const ud = document.getElementById('uid-display');
+  ud.textContent = uid;
+  ud.classList.remove('empty');
+  document.getElementById('scan-time').textContent = ts;
+  document.getElementById('scan-type').textContent = cardType;
+  document.getElementById('scan-line').textContent = cardLine;
+
+  const badge = document.getElementById('scan-badge');
+  badge.className = 'scan-badge ' + (status === 'granted' ? 'granted' : status === 'denied' ? 'denied' : 'unknown');
+  badge.textContent = status.toUpperCase();
+
+  sc.className = 'scan-card active';
+  setTimeout(() => sc.className = 'scan-card', 800);
+
+  // Log
+  const logClass = status === 'granted' ? 'log-ok' : status === 'denied' ? 'log-err' : 'log-info';
+  const logLabel = status === 'granted' ? '✔ ACCESS GRANTED' : status === 'denied' ? '✘ ACCESS DENIED' : '? UNKNOWN CARD';
+  addLog(`SCAN #${scanCount} — UID: <span class="log-uid">${uid}</span> — ${cardName} — ${logLabel}`, logClass);
+
+  // Table
+  scans.unshift({ n: scanCount, uid, time: ts, type: cardType, line: cardLine, status });
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('scan-tbody');
+  if (scans.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#333;padding:20px;">NO SCANS YET</td></tr>';
+    return;
+  }
+  tbody.innerHTML = scans.slice(0,50).map((s, i) => `
+    <tr class="${i === 0 ? 'new-scan' : ''}">
+      <td>${s.n}</td>
+      <td style="color:var(--amber);font-weight:bold;">${s.uid}</td>
+      <td>${s.time}</td>
+      <td>${s.type}</td>
+      <td>${s.line}</td>
+      <td><span class="badge ${s.status === 'granted' ? 'ok' : s.status === 'denied' ? 'deny' : 'unk'}">${s.status.toUpperCase()}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ─── WEBSOCKET ───────────────────────────────────────
+function connectWebSocket() {
+  const ip = document.getElementById('esp-ip').value.trim();
+  const port = document.getElementById('esp-port').value.trim();
+  const url = `ws://${ip}:${port}`;
+
+  setStatus('connecting');
+  addLog(`Connecting WebSocket → ${url}`, 'log-info');
+
+  try {
+    ws = new WebSocket(url);
+  } catch(e) {
+    setStatus('disconnected');
+    addLog('WebSocket creation failed: ' + e.message, 'log-err');
+    return;
+  }
+
+  ws.onopen = () => {
+    setStatus('connected');
+    addLog(`WebSocket connected to ESP32 @ ${ip}`, 'log-ok');
+    document.getElementById('connect-btn').disabled = true;
+    document.getElementById('disconnect-btn').disabled = false;
+  };
+
+  ws.onmessage = (e) => {
+    const raw = e.data.trim();
+    addLog(`RAW ← ${raw}`, 'log-sys');
+    // Parse UID — ESP32 can send plain UID or JSON like {"uid":"AABBCCDD"}
+    let uid = raw;
+    try {
+      const j = JSON.parse(raw);
+      uid = j.uid || j.UID || j.card || raw;
+    } catch(_) {}
+    if (uid && uid.length >= 4) processScan(uid);
+  };
+
+  ws.onerror = () => {
+    addLog('WebSocket error — check ESP32 IP/port and network', 'log-err');
+  };
+
+  ws.onclose = () => {
+    setStatus('disconnected');
+    addLog('WebSocket disconnected', 'log-info');
+    document.getElementById('connect-btn').disabled = false;
+    document.getElementById('disconnect-btn').disabled = true;
+  };
+}
+
+// ─── HTTP POLL ────────────────────────────────────────
+let lastPollUID = '';
+function connectHTTP() {
+  const ip = document.getElementById('esp-ip').value.trim();
+  const port = document.getElementById('esp-port').value.trim();
+  setStatus('connected');
+  addLog(`HTTP polling ESP32 @ http://${ip}:${port}/rfid every 500ms`, 'log-ok');
+  document.getElementById('connect-btn').disabled = true;
+  document.getElementById('disconnect-btn').disabled = false;
+
+  pollTimer = setInterval(async () => {
+    try {
+      const res = await fetch(`http://${ip}:${port}/rfid`, { signal: AbortSignal.timeout(400) });
+      const txt = await res.text();
+      let uid = txt.trim();
+      try { uid = JSON.parse(txt).uid || uid; } catch(_) {}
+      if (uid && uid !== 'NONE' && uid !== lastPollUID) {
+        lastPollUID = uid;
+        processScan(uid);
+      }
+    } catch(e) {
+      // silent poll fail — ESP may not have a card
+    }
+  }, 500);
+}
+
+// ─── DEMO ────────────────────────────────────────────
+function startDemo() {
+  setStatus('connected');
+  addLog('DEMO MODE — simulated ESP32 scans starting...', 'log-info');
+  document.getElementById('connect-btn').disabled = true;
+  document.getElementById('disconnect-btn').disabled = false;
+
+  let i = 0;
+  function nextDemo() {
+    const uid = demoUIDs[Math.floor(Math.random() * demoUIDs.length)];
+    processScan(uid);
+    const delay = 2000 + Math.random() * 3000;
+    demoTimer = setTimeout(nextDemo, delay);
+  }
+  demoTimer = setTimeout(nextDemo, 1500);
+}
+
+// ─── CONNECT/DISCONNECT ──────────────────────────────
+function connect() {
+  disconnect();
+  if (mode === 'ws') connectWebSocket();
+  else if (mode === 'http') connectHTTP();
+  else startDemo();
+}
+
+function disconnect() {
+  if (ws) { try { ws.close(); } catch(_) {} ws = null; }
+  if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+  if (demoTimer) { clearTimeout(demoTimer); demoTimer = null; }
+  setStatus('disconnected');
+  document.getElementById('connect-btn').disabled = false;
+  document.getElementById('disconnect-btn').disabled = true;
+}
+
+function setStatus(s) {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  dot.className = 'status-dot ' + s;
+  txt.textContent = s === 'connected' ? 'CONNECTED — LIVE' : s === 'connecting' ? 'CONNECTING...' : 'DISCONNECTED';
+  txt.style.color = s === 'connected' ? 'var(--green)' : s === 'connecting' ? 'var(--amber)' : 'var(--red)';
+}
+</script>
+
+<!-- ===================== ESP32 ARDUINO CODE ===================== -->
+<!--
+=== PASTE THIS INTO YOUR ARDUINO IDE (ESP32 NodeMCU-32S) ===
+
+#include <WiFi.h>
+#include <WebSocketsServer.h>   // by Markus Sattler
+#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN   5    // SDA/CS — change if needed
+#define RST_PIN  22
+
+const char* ssid     = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+WebSocketsServer ws = WebSocketsServer(81);
+
+void setup() {
+  Serial.begin(115200);
+  SPI.begin();
+  rfid.PCD_Init();
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) { delay(500); Serial.print("."); }
+  Serial.println("\nIP: " + WiFi.localIP().toString());
+  ws.begin();
+}
+
+void loop() {
+  ws.loop();
+  if (!rfid.PICC_IsNewCardPresent() || !rfid.PICC_ReadCardSerial()) return;
+  String uid = "";
+  for (byte i = 0; i < rfid.uid.size; i++) {
+    if (i > 0) uid += " ";
+    uid += String(rfid.uid.uidByte[i] < 0x10 ? "0" : "");
+    uid += String(rfid.uid.uidByte[i], HEX);
+  }
+  uid.toUpperCase();
+  String msg = "{\"uid\":\"" + uid + "\"}";
+  ws.broadcastTXT(msg);
+  Serial.println("SCAN: " + uid);
+  rfid.PICC_HaltA();
+  rfid.PCD_StopCrypto1();
+  delay(1000);
+}
+
+=== WIRING (MFRC522 → NodeMCU-32S) ===
+MFRC522  →  ESP32
+SDA/CS   →  GPIO5
+SCK      →  GPIO18
+MOSI     →  GPIO23
+MISO     →  GPIO19
+RST      →  GPIO22
+3.3V     →  3V3
+GND      →  GND
+-->
+
+</body>
+</html>
