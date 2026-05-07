@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ATARA Sustainable City - Bus Network</title>
+<title>Tirana Sustainable City - Bus Network</title>
 <link rel="stylesheet" href="../css/main.css">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -38,69 +38,42 @@ body{background:#000;color:#fff;font-family:'IBM Plex Mono',monospace;overflow:h
 </style>
 </head>
 <body>
-
 <div class="scanline"></div>
-
 <nav class="nav">
-  <div class="nav-logo">[ATARA.SUSTAINABLE]</div>
-
+  <div class="nav-logo">TIRANA SUSTAINABLE CITY</div>
   <div class="nav-links">
     <a href="../index.html" class="nav-link">HOME</a>
     <a href="bus.html" class="nav-link active">BUS NETWORK</a>
     <a href="train.html" class="nav-link">TRAIN</a>
     <a href="rfid.html" class="nav-link">SMART CARD</a>
-    <a href="rfid.html" class="nav-link">RFID LIVE</a>
+    <a href="rfid.html">RFID LIVE</a>
   </div>
-
   <div class="nav-time" id="navTime">--:--:--</div>
 </nav>
-
 <div class="layout">
   <div class="panel">
-    <div class="ph">
-      <div class="pt">BUS LINES</div>
-      <div class="ps">// ATARA — TRANSPORTI URBAN TIRANE</div>
-    </div>
-
+    <div class="ph"><div class="pt">BUS LINES</div><div class="ps">// TUA — TRANSPORTI URBAN TIRANE</div></div>
     <div style="padding:8px 14px;border-bottom:1px solid #1a1a1a">
-      <div style="font-size:9px;color:#00ff41;letter-spacing:1.5px;margin-bottom:5px;font-family:'Share Tech Mono',monospace">
-        LINE COLORS
-      </div>
+      <div style="font-size:9px;color:#00ff41;letter-spacing:1.5px;margin-bottom:5px;font-family:'Share Tech Mono',monospace">LINE COLORS</div>
       <div id="legend"></div>
     </div>
-
     <div id="lineList"></div>
-
     <div style="margin-top:auto;padding:8px 14px;border-top:1px solid #222">
-      <div style="font-size:9px;color:#00ff41;letter-spacing:1px;margin-bottom:6px;font-family:'Share Tech Mono',monospace">
-        LIVE STATS
-      </div>
-
+      <div style="font-size:9px;color:#00ff41;letter-spacing:1px;margin-bottom:6px;font-family:'Share Tech Mono',monospace">LIVE STATS</div>
       <div class="kv"><span class="kk">ACTIVE BUSES</span><span style="color:#fff">9</span></div>
       <div class="kv"><span class="kk">PASSENGERS TODAY</span><span style="color:#fff" id="sP">1,847</span></div>
       <div class="kv"><span class="kk">LINES OPERATIONAL</span><span style="color:#00ff41">7 / 7</span></div>
       <div class="kv"><span class="kk">CO2 SAVED TODAY</span><span style="color:#00ff41">4.2 T</span></div>
     </div>
   </div>
-
   <div class="map-wrap">
     <div class="mbadge" id="mbadge">GPS ACTIVE</div>
     <div id="map"></div>
   </div>
-
   <div class="panel">
-    <div class="ph">
-      <div class="pt" style="font-size:1rem">STATION ARRIVALS</div>
-      <div class="ps" id="selLbl">// SELECT A LINE</div>
-    </div>
-
+    <div class="ph"><div class="pt" style="font-size:1rem">STATION ARRIVALS</div><div class="ps" id="selLbl">// SELECT A LINE</div></div>
     <div id="stList"></div>
-
-    <div class="ph">
-      <div class="pt" style="font-size:1rem">BUS STATUS</div>
-      <div class="ps" id="busLbl">// LIVE DATA</div>
-    </div>
-
+    <div class="ph"><div class="pt" style="font-size:1rem">BUS STATUS</div><div class="ps" id="busLbl">// LIVE DATA</div></div>
     <div style="padding:8px 14px">
       <div class="kv"><span class="kk">SPEED</span><span style="color:#fff" id="dSpd">— km/h</span></div>
       <div class="kv"><span class="kk">NEXT STOP</span><span style="color:#fff;font-size:9px" id="dNext">—</span></div>
@@ -108,27 +81,106 @@ body{background:#000;color:#fff;font-family:'IBM Plex Mono',monospace;overflow:h
       <div class="kv"><span class="kk">OCCUPANCY</span><span style="color:#fff" id="dOcc">—%</span></div>
       <div class="kv"><span class="kk">GPS SIGNAL</span><span style="color:#00ff41">LIVE</span></div>
     </div>
-
-    <div class="ph">
-      <div class="pt" style="font-size:1rem;color:#ff2222">ACCIDENT ZONES</div>
-      <div class="ps">// CLICK TO ZOOM ON MAP</div>
-    </div>
-
+    <div class="ph"><div class="pt" style="font-size:1rem;color:#ff2222">ACCIDENT ZONES</div><div class="ps">// CLICK TO ZOOM ON MAP</div></div>
     <div id="hotList"></div>
   </div>
 </div>
-
 <div class="alert-bar" id="alertBar">
   <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px">SAFETY ALERT</span>
   <span id="alertText"></span>
   <span style="cursor:pointer;margin-left:auto;font-weight:700" onclick="document.getElementById('alertBar').classList.remove('show')">X</span>
 </div>
-
 <script>
-/* KEEPING ALL ORIGINAL FUNCTIONALITY EXACTLY THE SAME */
+const SPEED=18,DWELL=25;
+const ROUTES=[
+  {id:'L5B',n:'5B',name:'Institut - Qender',color:'#2F835B',stops:[{name:'Institut',lat:41.3089,lon:19.7934},{name:'Kombinat',lat:41.3110,lon:19.7980},{name:'Sheshi Willson',lat:41.3207,lon:19.7978},{name:'Blloku',lat:41.3230,lon:19.8090},{name:'Qendra',lat:41.3265,lon:19.8175},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193}],path:[[41.3089,19.7934],[41.3150,19.7978],[41.3207,19.7978],[41.3230,19.8090],[41.3265,19.8175],[41.3285,19.8193]]},
+  {id:'L16A',n:'16A',name:'Linja e Gjelbrer - Orar',color:'#49B249',stops:[{name:'Dispanseria',lat:41.3377,lon:19.8212},{name:'Tregu 5 Maji',lat:41.3400,lon:19.8254},{name:'Materniteti',lat:41.3347,lon:19.8168},{name:'15 Kateshi A',lat:41.3305,lon:19.8189},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193}],path:[[41.3377,19.8212],[41.3400,19.8254],[41.3370,19.8210],[41.3347,19.8168],[41.3305,19.8189],[41.3285,19.8193]]},
+  {id:'L13B',n:'13B',name:'Tirana e Re - Antiorar',color:'#B772B0',stops:[{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193},{name:'Stacioni i Trenit',lat:41.3368,lon:19.8200},{name:'Laprake',lat:41.3421,lon:19.8312},{name:'Tirana e Re',lat:41.3510,lon:19.8380},{name:'Kamez Qender',lat:41.3620,lon:19.8120}],path:[[41.3285,19.8193],[41.3368,19.8200],[41.3421,19.8312],[41.3510,19.8380],[41.3620,19.8120]]},
+  {id:'L12A',n:'12A',name:'Uzina Dinamo - Sharre',color:'#91D0AE',stops:[{name:'Uzina Dinamo',lat:41.3320,lon:19.8420},{name:'Selite',lat:41.3198,lon:19.8389},{name:'Blloku',lat:41.3230,lon:19.8090},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193},{name:'Sharre',lat:41.3050,lon:19.8500}],path:[[41.3320,19.8420],[41.3198,19.8389],[41.3230,19.8090],[41.3265,19.8175],[41.3285,19.8193],[41.3200,19.8350],[41.3050,19.8500]]},
+  {id:'L6',n:'6',name:'Lapraka - Qender',color:'#EE3D7F',stops:[{name:'Laprake',lat:41.3421,lon:19.8312},{name:'Stacioni i Trenit',lat:41.3368,lon:19.8200},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193},{name:'Qendra',lat:41.3265,lon:19.8175},{name:'Blloku',lat:41.3230,lon:19.8090}],path:[[41.3421,19.8312],[41.3368,19.8200],[41.3310,19.8195],[41.3285,19.8193],[41.3265,19.8175],[41.3230,19.8090]]},
+  {id:'L8A',n:'8A',name:'Terminali Juglindor - Qender',color:'#665AA7',stops:[{name:'Terminali Juglindor',lat:41.2980,lon:19.8420},{name:'Kombinat Jugor',lat:41.3040,lon:19.8350},{name:'Qendra',lat:41.3265,lon:19.8175},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193}],path:[[41.2980,19.8420],[41.3040,19.8350],[41.3150,19.8280],[41.3265,19.8175],[41.3285,19.8193]]},
+  {id:'L9',n:'9',name:'Kamez - Sheshi Skenderbej',color:'#E8A020',stops:[{name:'Kamez',lat:41.3812,lon:19.7721},{name:'Fark e Vogel',lat:41.3650,lon:19.7850},{name:'Koder Kamez',lat:41.3540,lon:19.7920},{name:'Stacioni i Trenit',lat:41.3368,lon:19.8200},{name:'Sheshi Skenderbej',lat:41.3285,lon:19.8193}],path:[[41.3812,19.7721],[41.3650,19.7850],[41.3540,19.7920],[41.3420,19.8060],[41.3368,19.8200],[41.3285,19.8193]]},
+];
+const HOTSPOTS=[
+  {lat:41.3285,lon:19.8193,name:'Sheshi Skenderbej',sev:'HIGH',n:24},
+  {lat:41.3207,lon:19.7978,name:'Sheshi Willson',sev:'HIGH',n:18},
+  {lat:41.3368,lon:19.8200,name:'Stacioni i Trenit',sev:'MEDIUM',n:12},
+  {lat:41.3400,lon:19.8254,name:'Tregu 5 Maji',sev:'HIGH',n:21},
+  {lat:41.3089,lon:19.7934,name:'Kombinat / Institut',sev:'HIGH',n:32},
+  {lat:41.3421,lon:19.8312,name:'Laprake',sev:'MEDIUM',n:14},
+  {lat:41.3812,lon:19.7721,name:'Kamez',sev:'HIGH',n:19},
+];
+const ALERTS=[
+  'REDUCE SPEED — Sheshi Skenderbej: high pedestrian area, 24 incidents recorded',
+  'CAUTION — Kombinat / Institut: heavy truck zone, limited visibility',
+  'SCHOOL ZONE — 15 Kateshi: 30 km/h limit active 07:30 to 15:30',
+  'POOR LIGHTING — Stacioni i Trenit: sharp curve ahead, use low beams',
+  'PEDESTRIAN ZONE — Tregu 5 Maji: market traffic, yield at all crossings',
+  'EXCESSIVE SPEED — Kamez main road: reduce to posted limit'
+];
+function hkm(a,b,c,d){const R=6371,dL=(c-a)*Math.PI/180,dN=(d-b)*Math.PI/180,x=Math.sin(dL/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(dN/2)**2;return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+function etas(stops){const e=[0];for(let i=1;i<stops.length;i++){const d=hkm(stops[i-1].lat,stops[i-1].lon,stops[i].lat,stops[i].lon);e.push(e[i-1]+(d/SPEED)*60+DWELL/60);}return e.map(m=>Math.round(m));}
+const map=L.map('map',{zoomControl:true}).setView([41.3285,19.8200],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:18}).addTo(map);
+ROUTES.forEach(r=>{
+  L.polyline(r.path,{color:r.color,weight:4,opacity:0.85}).addTo(map).bindTooltip('<b style="font-family:monospace;font-size:12px">LINE '+r.n+'</b><br>'+r.name,{sticky:true});
+  const e=etas(r.stops);
+  r.stops.forEach((s,i)=>{L.circleMarker([s.lat,s.lon],{radius:i===0||i===r.stops.length-1?7:5,fillColor:r.color,color:'#000',weight:1.5,fillOpacity:0.95}).addTo(map).bindPopup('<div style="font-family:monospace;font-size:12px"><b style="color:'+r.color+'">'+s.name+'</b><br>Line '+r.n+' — Stop '+(i+1)+' of '+r.stops.length+'<br>From terminus: <b>'+e[i]+' min</b></div>');});
+});
+HOTSPOTS.forEach(h=>{const c=h.sev==='HIGH'?'#ff2222':h.sev==='MEDIUM'?'#ff9900':'#ffdd00';L.circleMarker([h.lat,h.lon],{radius:h.sev==='HIGH'?14:10,fillColor:c,color:'#000',weight:1,fillOpacity:0.28}).addTo(map).bindPopup('<div style="font-family:monospace;font-size:11px"><b style="color:'+c+'">'+h.sev+' RISK ZONE</b><br>'+h.name+'<br>'+h.n+' incidents recorded</div>');});
+const busState={};
+ROUTES.forEach(r=>{
+  const icon=L.divIcon({html:'<div style="background:'+r.color+';color:#000;font-family:monospace;font-size:10px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:2px solid #000;border-radius:2px;font-weight:bold">'+r.n+'</div>',iconSize:[26,26],iconAnchor:[13,13],className:''});
+  const mk=L.marker([r.stops[0].lat,r.stops[0].lon],{icon}).addTo(map);
+  const b={speed:14+Math.random()*8,occ:Math.floor(Math.random()*70)+20,seg:0,prog:Math.random()*0.6};
+  busState[r.id]={mk,b,r};
+  setInterval(()=>{const p=r.path;b.prog+=0.005+Math.random()*0.004;if(b.prog>=1){b.prog=0;b.seg=(b.seg+1)%(p.length-1);}const f=p[b.seg],t=p[Math.min(b.seg+1,p.length-1)];const lat=f[0]+(t[0]-f[0])*b.prog,lon=f[1]+(t[1]-f[1])*b.prog;b.speed=+(13+Math.random()*9).toFixed(1);mk.setLatLng([lat,lon]);},1400);
+});
+const leg=document.getElementById('legend'),ll=document.getElementById('lineList');
+let sel=ROUTES[0];
+ROUTES.forEach(r=>{
+  const tot=etas(r.stops).slice(-1)[0];
+  leg.innerHTML+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><div style="width:24px;height:3px;background:'+r.color+'"></div><span style="font-size:9px;color:#777;font-family:\'Share Tech Mono\',monospace">LINE '+r.n+'</span></div>';
+  const el=document.createElement('div');
+  el.className='line-item';el.id='li-'+r.id;
+  el.innerHTML='<div style="width:10px;height:10px;border-radius:50%;background:'+r.color+';flex-shrink:0"></div><div style="min-width:28px;font-family:\'Bebas Neue\',sans-serif;font-size:1.1rem;letter-spacing:1px">'+r.n+'</div><div style="flex:1"><div style="font-size:9px;color:#ccc;font-family:\'Share Tech Mono\',monospace;letter-spacing:0.5px">'+r.name+'</div><div style="font-size:8px;color:#444;margin-top:2px">'+r.stops.length+' stops</div></div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;color:'+r.color+'">'+tot+'m</div>';
+  el.addEventListener('click',()=>selectRoute(r));
+  ll.appendChild(el);
+});
+function selectRoute(r){
+  sel=r;
+  document.querySelectorAll('.line-item').forEach(e=>e.classList.remove('sel'));
+  const el=document.getElementById('li-'+r.id);if(el)el.classList.add('sel');
+  map.flyTo([r.stops[0].lat,r.stops[0].lon],14,{duration:1});
+  document.getElementById('selLbl').textContent='// LINE '+r.n+': '+r.name;
+  document.getElementById('busLbl').textContent='// BUS ON LINE '+r.n;
+  const e=etas(r.stops);
+  const now=new Date();
+  const sl=document.getElementById('stList');sl.innerHTML='';
+  r.stops.forEach((s,i)=>{
+    const arr=new Date(now.getTime()+e[i]*60000);
+    const hh=arr.getHours().toString().padStart(2,'0'),mm=arr.getMinutes().toString().padStart(2,'0');
+    sl.innerHTML+='<div class="station-item"><div style="width:7px;height:7px;border-radius:50%;background:'+r.color+';flex-shrink:0"></div><div style="flex:1"><div style="font-size:10px;color:#ccc;font-family:\'Share Tech Mono\',monospace">'+s.name+'</div><div style="font-size:8px;color:#444;margin-top:1px">Arrives at '+hh+':'+mm+'</div></div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.2rem;color:'+r.color+'">'+e[i]+'m</div></div>';
+  });
+  const bd=busState[r.id];
+  if(bd){document.getElementById('dSpd').textContent=bd.b.speed.toFixed(0)+' km/h';document.getElementById('dNext').textContent=r.stops[1]?r.stops[1].name:'—';document.getElementById('dEta').textContent=e[1]+' min';document.getElementById('dOcc').textContent=bd.b.occ+'%';}
+}
+const hl=document.getElementById('hotList');
+HOTSPOTS.forEach(h=>{
+  const c=h.sev==='HIGH'?'#ff2222':h.sev==='MEDIUM'?'#ff9900':'#ffdd00';
+  hl.innerHTML+='<div style="padding:6px 14px;border-bottom:1px solid #111;cursor:pointer;transition:background 0.1s" onmouseover="this.style.background=\'rgba(255,34,34,0.04)\'" onmouseout="this.style.background=\'\'" onclick="map.flyTo(['+h.lat+','+h.lon+'],16)"><div style="font-size:8px;color:'+c+';letter-spacing:1.5px;font-family:\'Share Tech Mono\',monospace">'+h.sev+' — '+h.n+' INCIDENTS</div><div style="font-size:10px;color:#bbb;margin-top:2px;font-family:\'Share Tech Mono\',monospace">'+h.name+'</div></div>';
+});
+selectRoute(ROUTES[0]);
+setInterval(()=>selectRoute(sel),6000);
+setInterval(()=>{
+  const t=new Date().toTimeString().slice(0,8);
+  document.getElementById('navTime').textContent=t;
+  document.getElementById('mbadge').textContent='GPS ACTIVE — '+ROUTES.length+' ROUTES — '+t;
+  document.getElementById('sP').textContent=(1847+Math.floor(Math.random()*12)).toLocaleString();
+},1000);
+let ai=0;
+function showAlert(){const b=document.getElementById('alertBar');document.getElementById('alertText').textContent=ALERTS[ai%ALERTS.length];b.classList.add('show');ai++;setTimeout(()=>b.classList.remove('show'),5500);}
+setTimeout(showAlert,4000);setInterval(showAlert,14000);
 </script>
-
-<script src="../js/main.js"></script>
-
 </body>
 </html>
