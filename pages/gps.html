@@ -1,674 +1,382 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tirana Sustainable City - GPS Location Tracking</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPS Tracker — Atara Sustainable</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --green: #00ff88;
-      --green-dim: #00bb66;
-      --green-dark: #003322;
-      --amber: #ffaa00;
-      --red: #ff3355;
-      --bg: #040f08;
-      --panel: #081510;
-      --border: #00ff8844;
-      --text: #00ff88cc;
-    }
+  :root {
+    --green: #00ff00;
+    --bg: #000;
+    --panel: #0a0a0a;
+    --border: #1a1a1a;
+    --text: #fff;
+    --muted: #555;
+    --font: 'Courier New', Courier, monospace;
+  }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { background: var(--bg); color: var(--green); font-family: 'Share Tech Mono', monospace; min-height: 100vh; }
+  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font); overflow-x: hidden; }
 
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.13) 2px, rgba(0,0,0,0.13) 4px);
-      pointer-events: none;
-      z-index: 9999;
-    }
+  /* ── NAV ── */
+  #nav {
+    display: flex;
+    align-items: stretch;
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  #nav .brand {
+    display: flex; align-items: center;
+    color: var(--green);
+    font-size: 13px; font-weight: 700;
+    letter-spacing: .05em;
+    padding: 0 24px;
+    white-space: nowrap;
+    border-right: 1px solid var(--border);
+    text-decoration: none;
+  }
+  #nav .links { display: flex; }
+  #nav .links a {
+    display: flex; align-items: center;
+    color: #888;
+    font-size: 11px; letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
+    padding: 0 20px;
+    border-right: 1px solid var(--border);
+    transition: color .15s, background .15s;
+    white-space: nowrap;
+  }
+  #nav .links a:hover { color: var(--text); background: #111; }
+  #nav .links a.active { color: var(--text); background: #111; border-bottom: 2px solid var(--green); }
+  #nav .clock {
+    margin-left: auto;
+    display: flex; align-items: center;
+    color: var(--green);
+    font-size: 13px; letter-spacing: .08em;
+    padding: 0 24px;
+  }
 
-    /* NAV */
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 24px;
-      border-bottom: 1px solid var(--border);
-      background: var(--panel);
-      position: sticky; top: 0; z-index: 200;
-    }
-    .nav-logo {
-      font-family: 'Orbitron', sans-serif;
-      font-weight: 900;
-      font-size: 13px;
-      letter-spacing: 3px;
-      color: var(--green);
-      text-decoration: none;
-    }
-    .nav-links { display: flex; gap: 0; }
-    .nav-links a {
-      color: var(--text);
-      text-decoration: none;
-      font-size: 11px;
-      letter-spacing: 2px;
-      padding: 4px 14px;
-      border-left: 1px solid var(--border);
-      transition: color 0.2s;
-    }
-    .nav-links a:hover, .nav-links a.active { color: var(--green); }
-    #nav-clock {
-      font-size: 11px;
-      letter-spacing: 2px;
-      color: var(--green-dim);
-      min-width: 70px;
-      text-align: right;
-    }
+  /* ── BUTTONS ── */
+  .btn-row { display: flex; gap: 12px; padding: 20px 24px 0; }
+  .btn {
+    font-family: var(--font);
+    font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    padding: 11px 24px;
+    cursor: pointer;
+    border: 2px solid;
+    transition: all .15s;
+  }
+  .btn-fill  { background: var(--green); color: #000; border-color: var(--green); }
+  .btn-fill:hover { background: #00cc00; border-color: #00cc00; }
+  .btn-fill:disabled { opacity: .4; cursor: default; }
+  .btn-outline { background: transparent; color: var(--text); border-color: #333; }
+  .btn-outline:hover { border-color: var(--text); }
+  .btn-outline.tracking { border-color: #ff4444; color: #ff4444; }
 
-    /* TICKER */
-    .ticker {
-      border-bottom: 1px solid var(--border);
-      padding: 5px 0;
-      overflow: hidden;
-      white-space: nowrap;
-      background: var(--panel);
-    }
-    .ticker-inner {
-      display: inline-block;
-      animation: ticker 35s linear infinite;
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--text);
-    }
-    @keyframes ticker {
-      0% { transform: translateX(100vw); }
-      100% { transform: translateX(-100%); }
-    }
+  /* ── STATS BAR ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .stat {
+    padding: 22px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-size: 34px; font-weight: 700; color: var(--green);
+    line-height: 1; margin-bottom: 6px; word-break: break-all;
+  }
+  .stat-num.sm { font-size: 18px; padding-top: 8px; }
+  .stat-label { font-size: 9px; color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
 
-    /* PAGE HEADER */
-    .page-header {
-      padding: 24px 28px;
-      border-bottom: 1px solid var(--border);
-    }
-    .page-header-top {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-      margin-bottom: 6px;
-    }
-    .page-tag {
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: var(--green-dim);
-      border: 1px solid var(--border);
-      padding: 2px 8px;
-    }
-    .page-header h1 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing: 5px;
-    }
-    .page-header p {
-      font-size: 11px;
-      color: var(--text);
-      letter-spacing: 2px;
-      margin-top: 8px;
-    }
+  /* ── TICKER ── */
+  .ticker {
+    display: flex; align-items: center;
+    border-bottom: 1px solid var(--border);
+    height: 34px; overflow: hidden;
+  }
+  .ticker-tag {
+    background: var(--green); color: #000;
+    font-size: 10px; font-weight: 700; letter-spacing: .1em;
+    padding: 0 14px; height: 100%;
+    display: flex; align-items: center;
+    flex-shrink: 0;
+  }
+  .ticker-msg {
+    font-size: 10px; color: var(--green); letter-spacing: .07em;
+    padding: 0 16px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
 
-    /* MAIN LAYOUT */
-    .main-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      min-height: calc(100vh - 180px);
-    }
+  /* ── MAIN GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    height: calc(100vh - 52px - 52px - 34px - 98px);
+    min-height: 380px;
+  }
 
-    /* PANELS */
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 16px;
-      margin: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .panel-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 3px;
-      color: var(--green-dim);
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 8px;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
+  /* ── MAP ── */
+  #map-wrap { position: relative; border-right: 1px solid var(--border); }
+  #map { width: 100%; height: 100%; }
+  .map-badge {
+    position: absolute; top: 14px; left: 14px; z-index: 999;
+    background: rgba(0,0,0,.88);
+    border: 1px solid var(--border);
+    padding: 10px 14px; pointer-events: none;
+  }
+  .map-badge .coords { color: var(--green); font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+  .map-badge .addr   { color: #666; font-size: 10px; }
 
-    /* LEFT PANEL */
-    .left-section {
-      padding: 0 20px;
-      overflow-y: auto;
-    }
+  /* ── SIDE PANEL ── */
+  .side { display: flex; flex-direction: column; overflow-y: auto; }
+  .side::-webkit-scrollbar { width: 3px; }
+  .side::-webkit-scrollbar-thumb { background: var(--border); }
 
-    /* MAP */
-    #map {
-      border: 1px solid var(--border);
-      height: 500px;
-      margin: 20px;
-      filter: grayscale(100%) invert(1) contrast(88%);
-    }
+  .section { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+  .section-title { font-size: 9px; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; margin-bottom: 12px; }
 
-    /* CONTROL PANELS */
-    .control-panel {
-      border: 1px solid var(--border);
-      padding: 12px;
-      background: var(--panel);
-      margin: 20px;
-    }
+  .row { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; border-bottom: 1px solid #080808; font-size: 11px; }
+  .row:last-child { border-bottom: none; }
+  .rk { color: var(--muted); font-size: 10px; letter-spacing: .07em; text-transform: uppercase; }
+  .rv { color: var(--text); font-weight: 700; text-align: right; }
+  .rv.g { color: var(--green); }
 
-    .mode-row { display: flex; gap: 6px; margin-bottom: 12px; }
-    .mode-btn {
-      flex: 1;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-family: 'Orbitron', sans-serif;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      padding: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-transform: uppercase;
-    }
-    .mode-btn.active {
-      background: var(--green-dark);
-      border-color: var(--green);
-      color: var(--green);
-    }
+  /* ── ERROR ── */
+  .err { background: #0d0000; border-bottom: 1px solid #440000; color: #ff4444; font-size: 11px; padding: 9px 24px; letter-spacing: .05em; display: none; }
 
-    .field-group { margin-bottom: 12px; }
-    .field-label {
-      font-size: 9px;
-      letter-spacing: 2px;
-      color: var(--green-dim);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--green);
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 12px;
-      padding: 6px 8px;
-      outline: none;
-    }
-    input:focus { border-color: var(--green); }
-
-    .status-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      margin-bottom: 8px;
-    }
-    .status-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--red);
-      flex-shrink: 0;
-      box-shadow: 0 0 6px var(--red);
-    }
-    .status-dot.connected {
-      background: var(--green);
-      box-shadow: 0 0 10px var(--green);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
-
-    .btn {
-      background: transparent;
-      border: 1px solid var(--green);
-      color: var(--green);
-      font-family: 'Orbitron', sans-serif;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      padding: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-transform: uppercase;
-    }
-    .btn:hover { background: var(--green); color: var(--bg); }
-    .btn.danger { border-color: var(--red); color: var(--red); }
-    .btn.danger:hover { background: var(--red); color: var(--bg); }
-    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    /* INFO PANELS */
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px;
-      border-bottom: 1px solid #0a2018;
-      font-size: 11px;
-      letter-spacing: 2px;
-    }
-    .info-label { color: var(--green-dim); }
-    .info-value { color: var(--green); font-weight: bold; }
-
-    .status-badge {
-      border: 1px solid;
-      padding: 6px 12px;
-      border-radius: 2px;
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-align: center;
-    }
-    .badge-granted { border-color: var(--green); color: var(--green); background: var(--green-dark); }
-    .badge-denied  { border-color: var(--red);   color: var(--red);   background: #330011; }
-    .badge-unknown { border-color: var(--amber);  color: var(--amber);  background: #331100; }
-
-    /* TERMINAL */
-    #log {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 12px;
-      height: 200px;
-      overflow-y: auto;
-      font-size: 10px;
-      line-height: 1.8;
-    }
-    #log::-webkit-scrollbar { width: 4px; }
-    #log::-webkit-scrollbar-thumb { background: var(--green-dark); }
-
-    .log-line { display: flex; gap: 8px; margin-bottom: 2px; }
-    .log-ts { color: var(--green-dim); flex-shrink: 0; }
-    .log-ok { color: var(--green); }
-    .log-err { color: var(--red); }
-    .log-inf { color: var(--text); }
-
-    /* RIGHT PANEL */
-    .right-section {
-      padding: 0 20px;
-      overflow-y: auto;
-    }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 12px 24px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 9px;
-      letter-spacing: 2px;
-      color: #446655;
-      background: var(--panel);
-    }
-
-    @media (max-width: 900px) {
-      .main-wrap { grid-template-columns: 1fr; }
-      #map { height: 300px; }
-    }
-  </style>
+  /* ── BLINK DOT ── */
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #333; margin-right: 6px; vertical-align: middle; }
+  .dot.on { background: var(--green); animation: blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+</style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav>
-  <a class="nav-logo" href="../index.html">[TUA.SUSTAINABLE]</a>
-  <div class="nav-links">
-    <a href="../index.html">HOME</a>
-    <a href="bus.html">BUS NETWORK</a>
-    <a href="train.html">TRAIN</a>
-    <a href="rfid.html">SMART CARD</a>
-    <a href="gps.html" class="active">GPS LOCATION</a>
+<div id="nav">
+  <a class="brand" href="https://denisa-g1t.github.io/tirana-bus-tracker/index.html">[ATARA.SUSTAINABLE]</a>
+  <div class="links">
+    <a href="https://denisa-g1t.github.io/tirana-bus-tracker/index.html">HOME</a>
+    <a href="https://denisa-g1t.github.io/tirana-bus-tracker/pages/bus-tirana.html">BUS TIRANA</a>
+    <a href="https://denisa-g1t.github.io/tirana-bus-tracker/pages/train-albania.html">TRAIN ALBANIA</a>
+    <a href="https://denisa-g1t.github.io/tirana-bus-tracker/pages/smart-card.html">SMART CARD</a>
+    <a href="#" class="active">GPS</a>
   </div>
-  <div id="nav-clock">--:--:--</div>
-</nav>
+  <div class="clock" id="clock">00:00:00</div>
+</div>
+
+<!-- ERROR -->
+<div class="err" id="errBar"></div>
+
+<!-- BUTTONS -->
+<div class="btn-row">
+  <button class="btn btn-fill" id="btnGet" onclick="getLocation()">GET MY LOCATION</button>
+  <button class="btn btn-outline" id="btnTrack" onclick="toggleTrack()"><span class="dot" id="dot"></span>LIVE TRACK</button>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num sm" id="sLat">—</div><div class="stat-label">LATITUDE</div></div>
+  <div class="stat"><div class="stat-num sm" id="sLng">—</div><div class="stat-label">LONGITUDE</div></div>
+  <div class="stat"><div class="stat-num" id="sAcc">—</div><div class="stat-label">ACCURACY (M)</div></div>
+  <div class="stat"><div class="stat-num" id="sFix">0</div><div class="stat-label">GPS FIXES</div></div>
+</div>
 
 <!-- TICKER -->
 <div class="ticker">
-  <span class="ticker-inner">
-    GPS LOCATION TRACKER ONLINE &nbsp;·&nbsp; ESP32 + GPS MODULE V2 &nbsp;·&nbsp;
-    MFRC522 RFID &nbsp;·&nbsp; REAL-TIME SATELLITE TRACKING &nbsp;·&nbsp;
-    TUA SUSTAINABLE TRANSIT &nbsp;·&nbsp; SCAN CARD FOR LOCATION LOG &nbsp;·&nbsp;
-  </span>
+  <div class="ticker-tag">LIVE</div>
+  <div class="ticker-msg" id="ticker">Waiting for GPS signal…</div>
 </div>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <div class="page-header-top">
-    <span class="page-tag">GPS 02</span>
-    <h1>GPS LOCATION TRACKER</h1>
-  </div>
-  <p>ESP32 + GPS Module V2 + MFRC522 RFID &nbsp;·&nbsp; Real-time satellite positioning &nbsp;·&nbsp; Card-linked location history</p>
-</div>
-
-<!-- MAIN LAYOUT -->
-<div class="main-wrap">
-
-  <!-- LEFT: MAP & CONTROLS -->
-  <div class="left-section">
-
-    <!-- MAP -->
+<!-- MAP + SIDE -->
+<div class="grid">
+  <div id="map-wrap">
     <div id="map"></div>
-
-    <!-- CONNECTION CONTROLS -->
-    <div class="control-panel">
-      <div class="panel-title">ESP32 Connection</div>
-      
-      <div class="mode-row">
-        <button class="mode-btn active" onclick="setMode('ws')">WebSocket</button>
-        <button class="mode-btn" onclick="setMode('http')">HTTP Poll</button>
-        <button class="mode-btn" onclick="setMode('demo')">Demo</button>
-      </div>
-
-      <div class="field-group">
-        <div class="field-label">ESP32 IP Address</div>
-        <input type="text" id="esp-ip" value="192.168.1.100" placeholder="192.168.1.100" />
-      </div>
-
-      <div class="field-group" id="port-group">
-        <div class="field-label">WebSocket Port</div>
-        <input type="number" id="esp-port" value="81" style="width: 100px;" />
-      </div>
-
-      <div class="status-row">
-        <div class="status-dot" id="status-dot"></div>
-        <span id="status-text">Disconnected</span>
-      </div>
-
-      <div style="display: flex; gap: 8px;">
-        <button class="btn" onclick="doConnect()" id="connect-btn">Connect</button>
-        <button class="btn danger" onclick="doDisconnect()" id="disconnect-btn" disabled>Disconnect</button>
-      </div>
+    <div class="map-badge">
+      <div class="coords" id="bCoords">—</div>
+      <div class="addr"   id="bAddr">Press GET MY LOCATION</div>
     </div>
-
   </div>
 
-  <!-- RIGHT: GPS DATA & CARD INFO -->
-  <div class="right-section">
-
-    <!-- GPS COORDINATES -->
-    <div class="panel">
-      <div class="panel-title">Current GPS Position</div>
-      <div class="info-row">
-        <span class="info-label">Latitude:</span>
-        <span class="info-value" id="gps-lat">--</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Longitude:</span>
-        <span class="info-value" id="gps-lng">--</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Altitude:</span>
-        <span class="info-value" id="gps-alt">-- m</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Speed:</span>
-        <span class="info-value" id="gps-speed">-- kt</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Satellites:</span>
-        <span class="info-value" id="gps-sats">0</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Fix Status:</span>
-        <span class="info-value" id="gps-fix">No Fix</span>
-      </div>
+  <div class="side">
+    <div class="section">
+      <div class="section-title">Address</div>
+      <div class="row"><span class="rk">Street</span><span class="rv g" id="dStreet">—</span></div>
+      <div class="row"><span class="rk">City</span><span class="rv" id="dCity">—</span></div>
+      <div class="row"><span class="rk">Country</span><span class="rv" id="dCountry">—</span></div>
+      <div class="row"><span class="rk">Postcode</span><span class="rv" id="dPost">—</span></div>
     </div>
-
-    <!-- CARD INFO -->
-    <div class="panel">
-      <div class="panel-title">Last Card Scanned</div>
-      <div class="info-row">
-        <span class="info-label">Card UID:</span>
-        <span class="info-value" id="card-uid">--</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Holder:</span>
-        <span class="info-value" id="card-name">--</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Balance:</span>
-        <span class="info-value" id="card-balance">$--</span>
-      </div>
-      <div style="margin-top: 12px;">
-        <div class="status-badge badge-unknown" id="card-badge">No Scan</div>
-      </div>
+    <div class="section">
+      <div class="section-title">GPS Data</div>
+      <div class="row"><span class="rk">Altitude</span><span class="rv" id="dAlt">—</span></div>
+      <div class="row"><span class="rk">Speed</span><span class="rv g" id="dSpd">—</span></div>
+      <div class="row"><span class="rk">Heading</span><span class="rv" id="dHdg">—</span></div>
+      <div class="row"><span class="rk">Updated</span><span class="rv" id="dTime">—</span></div>
     </div>
-
-    <!-- TERMINAL LOG -->
-    <div class="panel">
-      <div class="panel-title">Live Terminal Log</div>
-      <div id="log">
-        <div class="log-line">
-          <span class="log-ts">00:00:00</span>
-          <span class="log-inf">&gt; TUA GPS Location Tracker Ready</span>
-        </div>
-        <div class="log-line">
-          <span class="log-ts">00:00:00</span>
-          <span class="log-inf">&gt; Waiting for ESP32 connection...</span>
-        </div>
-      </div>
+    <div class="section">
+      <div class="section-title">Coordinates</div>
+      <div class="row"><span class="rk">Lat DMS</span><span class="rv" id="dLatD">—</span></div>
+      <div class="row"><span class="rk">Lng DMS</span><span class="rv" id="dLngD">—</span></div>
+      <div class="row"><span class="rk">Distance moved</span><span class="rv g" id="dDist">0 m</span></div>
     </div>
-
   </div>
-
 </div>
 
-<!-- FOOTER -->
-<footer>
-  <span>[TUA.SUSTAINABLE]</span>
-  <span>2025 TIRANA URBAN TRANSIT SYSTEM - GPS TRACKING</span>
-</footer>
-
-<!-- LEAFLET MAP -->
 <script>
-// Initialize map
-let map = L.map('map').setView([41.3275, 19.8187], 13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors',
-  maxZoom: 19
+// ── CLOCK ──────────────────────────────────────────
+setInterval(() => {
+  const n = new Date();
+  document.getElementById('clock').textContent =
+    [n.getHours(), n.getMinutes(), n.getSeconds()].map(v => String(v).padStart(2,'0')).join(':');
+}, 1000);
+
+// ── MAP ────────────────────────────────────────────
+const map = L.map('map').setView([41.3276, 19.8187], 15);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CARTO',
+  subdomains: 'abcd', maxZoom: 19
 }).addTo(map);
 
-let locationMarker = null;
-let locationHistory = [];
+const icon = L.divIcon({
+  className: '',
+  html: `<div style="width:14px;height:14px;background:#00ff00;border:3px solid #000;border-radius:50%;
+         box-shadow:0 0 0 3px rgba(0,255,0,.25),0 0 14px #00ff00"></div>`,
+  iconSize: [14,14], iconAnchor: [7,7]
+});
 
-function updateMapLocation(lat, lng) {
-  if (lat && lng) {
-    if (locationMarker) {
-      locationMarker.setLatLng([lat, lng]);
-    } else {
-      locationMarker = L.circleMarker([lat, lng], {
-        radius: 8,
-        fillColor: '#00ff88',
-        color: '#00ff88',
-        weight: 2,
-        opacity: 1,
-        fillOpacity: 0.8
-      }).addTo(map);
-    }
-    map.setView([lat, lng], 15);
-    locationHistory.push([lat, lng]);
-    
-    // Draw path
-    if (locationHistory.length > 1) {
-      L.polyline(locationHistory, {
-        color: '#00ff8844',
-        weight: 2,
-        opacity: 0.5
-      }).addTo(map);
-    }
-  }
+let marker, circle, trackId, tracking = false, fixes = 0, lastPt = null, totalDist = 0;
+
+// ── HELPERS ───────────────────────────────────────
+function dms(v, isLat) {
+  const d = Math.floor(Math.abs(v));
+  const mf = (Math.abs(v) - d) * 60;
+  const m = Math.floor(mf);
+  const s = ((mf - m) * 60).toFixed(1);
+  const dir = v >= 0 ? (isLat ? 'N' : 'E') : (isLat ? 'S' : 'W');
+  return `${d}°${m}'${s}"${dir}`;
 }
 
-// GPS & Comms
-let currentMode = 'ws';
-let wsConn = null;
-let httpTimer = null;
-let demoTimer = null;
-
-function nowTS() {
-  const n = new Date();
-  return [n.getHours(), n.getMinutes(), n.getSeconds()]
-    .map(x => String(x).padStart(2, '0')).join(':');
+function haversine(a, b, c, d) {
+  const R = 6371000, r = Math.PI / 180;
+  const x = Math.sin((c-a)*r/2)**2 + Math.cos(a*r)*Math.cos(c*r)*Math.sin((d-b)*r/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(x), Math.sqrt(1-x));
 }
 
-function addLog(text, cls) {
-  const log = document.getElementById('log');
-  const div = document.createElement('div');
-  div.className = 'log-line';
-  div.innerHTML = `<span class="log-ts">${nowTS()}</span><span class="${cls}">&gt; ${text}</span>`;
-  log.appendChild(div);
-  log.scrollTop = log.scrollHeight;
-  if (log.children.length > 50) log.removeChild(log.firstChild);
-}
-
-function updateGPS(data) {
-  if (data.gps) {
-    const gps = data.gps;
-    document.getElementById('gps-lat').textContent = gps.latitude.toFixed(6);
-    document.getElementById('gps-lng').textContent = gps.longitude.toFixed(6);
-    document.getElementById('gps-alt').textContent = gps.altitude.toFixed(1) + ' m';
-    document.getElementById('gps-speed').textContent = gps.speed.toFixed(1) + ' kt';
-    document.getElementById('gps-sats').textContent = gps.satellites;
-    document.getElementById('gps-fix').textContent = gps.has_fix ? 'FIX ✓' : 'No Fix';
-    
-    updateMapLocation(gps.latitude, gps.longitude);
-    addLog(`GPS: ${gps.latitude.toFixed(6)}, ${gps.longitude.toFixed(6)} | Satellites: ${gps.satellites}`, 'log-ok');
-  }
-  
-  if (data.card && data.card.uid) {
-    const card = data.card;
-    document.getElementById('card-uid').textContent = card.uid;
-    document.getElementById('card-name').textContent = card.name;
-    document.getElementById('card-balance').textContent = '$' + card.balance.toFixed(2);
-    
-    const badge = document.getElementById('card-badge');
-    badge.className = 'status-badge badge-' + card.status;
-    badge.textContent = card.status.toUpperCase();
-    
-    addLog(`CARD: ${card.name} | Balance: $${card.balance.toFixed(2)} | ${card.status.toUpperCase()}`, 
-      card.status === 'granted' ? 'log-ok' : 'log-err');
-  }
-}
-
-function setMode(m) {
-  currentMode = m;
-  document.querySelectorAll('.mode-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', ['ws', 'http', 'demo'][i] === m);
-  });
-  document.getElementById('port-group').style.display = m === 'demo' ? 'none' : 'block';
-  doDisconnect();
-}
-
-function setStatus(state) {
-  const dot = document.getElementById('status-dot');
-  const txt = document.getElementById('status-text');
-  dot.className = 'status-dot' + (state === 'connected' ? ' connected' : '');
-  txt.textContent = state === 'connected' ? 'Connected — Live' : 'Disconnected';
-  document.getElementById('connect-btn').disabled = state !== 'disconnected';
-  document.getElementById('disconnect-btn').disabled = state === 'disconnected';
-}
-
-function doConnect() {
-  doDisconnect();
-  if (currentMode === 'ws') connectWS();
-  else if (currentMode === 'http') connectHTTP();
-  else startDemo();
-}
-
-function doDisconnect() {
-  if (wsConn) { try { wsConn.close(); } catch(_){} wsConn = null; }
-  if (httpTimer) clearInterval(httpTimer);
-  if (demoTimer) clearTimeout(demoTimer);
-  setStatus('disconnected');
-}
-
-function connectWS() {
-  const ip = document.getElementById('esp-ip').value.trim();
-  const port = document.getElementById('esp-port').value.trim();
-  const url = `ws://${ip}:${port}`;
-  setStatus('connecting');
-  addLog(`WebSocket → ${url}`, 'log-inf');
-  
+async function geocode(lat, lng) {
   try {
-    wsConn = new WebSocket(url);
-    wsConn.onopen = () => {
-      setStatus('connected');
-      addLog('WebSocket connected', 'log-ok');
-    };
-    wsConn.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data);
-        updateGPS(data);
-      } catch(_) {}
-    };
-    wsConn.onerror = () => addLog('WebSocket error', 'log-err');
-    wsConn.onclose = () => { setStatus('disconnected'); addLog('Disconnected', 'log-inf'); };
-  } catch(e) {
-    addLog('Connection error: ' + e.message, 'log-err');
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
+      { headers: { 'Accept-Language': 'en' } }
+    );
+    const a = (await res.json()).address || {};
+    const street = (a.road || a.pedestrian || a.path || 'Unknown road') + (a.house_number ? ' ' + a.house_number : '');
+    document.getElementById('dStreet').textContent  = street;
+    document.getElementById('dCity').textContent    = a.city || a.town || a.village || '—';
+    document.getElementById('dCountry').textContent = a.country || '—';
+    document.getElementById('dPost').textContent    = a.postcode || '—';
+    document.getElementById('bAddr').textContent    = street;
+  } catch(e) {}
+}
+
+// ── POSITION HANDLER ──────────────────────────────
+function onPos(pos) {
+  const { latitude: lat, longitude: lng, accuracy: acc, altitude: alt, speed: spd, heading: hdg } = pos.coords;
+  fixes++;
+
+  if (lastPt) totalDist += haversine(lastPt.lat, lastPt.lng, lat, lng);
+  lastPt = { lat, lng };
+
+  // Stats bar
+  document.getElementById('sLat').textContent = lat.toFixed(7);
+  document.getElementById('sLng').textContent = lng.toFixed(7);
+  document.getElementById('sAcc').textContent = acc.toFixed(0);
+  document.getElementById('sFix').textContent = fixes;
+
+  // Map badge
+  document.getElementById('bCoords').textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+  // Side panel
+  document.getElementById('dAlt').textContent  = alt  != null ? alt.toFixed(1) + ' m'        : '—';
+  document.getElementById('dSpd').textContent  = spd  != null ? (spd * 3.6).toFixed(1) + ' km/h' : '—';
+  document.getElementById('dHdg').textContent  = hdg  != null ? hdg.toFixed(0) + '°'           : '—';
+  document.getElementById('dTime').textContent = new Date(pos.timestamp).toLocaleTimeString();
+  document.getElementById('dLatD').textContent = dms(lat, true);
+  document.getElementById('dLngD').textContent = dms(lng, false);
+  document.getElementById('dDist').textContent = totalDist > 1000
+    ? (totalDist / 1000).toFixed(2) + ' km'
+    : totalDist.toFixed(0) + ' m';
+
+  // Ticker
+  document.getElementById('ticker').textContent =
+    `LAT ${lat.toFixed(6)}  |  LNG ${lng.toFixed(6)}  |  ±${acc.toFixed(0)}m  |  FIXES: ${fixes}  |  ${new Date().toLocaleTimeString()}`;
+
+  // Map marker
+  if (!marker) {
+    marker = L.marker([lat, lng], { icon }).addTo(map);
+    circle = L.circle([lat, lng], {
+      radius: acc, color: '#00ff00', weight: 1,
+      fillColor: '#00ff00', fillOpacity: 0.04, dashArray: '4 4'
+    }).addTo(map);
+  } else {
+    marker.setLatLng([lat, lng]);
+    circle.setLatLng([lat, lng]).setRadius(acc);
+  }
+  map.setView([lat, lng], 17);
+
+  // Error clear
+  document.getElementById('errBar').style.display = 'none';
+  document.getElementById('dot').classList.add('on');
+
+  // Geocode every 5 fixes or first
+  if (fixes === 1 || fixes % 5 === 0) geocode(lat, lng);
+}
+
+function onErr(e) {
+  const msgs = { 1: 'Permission denied — allow location access in browser settings', 2: 'Position unavailable', 3: 'Timeout — try again' };
+  const bar = document.getElementById('errBar');
+  bar.textContent = '⚠  ' + (msgs[e.code] || e.message);
+  bar.style.display = 'block';
+  document.getElementById('btnGet').disabled = false;
+}
+
+// ── GET ONCE ──────────────────────────────────────
+function getLocation() {
+  document.getElementById('btnGet').disabled = true;
+  document.getElementById('ticker').textContent = 'Acquiring GPS signal…';
+  navigator.geolocation.getCurrentPosition(
+    p => { onPos(p); document.getElementById('btnGet').disabled = false; },
+    onErr,
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+  );
+}
+
+// ── LIVE TRACK ────────────────────────────────────
+function toggleTrack() {
+  const btn = document.getElementById('btnTrack');
+  if (!tracking) {
+    trackId = navigator.geolocation.watchPosition(onPos, onErr,
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 1000 });
+    tracking = true;
+    btn.innerHTML = '<span class="dot on" id="dot"></span>STOP TRACKING';
+    btn.classList.add('tracking');
+  } else {
+    navigator.geolocation.clearWatch(trackId);
+    tracking = false;
+    btn.innerHTML = '<span class="dot" id="dot"></span>LIVE TRACK';
+    btn.classList.remove('tracking');
   }
 }
 
-function connectHTTP() {
-  const ip = document.getElementById('esp-ip').value.trim();
-  addLog(`HTTP polling http://${ip}:5000/gps`, 'log-ok');
-  setStatus('connected');
-  httpTimer = setInterval(async () => {
-    try {
-      const res = await fetch(`http://${ip}:5000/gps`, { signal: AbortSignal.timeout(2000) });
-      const data = await res.json();
-      updateGPS(data);
-    } catch(_) {}
-  }, 500);
-}
-
-function startDemo() {
-  addLog('Demo mode — simulated GPS data', 'log-inf');
-  setStatus('connected');
-  function nextUpdate() {
-    const lat = 41.3275 + (Math.random() - 0.5) * 0.01;
-    const lng = 19.8187 + (Math.random() - 0.5) * 0.01;
-    const data = {
-      gps: {
-        latitude: lat,
-        longitude: lng,
-        altitude: 50 + Math.random() * 10,
-        speed: Math.random() * 30,
-        satellites: 8 + Math.floor(Math.random() * 4),
-        has_fix: true
-      },
-      card: { uid: 'DEMO1234', name: 'DEMO USER', balance: 25.50, status: 'granted' }
-    };
-    updateGPS(data);
-    demoTimer = setTimeout(nextUpdate, 2000);
-  }
-  nextUpdate();
-}
-
-// Clock
-function tick() {
-  const n = new Date();
-  document.getElementById('nav-clock').textContent =
-    [n.getHours(), n.getMinutes(), n.getSeconds()]
-      .map(x => String(x).padStart(2, '0')).join(':');
-}
-setInterval(tick, 1000);
-tick();
+// Auto-locate on load
+setTimeout(getLocation, 400);
 </script>
-
 </body>
 </html>
