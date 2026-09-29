@@ -85,6 +85,14 @@ function formatMinutes(mins) {
   return m ? `${h} h ${m} min` : `${h} h`;
 }
 
+// A bus standing at your stop is 40 m away, not "0.0 km".
+function formatKm(km) {
+  if (km === null || km === undefined) return '--';
+  if (km < 0.1) return '<0.1 km';
+  if (km < 10) return `${km.toFixed(1)} km`;
+  return `${Math.round(km)} km`;
+}
+
 const ATARA = {
   data: null,
   error: null,
@@ -273,4 +281,4 @@ const ATARA = {
 };
 
 window.ATARA = ATARA;
-window.ATARA_HELPERS = { haversineKm, trafficFactor, formatAge, formatClock, formatMinutes };
+window.ATARA_HELPERS = { haversineKm, trafficFactor, formatAge, formatClock, formatMinutes, formatKm, shortPlaceName };

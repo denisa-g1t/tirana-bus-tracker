@@ -141,10 +141,10 @@ const ATARA_UI = {
       </div>
       <div style="color:#646464;font-size:13px;margin-bottom:7px">${esc(line.name)}</div>
       ${eta ? `<div style="font-size:20px;font-weight:700;color:#0047DE;letter-spacing:-.02em">${esc(formatMinutes(eta.minutes))}</div>
-        <div style="color:#646464;font-size:12px;margin-bottom:7px">${eta.km.toFixed(1)} km to your destination · ${eta.speedKmh} km/h${eta.usingLiveSpeed ? ' (live)' : ' (line average)'}${eta.reliable ? '' : ' · position may be out of date'}</div>` : ''}
+        <div style="color:#646464;font-size:12px;margin-bottom:7px">${esc(formatKm(eta.km))} to your destination · ${eta.speedKmh} km/h${eta.usingLiveSpeed ? ' (live)' : ' (line average)'}${eta.reliable ? '' : ' · position may be out of date'}</div>` : ''}
       <div><span class="status-chip ${status.className}">${status.label}</span>
         <span style="color:#646464;font-size:12px;margin-left:6px">${esc(bus.speed_kmh)} km/h · ${esc(formatAge(bus.age_s))}</span></div>
-      ${near ? `<div style="color:#646464;font-size:12px;margin-top:5px">Nearest reported area: ${esc(shortPlaceName(near.stop.name))} (${near.km.toFixed(1)} km)</div>` : ''}
+      ${near ? `<div style="color:#646464;font-size:12px;margin-top:5px">Nearest reported area: ${esc(shortPlaceName(near.stop.name))} (${esc(formatKm(near.km))})</div>` : ''}
     </div>`;
   },
 
@@ -407,7 +407,7 @@ const ATARA_TRIPS = {
           </div>
           <div class="trip-line">${esc(line.name)}</div>
           <div class="trip-facts">
-            ${eta ? `<span class="trip-fact"><b>${eta.km.toFixed(1)} km</b> away</span>` : ''}
+            ${eta ? `<span class="trip-fact"><b>${esc(formatKm(eta.km))}</b> away</span>` : ''}
             <span class="trip-fact"><b>${esc(bus.speed_kmh)} km/h</b> ${state}</span>
             ${near ? `<span class="trip-fact">near <b>${esc(shortPlaceName(near.stop.name))}</b></span>` : ''}
           </div>

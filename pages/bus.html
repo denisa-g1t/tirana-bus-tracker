@@ -124,7 +124,7 @@ function renderSelected() {
   const eta = ATARA.destination ? ATARA.eta(bus, line, ATARA.destination) : null;
   const rows = [
     ['Arrives in', eta ? formatMinutes(eta.minutes) : 'set a destination'],
-    ['Distance to destination', eta ? `${eta.km.toFixed(1)} km` : '--'],
+    ['Distance to destination', eta ? formatKm(eta.km) : '--'],
     ['Speed now', `${bus.speed_kmh} km/h`],
     ['Speed used for ETA', eta ? `${eta.speedKmh} km/h (${eta.usingLiveSpeed ? 'live' : 'line average'})` : '--'],
     ['Driver', bus.driver || 'unassigned'],
