@@ -79,7 +79,11 @@
     <li><strong>Bus stop names and positions</strong> come from OpenStreetMap, which is why Atara can tell you to walk to a real stop by its real name.</li>
     <li><strong>Notable places</strong> such as Skanderregu, Toptani or the East Gate are included so you can search for a destination by the name you would actually use.</li>
   </ul>
-  <p>Atara is refreshed by a scheduled job. If that job stops, the top of the page says so instead of pretending the buses are still moving.</p>
+  <p>Atara is pulled on demand rather than on a fixed clock, so the age of the
+  feed is always on screen: the pill at the top says how many buses are live, and
+  turns into a "last update" time once the positions go stale. When the data is
+  old the vehicles stay on the map, dimmed and stamped with when they were last
+  seen, because an empty map would be a nicer lie than a dim one.</p>
 
   <p class="cta"><a href="index.html">Open Atara</a></p>
 </main>
