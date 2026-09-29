@@ -1,9 +1,9 @@
 // Shared map, journey picker and trip list for the ATARA public pages.
 
 const ATARA_ICONS = {
-  swap: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4"/><path d="M3 8l4-4 4 4"/><path d="M17 8v12"/><path d="M13 16l4 4 4-4"/></svg>',
-  pin: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>',
-  clock: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
+  swap: '<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16V4"/><path d="M3 8l4-4 4 4"/><path d="M17 8v12"/><path d="M13 16l4 4 4-4"/></svg>',
+  pin: '<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></svg>',
+  clock: '<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
 };
 
 const esc = value => (value === null || value === undefined || value === '')
@@ -31,7 +31,7 @@ const ATARA_UI = {
   pinIcon(color) {
     return L.divIcon({
       className: 'bus-marker',
-      html: `<svg width="26" height="34" viewBox="0 0 24 32" style="filter:drop-shadow(0 2px 5px rgba(6,26,47,.4))">
+      html: `<svg aria-hidden="true" width="26" height="34" viewBox="0 0 24 32" style="filter:drop-shadow(0 2px 5px rgba(6,26,47,.4))">
         <path d="M12 31C12 31 22 20.5 22 12A10 10 0 002 12c0 8.5 10 19 10 19z" fill="${color}"/>
         <circle cx="12" cy="12" r="4" fill="#fff"/></svg>`,
       iconSize: [26, 34],
