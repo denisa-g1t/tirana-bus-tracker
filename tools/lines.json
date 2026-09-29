@@ -1,0 +1,66 @@
+{
+  "source": {
+    "system": "GpsGate Server",
+    "host": "https://bus.atd-grp.com",
+    "app_id": 14,
+    "version": "4.0.0.5777"
+  },
+  "lines": [
+    {
+      "id": "L1",
+      "number": "1",
+      "name": "1-Linja Kamez",
+      "username": "bus",
+      "view_id": 24,
+      "color": "#0047DE"
+    },
+    {
+      "id": "L2",
+      "number": "2",
+      "name": "2-Linja Paskuqan",
+      "username": "buss",
+      "view_id": 51,
+      "color": "#0e9f6e"
+    },
+    {
+      "id": "L3",
+      "number": "3",
+      "name": "Tag Instituti Bujqesor",
+      "username": "instituti",
+      "view_id": 187,
+      "color": "#b45309"
+    },
+    {
+      "id": "L4",
+      "number": "4",
+      "name": "4-Linja Unaza Perendimore Valias",
+      "username": "unazaperindimore",
+      "view_id": 172,
+      "color": "#7c3aed"
+    },
+    {
+      "id": "L5",
+      "number": "5",
+      "name": "5-Linja Unaza Lindore",
+      "username": "unazalindore",
+      "view_id": 171,
+      "color": "#db2777"
+    },
+    {
+      "id": "L6",
+      "number": "6",
+      "name": "6-Linja Bathore Zallher",
+      "username": "bathorezallherr",
+      "view_id": 173,
+      "color": "#0f766e"
+    },
+    {
+      "id": "L7",
+      "number": "7",
+      "name": "7-Linja Unaza Paskuqan",
+      "username": "unazapaskuqan",
+      "view_id": 169,
+      "color": "#c2410c"
+    }
+  ]
+}

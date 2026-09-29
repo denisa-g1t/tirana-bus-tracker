@@ -1,0 +1,6 @@
+# GpsGate tracker credentials - never commit these.
+tools/accounts.json
+atara/tools/accounts.json
+
+__pycache__/
+*.pyc

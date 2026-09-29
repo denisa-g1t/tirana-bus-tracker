@@ -1,0 +1,58 @@
+name: Refresh live bus data
+
+# GitHub Pages serves static files and cannot run tools/fetch_live.py itself, so
+# the fleet positions have to be pulled on a schedule and committed back to main.
+# The passwords live in the ATARA_PASSWORDS repository secret, never in the repo.
+
+on:
+  schedule:
+    # Every 5 minutes, the shortest interval GitHub Actions allows.
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-live-data
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Fetch fleet positions
+        env:
+          ATARA_PASSWORDS: ${{ secrets.ATARA_PASSWORDS }}
+        run: |
+          if [ -z "$ATARA_PASSWORDS" ]; then
+            echo "::error::Secret ATARA_PASSWORDS is not set. Add it under Settings > Secrets."
+            exit 1
+          fi
+          # Scheduled runs can drift, so a bus counts as live for 10 minutes and
+          # the site always shows how old each fix actually is.
+          python tools/fetch_live.py --online-sec 600 --stale-sec 3600
+
+      - name: Commit the refreshed snapshot
+        run: |
+          git config user.name  'atara-bot'
+          git config user.email 'atara-bot@users.noreply.github.com'
+          git add data/live.json data/live.js data/places.json
+          if git diff --cached --quiet; then
+            echo 'No change in fleet data.'
+            exit 0
+          fi
+          SUMMARY=$(python -c "import json;d=json.load(open('data/live.json'));t=d['totals'];print(f\"{t['buses']} buses, {t['online']} live, {t['moving']} moving, {t['offline']} offline\")")
+          git commit -m "data: ${SUMMARY}"
+          git push
+          echo "Published: ${SUMMARY}"
