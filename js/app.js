@@ -300,8 +300,10 @@
         + 'The ride time is worked out from the distance still to cover and the speed the vehicle is doing now, '
         + 'not from a timetable, so treat it as a guide.';
 
-    $('startJourney').disabled = p.noVehicle;
-    $('startJourney').textContent = p.noVehicle ? 'Show the walk' : 'Start journey';
+    // A walk-only plan has nothing to guide, and the walk is already spelled out
+    // in the steps above. A button reading "Show the walk" that cannot be pressed
+    // just looks broken, so it is removed instead of left there disabled.
+    $('startJourney').hidden = p.noVehicle;
 
     drawRoute();
     drawLegend();
