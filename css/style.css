@@ -145,6 +145,18 @@ a { color: var(--blue); }
 .btn-sm { padding: 7px 14px; font-size: 14px; }
 .btn:disabled { opacity: .45; cursor: not-allowed; }
 
+/* ---------- stale feed notice ---------- */
+
+.banner {
+  margin: 18px 0 0; padding: 14px 18px;
+  border: 1px solid var(--amber); border-left-width: 4px;
+  border-radius: var(--r); background: var(--amber-wash); color: #6b3d06;
+  font-size: 14px; line-height: 1.5;
+}
+.banner[hidden] { display: none; }
+.banner strong { color: #4a2a04; }
+.shell-wide { max-width: 1500px; margin: 0 auto; padding: 0 20px; }
+
 /* ---------- trip / map toolbar ---------- */
 
 .pick-row { display: flex; align-items: center; gap: 10px; padding: 12px 2px 0; flex-wrap: wrap; }
@@ -242,6 +254,7 @@ a { color: var(--blue); }
   color: #cfe0f7; font-size: 14px; font-weight: 500;
 }
 .hero-now.on { color: var(--white); }
+.hero-now.late { background: rgba(180, 83, 9, .28); border-color: rgba(253, 186, 116, .45); color: #fde3bd; }
 .hero-art { width: 100%; height: auto; display: block; }
 .hero-stats { display: flex; gap: 40px; padding: 26px 0 30px; }
 .hero-stat-v { font-size: 27px; font-weight: 700; color: var(--white); letter-spacing: -.02em; }

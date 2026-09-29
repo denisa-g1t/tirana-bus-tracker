@@ -6,9 +6,15 @@ name: Refresh live bus data
 
 on:
   schedule:
-    # Every 5 minutes, the shortest interval GitHub Actions allows.
+    # Every 5 minutes, the shortest interval GitHub Actions allows. Cron runs can
+    # also be delayed by minutes when GitHub is busy, so the site flags a late feed
+    # rather than pretending to be live.
     - cron: '*/5 * * * *'
   workflow_dispatch:
+  # Lets an external pinger (or a small cron on your own machine) drive a faster
+  # cadence than the 5 minute floor, without needing a token with repo scope.
+  repository_dispatch:
+    types: [refresh-live-data]
 
 permissions:
   contents: write

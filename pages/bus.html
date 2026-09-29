@@ -25,6 +25,8 @@
   </div>
 </nav>
 
+<div class="shell-wide"><div class="banner" id="feedBanner" hidden></div></div>
+
 <div class="journey-wrap" style="margin-top:0;padding:20px 0 0">
   <div class="section-shell">
     <h1 class="sr-only">Live bus map for Tirana and Kamëz</h1>
@@ -188,6 +190,7 @@ function renderAll() {
   renderNetwork();
   renderLegend();
   renderLivePill();
+  renderFeedBanner();
 
   if (!mapFitted) {
     mapFitted = true;
@@ -232,6 +235,7 @@ setInterval(() => {
     new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Tirane' });
   ATARA.rebaseAges();
   renderAll();
+  renderFeedBanner();
 }, 1000);
 
 ATARA.fromHash(location.hash);

@@ -433,6 +433,31 @@ const ATARA_TRIPS = {
   }
 };
 
+// GitHub Pages is a static mirror, so the site is only as fresh as the job that last
+// pulled the data. When that job has not run for a while the map would otherwise
+// just look empty and broken, so say plainly that the feed is late.
+const ATARA_FEED_LATE_S = 900;
+
+// Age of the data itself, not of the download. The snapshot can be seconds old in
+// the browser and still be an hour old if the collector stopped running.
+function feedAgeSeconds() {
+  if (!ATARA.data || !ATARA.data.generated_at) return null;
+  const t = new Date(ATARA.data.generated_at).getTime();
+  return Number.isFinite(t) ? Math.round((Date.now() - t) / 1000) : null;
+}
+
+function renderFeedBanner() {
+  const el = document.getElementById('feedBanner');
+  if (!el) return;
+  const ageS = feedAgeSeconds();
+  if (ageS === null || ageS <= ATARA_FEED_LATE_S) { el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML =
+    `<strong>The live feed was last updated ${esc(formatAge(ageS))}.</strong> `
+    + 'The collector that mirrors the operator tracker is not running on schedule, '
+    + 'so the positions below are out of date and arrival times are not meaningful.';
+}
+
 function renderLivePill() {
   const el = document.getElementById('livePill');
   if (!el) return;
@@ -442,8 +467,8 @@ function renderLivePill() {
     return;
   }
   if (!ATARA.data) { el.className = 'live-pill down'; el.innerHTML = '<span class="live-dot"></span>Connecting'; return; }
-  const ageS = ATARA.loadedAt ? Math.round((Date.now() - ATARA.loadedAt) / 1000) : 0;
   const t = ATARA.totals;
+  const ageS = feedAgeSeconds() || 0;
   // The snapshot is only as fresh as the job that wrote it. A collector on a
   // 5-minute cadence should not be flagged broken, but it must not claim "live" either.
   const onlineMax = (ATARA.data.thresholds && ATARA.data.thresholds.online_s) || 120;
@@ -460,3 +485,4 @@ window.ATARA_UI = ATARA_UI;
 window.ATARA_JOURNEY = ATARA_JOURNEY;
 window.ATARA_TRIPS = ATARA_TRIPS;
 window.renderLivePill = renderLivePill;
+window.renderFeedBanner = renderFeedBanner;

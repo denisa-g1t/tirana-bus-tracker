@@ -95,6 +95,8 @@
   </div>
 </header>
 
+<div class="section-shell"><div class="banner" id="feedBanner" hidden></div></div>
+
 <div class="journey-wrap">
   <div class="section-shell">
     <div class="journey" id="journey"></div>
@@ -160,7 +162,11 @@ function renderLanding() {
   document.getElementById('statLive').textContent = t.online || '--';
   document.getElementById('statLines').textContent = ATARA.lines.length || '--';
   const now = document.getElementById('heroNow');
-  if (ATARA.data) {
+  const ageS = (window.ATARA_HELPERS && ATARA.data) ? feedAgeSeconds() : null;
+  if (ATARA.data && ageS !== null && ageS > 600) {
+    now.textContent = `Last update ${formatAge(ageS)} · ${t.buses} buses tracked, ${t.online} reported then`;
+    now.classList.add('late');
+  } else if (ATARA.data) {
     now.textContent = `Right now: ${t.moving} buses moving · ${t.online} of ${t.buses} reporting live`;
     now.classList.add('on');
   } else {
@@ -188,6 +194,7 @@ function renderLanding() {
 
   ATARA_JOURNEY.paint();
   renderLivePill();
+  renderFeedBanner();
 }
 
 ATARA.onUpdate(renderLanding);
@@ -196,6 +203,7 @@ setInterval(() => {
     new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Tirane' });
   ATARA.rebaseAges();
   renderLivePill();
+  renderFeedBanner();
 }, 1000);
 
 ATARA.fromHash(location.hash);
