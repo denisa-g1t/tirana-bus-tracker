@@ -348,20 +348,29 @@
 
   /* ---------- guidance ---------- */
 
-  /* The whole guidance screen is a function of these three points, so it can be
-     re-evaluated on every feed update instead of being a scripted animation. */
+  /* The whole guidance screen is a function of these points, so it can be
+     re-evaluated on every feed update instead of being a scripted animation.
+
+     `onboard` has to be told in rather than worked out here. Once the bus pulls
+     away from the kerb the rider is a long way from where they boarded, so the
+     "are you at the stop" test can never pass again and the screen would be
+     stuck on the boarding step for the rest of the trip. The screen remembers
+     the moment of boarding and hands that in; the only question left to answer
+     is when to get off. */
   const Guide = {
-    phase(plan, user) {
+    phase(plan, user, onboard) {
       if (!plan || !plan.ok || !plan.target) return 'unavailable';
       const t = plan.target;
       const bus = t.item.bus;
 
-      const userToBoardM = haversineKm(user.lat, user.lon, plan.board.lat, plan.board.lon) * 1000;
-      if (userToBoardM > 70) return 'walk_to_stop';
+      if (!onboard) {
+        const userToBoardM = haversineKm(user.lat, user.lon, plan.board.lat, plan.board.lon) * 1000;
+        if (userToBoardM > 70) return 'walk_to_stop';
 
-      // Once at the kerb, the question is only "how far away is my bus".
-      const busToBoardM = haversineKm(bus.lat, bus.lng, plan.board.lat, plan.board.lon) * 1000;
-      if (busToBoardM > 120) return 'wait_for_bus';
+        // Once at the kerb, the question is only "how far away is my bus".
+        const busToBoardM = haversineKm(bus.lat, bus.lng, plan.board.lat, plan.board.lon) * 1000;
+        if (busToBoardM > 120) return 'wait_for_bus';
+      }
 
       // On board. The alighting trigger is the bus getting near the stop where
       // the onward walk starts, not the destination pin, because that stop is

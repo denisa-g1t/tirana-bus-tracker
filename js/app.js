@@ -335,24 +335,22 @@
 
   /* ---------------- guidance ---------------- */
 
-  function guidePhase() {
+  function guidePhase(onboard) {
     if (!plan || !plan.ok || User.lat === null) return 'unavailable';
-    return Guide.phase(plan, User);
+    return Guide.phase(plan, User, onboard);
   }
 
-  /* Once you are on the bus, you stay on the bus. Guide.phase is a pure
-     function of two points and has no memory, so it would start telling you to
-     walk back to the kerb the moment the vehicle pulled away from it. This latch
-     is what turns that geometry into a journey. */
+  /* Once you are on the bus, you stay on the bus. Guide.phase works from where
+     the rider is standing, and a rider on a moving bus is never standing near the
+     kerb any more, so without this the screen would point them back the way they
+     came the moment the vehicle pulled away. The latch records the boarding and
+     is handed to Guide.phase, which then only waits for the alighting stop. */
   let boarded = false;
 
   function currentPhase() {
-    const raw = guidePhase();
-    if (boarded) {
-      return (raw === 'walk_to_destination' || raw === 'arrived') ? raw : 'on_board';
-    }
-    if (raw === 'on_board') boarded = true;
-    return raw;
+    const phase = guidePhase(boarded);
+    if (phase === 'on_board') boarded = true;
+    return phase;
   }
 
   const PHASE_COPY = {
