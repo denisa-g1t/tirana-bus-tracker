@@ -198,7 +198,7 @@
        the one that will reach the boarding stop soonest and then pass closest
        to the destination. That is a real, checkable statement, and it is the
        honest one. */
-    build(origin, destination) {
+    build(origin, destination, preferLineId) {
       if (!origin || !destination) return null;
 
       const plannable = Buses.plannable();
@@ -286,10 +286,40 @@
          completely useless. */
       const WORTH_TRAIN_MIN = 8;
       const SAVES_MIN = 3;
-      const viable = options.filter(
-        o => walkAllMin >= WORTH_TRAIN_MIN && o.totalMin <= walkAllMin - SAVES_MIN
-      );
-      viable.sort((a, b) => a.totalMin - b.totalMin);
+      const beatsWalking = o => walkAllMin >= WORTH_TRAIN_MIN && o.totalMin <= walkAllMin - SAVES_MIN;
+
+      /* The menu of lines is built from every vehicle that could serve the trip,
+         before the chosen line narrows anything. Building it from the filtered
+         set instead would mean that picking a line removed every other line from
+         the list, so the choice could never be changed back. */
+      const lineOptions = [];
+      const byLine = new Map();
+      for (const o of options) {
+        const id = o.item.line.id;
+        let entry = byLine.get(id);
+        if (!entry) {
+          entry = {
+            id,
+            number: o.item.line.number,
+            name: o.item.line.name,
+            color: o.item.line.color,
+            best: o.totalMin,
+            beatsWalking: false
+          };
+          byLine.set(id, entry);
+          lineOptions.push(entry);
+        }
+        if (o.totalMin < entry.best) entry.best = o.totalMin;
+        if (beatsWalking(o)) entry.beatsWalking = true;
+      }
+      lineOptions.sort((a, b) => Number(b.beatsWalking) - Number(a.beatsWalking) || a.best - b.best);
+
+      /* A chosen line is a hard constraint, not a preference: someone who asked
+         for the Unaza Lindore bus wants that service even if another line scores
+         a minute faster, because the other one is not the service they are
+         waiting for. */
+      const pool = preferLineId ? options.filter(o => o.item.line.id === preferLineId) : options;
+      const viable = pool.filter(beatsWalking).sort((a, b) => a.totalMin - b.totalMin);
       const best = viable[0] || null;
 
       const use = best || walkBest;
@@ -338,6 +368,12 @@
         alight: alight.stop,
         target: best,
         candidates: viable,
+        lineOptions,
+        preferLineId: preferLineId || null,
+        // A line was asked for and no vehicle on it could serve the trip. The
+        // caller needs to say so plainly, because silently planning on a
+        // different line would be the one thing a passenger cannot forgive.
+        preferredLineUnavailable: !!preferLineId && !lineOptions.length,
         walkAllMin,
         steps,
         totalMinutes: steps.reduce((s, x) => s + (x.minutes || 0), 0),

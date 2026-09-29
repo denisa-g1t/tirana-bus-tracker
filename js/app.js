@@ -232,16 +232,93 @@
     rebuild();
   }
 
+  /* Which bus the passenger wants. Null means "whichever is best", which stays
+     the default so the common case is still one tap. Picking a line is a real
+     constraint passed into the planner, not a filter applied to its answer. */
+  let preferLineId = null;
+
+  function currentOrigin() {
+    return User.lat !== null ? { lat: User.lat, lon: User.lon, name: User.label } : null;
+  }
+
   function setDestination(p, source) {
     plan = null;
     $('plan').hidden = true;
-    renderPlan(Plan.build(User.lat !== null ? { lat: User.lat, lon: User.lon, name: User.label } : null, p));
+    renderPlan(Plan.build(currentOrigin(), p, preferLineId));
   }
 
   function rebuild() {
     if (!plan || !plan.ok) return;
-    plan = Plan.build({ lat: User.lat, lon: User.lon, name: User.label }, plan.destination);
+    plan = Plan.build(currentOrigin(), plan.destination, preferLineId);
     renderPlan(plan);
+  }
+
+  /* The lines that can serve this trip, as a row of chips. Each chip carries the
+     real time from the live feed, so choosing between two services is a choice
+     between two numbers rather than a leap of faith. */
+  function renderLinePicker(p) {
+    const box = $('linesPick');
+    const row = $('linesPickRow');
+    const note = $('linesPickNote');
+    const options = (p && p.lineOptions) || [];
+    row.innerHTML = '';
+
+    if (!p || !p.ok || options.length < 2) {
+      box.hidden = true;
+      return;
+    }
+    box.hidden = false;
+
+    const anyGood = options.some(o => o.beatsWalking);
+    $('linesPickLabel').textContent = anyGood ? 'Which bus?' : 'Buses that pass near both ends';
+
+    for (const o of options) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'line-chip';
+      btn.dataset.lineId = o.id;
+      const chosen = o.id === preferLineId;
+      if (chosen) btn.classList.add('is-chosen');
+      btn.setAttribute('aria-pressed', chosen ? 'true' : 'false');
+      if (o.color) btn.style.setProperty('--line', o.color);
+
+      const num = document.createElement('span');
+      num.className = 'line-chip-num';
+      num.textContent = o.number;
+
+      const name = document.createElement('span');
+      name.className = 'line-chip-name';
+      name.textContent = o.name;
+
+      btn.append(num, name);
+      if (o.beatsWalking) {
+        const mins = document.createElement('span');
+        mins.className = 'line-chip-mins';
+        mins.textContent = formatMinutes(o.best);
+        btn.append(mins);
+      }
+      btn.addEventListener('click', () => {
+        preferLineId = chosen ? null : o.id;
+        boarded = false;
+        rebuild();
+      });
+      row.append(btn);
+    }
+
+    if (preferLineId) {
+      const chosen = options.find(o => o.id === preferLineId);
+      if (!chosen) {
+        note.textContent = 'That bus is not serving this trip at the moment. Showing the best available instead.';
+        note.hidden = false;
+      } else if (!chosen.beatsWalking) {
+        note.textContent = `${chosen.name} can take you, but walking is quicker right now.`;
+        note.hidden = false;
+      } else {
+        note.hidden = true;
+      }
+    } else {
+      note.hidden = true;
+    }
   }
 
   function renderPlan(p) {
@@ -249,6 +326,7 @@
     const panel = $('plan');
     if (!p || !p.ok) {
       panel.hidden = true;
+      $('linesPick').hidden = true;
       if (p && p.reason === 'no_stop_near_origin') {
         setHint('There is no mapped bus stop near you. Tap the map where you are to set it closer to a stop.');
       } else if (p && p.reason === 'no_stop_near_destination') {
@@ -257,6 +335,7 @@
       return;
     }
 
+    renderLinePicker(p);
     panel.hidden = false;
     $('planTotal').textContent = p.noVehicle
       ? `Walk it, about ${formatMinutes(p.walkAllMin)}`
@@ -394,6 +473,7 @@
     guiding = true;
     boarded = false;
     $('plan').hidden = true;
+    $('linesPick').hidden = true;
     $('ask').hidden = true;
     renderGuide();
     $('recenter').click();
@@ -452,8 +532,11 @@
 
   $('clearPlan').addEventListener('click', () => {
     guiding = false;
+    // A new trip should not inherit the last trip's bus choice.
+    preferLineId = null;
     $('guide').hidden = true;
     $('plan').hidden = true;
+    $('linesPick').hidden = true;
     $('ask').hidden = false;
     $('destInput').value = '';
     $('destInput').placeholder = 'Where do you want to go?';

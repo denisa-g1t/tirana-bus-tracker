@@ -235,6 +235,44 @@ a { color: var(--blue); }
   max-height: 290px; overflow-y: auto; padding: 5px;
 }
 .suggest[hidden] { display: none; }
+
+/* Which bus. The number is coloured by the line's own livery so the chip is
+   recognisable at a glance, and the chosen one is filled rather than outlined,
+   because the state has to be obvious on a phone in a hurry. */
+.lines-pick { margin-top: 16px; }
+.lines-pick[hidden] { display: none; }
+.lines-pick-label {
+  margin: 0 0 8px; font-size: 12px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+}
+.lines-pick-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.line-chip {
+  --line: var(--blue);
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px 8px 8px; cursor: pointer;
+  background: var(--white); border: 1.5px solid var(--line);
+  border-radius: 999px; font: inherit; color: var(--ink);
+}
+.line-chip:hover { background: var(--blue-soft); }
+.line-chip-num {
+  display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px;
+  border-radius: 999px; background: var(--line); color: var(--white);
+  font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums;
+}
+.line-chip-name { font-size: 14px; font-weight: 600; }
+.line-chip-mins {
+  font-size: 13px; font-weight: 700; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.line-chip.is-chosen { background: var(--ink); border-color: var(--ink); color: var(--white); }
+.line-chip.is-chosen .line-chip-num { background: var(--line); color: var(--white); }
+.line-chip.is-chosen .line-chip-mins { color: rgba(255, 255, 255, .82); }
+.line-chip.is-chosen:hover { background: #0a2440; }
+.line-chip:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.lines-pick-note {
+  margin: 8px 0 0; font-size: 13px; color: var(--muted); line-height: 1.45;
+}
+.lines-pick-note[hidden] { display: none; }
 .suggest-item {
   display: flex; align-items: center; gap: 10px; width: 100%;
   padding: 9px 11px; border: none; background: none; cursor: pointer;
