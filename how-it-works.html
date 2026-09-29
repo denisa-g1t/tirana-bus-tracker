@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Atara works</title>
+<meta name="description" content="What Atara shows you, where the data comes from, and what Atara will not guess.">
+<meta name="theme-color" content="#061a2f">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230047DE'/><rect x='6' y='9' width='20' height='14' rx='3' fill='white'/><rect x='9' y='12' width='14' height='5' rx='1' fill='%230047DE'/><circle cx='11' cy='25' r='2.4' fill='white'/><circle cx='21' cy='25' r='2.4' fill='white'/></svg>">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  .doc { max-width: 680px; margin: 0 auto; padding: 40px 20px 60px; }
+  .doc h1 { margin: 0 0 8px; font-size: clamp(30px, 6vw, 44px); letter-spacing: -.02em; color: var(--navy); }
+  .doc h2 { margin: 40px 0 10px; font-size: 21px; color: var(--navy); letter-spacing: -.01em; }
+  .doc p { margin: 0 0 13px; font-size: 16px; line-height: 1.65; color: #33404f; }
+  .doc ul { margin: 0 0 14px; padding-left: 20px; }
+  .doc li { font-size: 15.5px; line-height: 1.6; color: #33404f; margin-bottom: 7px; }
+  .doc .rule { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+  .doc .callout {
+    padding: 16px 18px; border-radius: var(--r-lg);
+    background: var(--blue-soft); border-left: 4px solid var(--blue);
+    font-size: 15px; line-height: 1.6; color: #23324a;
+  }
+  .doc .callout strong { color: var(--navy); }
+  .doc-back {
+    display: inline-block; margin-bottom: 26px; font-size: 14.5px; font-weight: 650;
+    color: var(--blue); text-decoration: none;
+  }
+  .doc-back:hover { text-decoration: underline; }
+  .doc .cta { margin-top: 34px; }
+  .doc .cta a {
+    display: inline-block; padding: 14px 26px; border-radius: var(--r);
+    background: var(--blue); color: #fff; font-weight: 700; text-decoration: none; font-size: 16px;
+  }
+  .doc .cta a:hover { background: var(--blue-hover); }
+</style>
+</head>
+<body class="app-body">
+
+<header class="app-top">
+  <a class="wordmark" href="./">ATARA</a>
+  <div class="app-top-right"><a class="ghost-link" href="index.html">Open Atara</a></div>
+</header>
+
+<main class="doc">
+  <a class="doc-back" href="index.html">&larr; Back to Atara</a>
+
+  <h1>How Atara works</h1>
+  <p>Atara exists to answer one question: how do I get from where I am to where I want to go?</p>
+  <p>You do not need to know which operator runs a line, which company a vehicle belongs to, or what the network is called. Atara merges every vehicle system serving Tirana into one map, and shows you the next thing to do.</p>
+
+  <hr class="rule">
+
+  <h2>What you see</h2>
+  <p>Real buses, moving, on a real map. The colour of each dot is the line it runs on. Your position is the blue dot in the centre.</p>
+  <p>Choose where you are and where you are going. Atara finds the bus stop nearest you, finds the vehicle closest to that stop that is also heading towards your destination, and shows the journey as a small number of plain steps.</p>
+  <p>Press <strong>Start journey</strong> and Atara stops being a map. It gives you one instruction at a time: walk to the stop, wait for the bus, stay on board, get off, walk to where you were going.</p>
+
+  <hr class="rule">
+
+  <h2>What Atara will not guess</h2>
+  <p>The vehicle systems publish live positions, speed and heading. They do not publish route shapes, ordered stop lists or timetables. That means there are some things Atara genuinely cannot tell you, and it would be dishonest to invent them.</p>
+  <ul>
+    <li><strong>Stop order.</strong> Atara will not say "four stops to go", because it does not know the sequence of stops on the line.</li>
+    <li><strong>Scheduled arrivals.</strong> There is no timetable to read, so arrival times are worked out from live distance and current speed.</li>
+    <li><strong>Transfers.</strong> Building a route through two buses needs a map of which lines meet at which stops. That map does not exist in the data, so Atara plans a single bus ride rather than inventing a transfer.</li>
+    <li><strong>Walking routes.</strong> Distances and directions are straight lines, scaled to allow for the way a street grid bends. They are close, not exact.</li>
+  </ul>
+
+  <div class="callout">
+    <strong>So every duration on Atara is an estimate.</strong> It is measured from real positions and real speeds, not read from a timetable. It is useful for deciding which bus to catch. It is not a promise.
+  </div>
+
+  <hr class="rule">
+
+  <h2>Where the data comes from</h2>
+  <ul>
+    <li><strong>Bus positions, speed, heading and occupancy</strong> come live from the vehicle tracking systems that serve Tirana, through the GpsGate platform. All configured systems are combined into one view.</li>
+    <li><strong>Bus stop names and positions</strong> come from OpenStreetMap, which is why Atara can tell you to walk to a real stop by its real name.</li>
+    <li><strong>Notable places</strong> such as Skanderregu, Toptani or the East Gate are included so you can search for a destination by the name you would actually use.</li>
+  </ul>
+  <p>Atara is refreshed by a scheduled job. If that job stops, the top of the page says so instead of pretending the buses are still moving.</p>
+
+  <p class="cta"><a href="index.html">Open Atara</a></p>
+</main>
+
+</body>
+</html>

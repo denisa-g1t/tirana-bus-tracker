@@ -1,213 +1,109 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atara — live buses in Tirana, minute by minute</title>
-<meta name="description" content="See every municipal and suburban bus around Tirana and Kamëz on one map, pick your destination and find out how many minutes the next bus is away from you.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atara — live buses in Tirana</title>
+<meta name="description" content="Atara shows you where the buses are in Tirana right now, and tells you which one to take to get where you are going.">
+<meta name="theme-color" content="#061a2f">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230047DE'/><rect x='6' y='9' width='20' height='14' rx='3' fill='white'/><rect x='9' y='12' width='14' height='5' rx='1' fill='%230047DE'/><circle cx='11' cy='25' r='2.4' fill='white'/><circle cx='21' cy='25' r='2.4' fill='white'/></svg>">
+<link rel="preconnect" href="https://tile.openstreetmap.org">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="app-body">
 
-<nav class="nav">
-  <a class="nav-brand" href="index.html"><span class="nav-mark">
-    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16V6a2 2 0 012-2h9a3 3 0 013 3v9"/><path d="M4 16h14"/><circle cx="7.5" cy="17.5" r="1.8"/><circle cx="16.5" cy="17.5" r="1.8"/></svg>
-  </span>Atara</a>
-  <div class="nav-links">
-    <a class="nav-link active" href="index.html">Plan your journey</a>
-    <a class="nav-link" href="pages/bus.html">Live map</a>
-    <a class="nav-link" href="pages/train.html">Trains</a>
-    <a class="nav-link" href="pages/rfid.html">Stop cards</a>
-  </div>
-  <div class="nav-right">
+<header class="app-top">
+  <a class="wordmark" href="./" aria-label="Atara home">ATARA</a>
+  <div class="app-top-right">
     <span class="live-pill" id="livePill"><span class="live-dot"></span>Connecting</span>
-    <span class="nav-clock mono" id="navClock">--:--</span>
-  </div>
-</nav>
-
-<header class="hero">
-  <div class="hero-grid">
-    <div>
-      <h1>Your bus is<br>closer than you think</h1>
-      <p class="lede">Atara puts every bus around Tirana and Kamëz on one map. Choose where you are going and see exactly which bus is coming, how far away it is and how many minutes it will take.</p>
-      <p class="hero-now" id="heroNow">Connecting to the live feed…</p>
-      <div class="hero-stats" id="heroStats">
-        <div><div class="hero-stat-v" id="statBuses">--</div><div class="hero-stat-l">Buses tracked</div></div>
-        <div><div class="hero-stat-v" id="statLive">--</div><div class="hero-stat-l">Reporting now</div></div>
-        <div><div class="hero-stat-v" id="statLines">--</div><div class="hero-stat-l">Lines</div></div>
-      </div>
-    </div>
-
-    <svg class="hero-art" viewBox="0 0 540 400" role="img" aria-label="Illustration of a bus travelling along a route towards a destination">
-      <defs>
-        <linearGradient id="skyG" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#0f2f52"/>
-          <stop offset="100%" stop-color="#061a2f"/>
-        </linearGradient>
-        <linearGradient id="busG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ffffff"/>
-          <stop offset="100%" stop-color="#e6edf6"/>
-        </linearGradient>
-        <linearGradient id="pinG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ff5a5f"/>
-          <stop offset="100%" stop-color="#b31414"/>
-        </linearGradient>
-      </defs>
-
-      <circle cx="300" cy="180" r="176" fill="url(#skyG)"/>
-      <circle cx="300" cy="180" r="176" fill="none" stroke="#1d4e79" stroke-width="1" opacity=".55"/>
-
-      <path d="M96 336 C 196 336, 214 214, 300 200 S 396 128, 404 92"
-            fill="none" stroke="#2f5f92" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"/>
-
-      <g fill="#0b2540" stroke="#7fb0ff" stroke-width="2.5">
-        <circle cx="96" cy="336" r="7"/>
-        <circle cx="228" cy="243" r="7"/>
-        <circle cx="352" cy="152" r="7"/>
-      </g>
-
-      <g transform="translate(330 68)">
-        <path d="M22 66C22 66 44 40 44 24A22 22 0 000 24C0 40 22 66 22 66z" fill="url(#pinG)"/>
-        <circle cx="22" cy="24" r="8" fill="#fff"/>
-        <text x="56" y="20" font-family="Geist, Roboto, sans-serif" font-size="19" font-weight="700" fill="#fff">Qender</text>
-        <text x="56" y="40" font-family="Geist, Roboto, sans-serif" font-size="13" fill="#9db6d0">your destination</text>
-      </g>
-
-      <g transform="translate(140 250) rotate(-13)">
-        <rect x="0" y="0" width="118" height="66" rx="12" fill="url(#busG)"/>
-        <path d="M0 40h118v14a12 12 0 01-12 12H12A12 12 0 010 54z" fill="#0047DE" opacity=".9"/>
-        <rect x="10" y="12" width="26" height="21" rx="4" fill="#bcd4ee"/>
-        <rect x="42" y="12" width="26" height="21" rx="4" fill="#bcd4ee"/>
-        <rect x="74" y="12" width="18" height="21" rx="4" fill="#bcd4ee"/>
-        <path d="M96 12h8a14 14 0 0114 14v7H96z" fill="#8fb6dd"/>
-        <rect x="10" y="48" width="46" height="4" rx="2" fill="#ffffff" opacity=".85"/>
-        <circle cx="27" cy="70" r="10" fill="#0b2540"/><circle cx="27" cy="70" r="4" fill="#9db6d0"/>
-        <circle cx="93" cy="70" r="10" fill="#0b2540"/><circle cx="93" cy="70" r="4" fill="#9db6d0"/>
-        <rect x="110" y="24" width="7" height="7" rx="2" fill="#ffd66b"/>
-      </g>
-
-      <g transform="translate(62 130)">
-        <rect x="0" y="0" width="104" height="42" rx="8" fill="#ffffff"/>
-        <text x="52" y="27" text-anchor="middle" font-family="Geist, Roboto, sans-serif" font-size="21" font-weight="700" fill="#0047DE">6 min</text>
-        <path d="M44 42l8 9 8-9z" fill="#ffffff"/>
-      </g>
-    </svg>
+    <a class="ghost-link" href="how-it-works.html">How it works</a>
   </div>
 </header>
 
-<div class="section-shell"><div class="banner" id="feedBanner" hidden></div></div>
+<div class="banner" id="feedBanner" hidden></div>
 
-<div class="journey-wrap">
-  <div class="section-shell">
-    <div class="journey" id="journey"></div>
-  </div>
-</div>
+<main class="app-main">
 
-<section class="section">
-  <div class="section-shell">
-    <div class="section-head">
-      <div class="eyebrow">Live network</div>
-      <h2>Every line, one map, no account needed</h2>
-      <p>Atara reads the same GPS feed the operators use. Pick a line and you will see each bus, its driver, its speed and when it last reported — all without signing in.</p>
-    </div>
-    <div class="line-grid" id="lineGrid"></div>
-  </div>
-</section>
+  <!-- One question. Everything else happens after this is answered. -->
+  <section class="ask" aria-labelledby="askH">
+    <h1 id="askH">Where are you going?</h1>
 
-<section class="section section-alt">
-  <div class="section-shell">
-    <div class="section-head">
-      <div class="eyebrow">Why it works</div>
-      <h2>Built on measured data, not guesses</h2>
-    </div>
-    <div class="value-grid">
-      <div class="card value-card">
-        <div class="value-icon"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-        <h3>Arrival times you can trust</h3>
-        <p>Each estimate uses the distance from the bus to you and the speed that bus is actually reporting right now, so a bus stopped at the depot never looks two minutes away.</p>
+    <div class="ask-fields">
+      <div class="ask-field">
+        <label for="originInput">From</label>
+        <input id="originInput" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Your location, a stop or a place">
+        <button type="button" class="link-btn" id="useLocation">Use my location</button>
       </div>
-      <div class="card value-card">
-        <div class="value-icon"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-5.5-7-11a7 7 0 0114 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-        <h3>See it on the map</h3>
-        <p>Every bus is a live marker with its heading, so you can watch it approach instead of staring at a number that may be wrong.</p>
-      </div>
-      <div class="card value-card">
-        <div class="value-icon"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3.5"/></svg></div>
-        <h3>Leave the car at home</h3>
-        <p>When you can see a bus is genuinely close, riding becomes the easy option — and every ride shared is a car that stays off the road.</p>
+      <div class="ask-field">
+        <label for="destInput">To</label>
+        <input id="destInput" type="text" autocomplete="off" spellcheck="false"
+               placeholder="Where do you want to go?">
       </div>
     </div>
-  </div>
-</section>
 
-<footer class="footer">
-  <div class="section-shell footer-in">
-    <div>Atara — live bus tracking for Tirana and Kamëz.</div>
-    <div>Positions from the operators' GPS feed · Map data © OpenStreetMap</div>
+    <p class="ask-hint" id="askHint">Search a destination, or tap the map to set where you are.</p>
+
+    <ul class="suggest" id="suggest" role="listbox" aria-label="Search results" hidden></ul>
+  </section>
+
+  <!-- The journey. Steps are listed so the whole plan is visible, but only the
+       next one is ever highlighted. -->
+  <section class="plan" id="plan" hidden aria-live="polite">
+    <div class="plan-head">
+      <div>
+        <p class="plan-total" id="planTotal"></p>
+        <p class="plan-sub" id="planSub"></p>
+      </div>
+      <button type="button" class="btn ghost" id="clearPlan">Change destination</button>
+    </div>
+    <ol class="steps" id="steps"></ol>
+    <p class="plan-note" id="planNote"></p>
+    <button type="button" class="btn primary big" id="startJourney">Start journey</button>
+  </section>
+
+  <!-- Guidance. One instruction, large, with the direction to follow. -->
+  <section class="guide" id="guide" hidden aria-live="assertive">
+    <div class="guide-card">
+      <div class="guide-top">
+        <span class="guide-step" id="guideStep"></span>
+        <button type="button" class="guide-exit" id="stopGuide">End</button>
+      </div>
+      <div class="guide-body">
+        <div class="guide-arrow" id="guideArrow" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="40" height="40"><path d="M20 3 L32 34 L20 27 L8 34 Z" fill="currentColor"/></svg>
+        </div>
+        <div class="guide-text">
+          <p class="guide-lead" id="guideLead"></p>
+          <p class="guide-sub" id="guideSub"></p>
+        </div>
+        <div class="guide-dist"><span id="guideDist"></span></div>
+      </div>
+      <div class="guide-actions">
+        <button type="button" class="btn ghost" id="recenter">I am here now</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="map-wrap" id="mapWrap">
+    <div id="map" role="application" aria-label="Map of buses in Tirana"></div>
+    <div class="map-legend" id="mapLegend" hidden></div>
+    <button type="button" class="map-locate" id="mapLocate" aria-label="Centre on my location">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3.4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke-linecap="round"/></svg>
+    </button>
   </div>
+
+</main>
+
+<footer class="app-foot">
+  <p>Live positions from the vehicle systems serving Tirana, shown as one network.
+     Arrival times are estimates from distance and current speed. Map data by OpenStreetMap contributors.</p>
 </footer>
 
-<script src="data/live.js" onerror="this.remove()"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <script src="js/main.js"></script>
-<script src="js/tracker.js"></script>
-<script>
-ATARA_JOURNEY.mount('journey', {
-  onSearch() { location.href = 'pages/bus.html#' + ATARA.toHash(); },
-  onChange() { renderLanding(); }
-});
-
-function renderLanding() {
-  const t = ATARA.totals;
-  document.getElementById('statBuses').textContent = t.buses || '--';
-  document.getElementById('statLive').textContent = t.online || '--';
-  document.getElementById('statLines').textContent = ATARA.lines.length || '--';
-  const now = document.getElementById('heroNow');
-  const ageS = (window.ATARA_HELPERS && ATARA.data) ? feedAgeSeconds() : null;
-  if (ATARA.data && ageS !== null && ageS > 600) {
-    now.textContent = `Last update ${formatAge(ageS)} · ${t.buses} buses tracked, ${t.online} reported then`;
-    now.classList.add('late');
-  } else if (ATARA.data) {
-    now.textContent = `Right now: ${t.moving} buses moving · ${t.online} of ${t.buses} reporting live`;
-    now.classList.add('on');
-  } else {
-    now.textContent = ATARA.error || 'Connecting to the live feed…';
-  }
-
-  const grid = document.getElementById('lineGrid');
-  grid.innerHTML = ATARA.lines.map(line => {
-    const live = line.buses.filter(b => b.status === 'online').length;
-    return `<button class="line-card" data-line="${line.id}">
-        <span class="line-badge" style="background:${line.color}">${esc(line.number)}</span>
-        <span>
-          <span class="line-name" style="display:block">${esc(line.name)}</span>
-          <span class="line-meta">${live} of ${line.buses.length} live · avg ${line.stats ? line.stats.avg_speed_kmh : 0} km/h</span>
-        </span>
-      </button>`;
-  }).join('') || '<div class="empty">No lines yet — run atara/tools/fetch_live.py</div>';
-
-  grid.querySelectorAll('[data-line]').forEach(card => {
-    card.addEventListener('click', () => {
-      ATARA.setLine(card.dataset.line);
-      location.href = 'pages/bus.html#' + ATARA.toHash();
-    });
-  });
-
-  ATARA_JOURNEY.paint();
-  renderLivePill();
-  renderFeedBanner();
-}
-
-ATARA.onUpdate(renderLanding);
-setInterval(() => {
-  document.getElementById('navClock').textContent =
-    new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Tirane' });
-  ATARA.rebaseAges();
-  renderLivePill();
-  renderFeedBanner();
-}, 1000);
-
-ATARA.fromHash(location.hash);
-ATARA.start();
-</script>
+<script src="js/app-core.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
