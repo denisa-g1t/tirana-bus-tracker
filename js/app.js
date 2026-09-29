@@ -265,7 +265,7 @@
       ? 'No bus is currently faster than walking this route.'
       : `From ${User.label || 'your position'} to ${p.destination.name}`;
 
-    const phase = guidePhase();
+    const phase = currentPhase();
     $('steps').innerHTML = p.steps.map((s, i) => {
       const active = i === nextStepIndex(phase);
       if (s.type === 'walk') {
@@ -338,6 +338,21 @@
     return Guide.phase(plan, User);
   }
 
+  /* Once you are on the bus, you stay on the bus. Guide.phase is a pure
+     function of two points and has no memory, so it would start telling you to
+     walk back to the kerb the moment the vehicle pulled away from it. This latch
+     is what turns that geometry into a journey. */
+  let boarded = false;
+
+  function currentPhase() {
+    const raw = guidePhase();
+    if (boarded) {
+      return (raw === 'walk_to_destination' || raw === 'arrived') ? raw : 'on_board';
+    }
+    if (raw === 'on_board') boarded = true;
+    return raw;
+  }
+
   const PHASE_COPY = {
     walk_to_stop: 'Step 1 of 3',
     wait_for_bus: 'Step 2 of 3',
@@ -351,7 +366,7 @@
     if (!guiding) { card.hidden = true; return; }
     card.hidden = false;
 
-    const phase = guidePhase();
+    const phase = currentPhase();
     if (phase === 'unavailable') {
       $('guideStep').textContent = 'Journey';
       $('guideLead').textContent = 'We lost track of your position';
@@ -377,6 +392,7 @@
   $('startJourney').addEventListener('click', () => {
     if (!plan || !plan.ok || plan.noVehicle) return;
     guiding = true;
+    boarded = false;
     $('plan').hidden = true;
     $('ask').hidden = true;
     renderGuide();
@@ -385,6 +401,7 @@
 
   $('stopGuide').addEventListener('click', () => {
     guiding = false;
+    boarded = false;
     $('guide').hidden = true;
     $('plan').hidden = false;
     $('ask').hidden = false;
@@ -394,12 +411,15 @@
 
   /* ---------------- location ---------------- */
 
-  function locate(then) {
+  /* fresh=true forces a new fix. A cached one is fine on arrival, but while
+     someone is walking to a kerb a thirty second old position makes the
+     guidance sit still and look broken. */
+  function locate(then, fresh) {
     if (!navigator.geolocation) {
       setHint('This browser cannot share your location. Tap the map to set where you are.');
       return;
     }
-    setHint('Finding your location...');
+    setHint(fresh ? 'Finding where you are now...' : 'Finding your location...');
     navigator.geolocation.getCurrentPosition(pos => {
       User.lat = pos.coords.latitude;
       User.lon = pos.coords.longitude;
@@ -408,20 +428,27 @@
       User.label = 'Your location';
       $('originInput').value = 'Your location';
       moveUser();
-      setHint('Location set. Now search where you want to go.');
+      if (!guiding) setHint('Location set. Now search where you want to go.');
       map.setView([User.lat, User.lon], 15);
       if (then) then();
-      rebuild();
+      // While guiding, the plan and its chosen vehicle stay fixed; only the
+      // current instruction is re-derived from the new position.
+      if (guiding) renderGuide();
+      else rebuild();
     }, err => {
       setHint(err.code === 1
         ? 'Location permission was declined. Tap the map to set where you are.'
         : 'Could not get a location fix. Tap the map to set where you are.');
-    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 });
+    }, {
+      enableHighAccuracy: true,
+      timeout: 12000,
+      maximumAge: fresh ? 0 : 30000
+    });
   }
 
   $('useLocation').addEventListener('click', () => locate());
   $('mapLocate').addEventListener('click', () => locate());
-  $('recenter').addEventListener('click', () => locate());
+  $('recenter').addEventListener('click', () => locate(null, true));
 
   $('clearPlan').addEventListener('click', () => {
     guiding = false;

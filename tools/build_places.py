@@ -119,21 +119,33 @@ OVERPASS_QUERY = f"""[out:json][timeout:90];
 out body;"""
 
 
-def http_get_json(url, data=None, timeout=120):
-    """POST the Overpass query, walking through mirrors if one is unavailable."""
+def http_get_json(url, data=None, timeout=120, attempts=3):
+    """POST the Overpass query, walking through mirrors and retrying.
+
+    Overpass rate limits aggressively and returns 504 under load, so a single
+    failure should not lose a build that has already fetched most of the data.
+    """
+    query = data or OVERPASS_QUERY
     last = None
-    for endpoint in OVERPASS_MIRRORS:
-        try:
-            body = urllib.parse.urlencode({"data": data or OVERPASS_QUERY}).encode()
-            req = urllib.request.Request(
-                endpoint, data=body, headers={"User-Agent": UA}
-            )
-            with urllib.request.urlopen(req, timeout=timeout) as resp:
-                return json.loads(resp.read().decode("utf-8")), endpoint
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
-            print(f"  {endpoint.split('/')[2]} failed: {exc}", file=sys.stderr)
-            last = exc
-            time.sleep(2)
+    for attempt in range(attempts):
+        for endpoint in OVERPASS_MIRRORS:
+            try:
+                body = urllib.parse.urlencode({"data": query}).encode()
+                req = urllib.request.Request(
+                    endpoint, data=body, headers={"User-Agent": UA}
+                )
+                with urllib.request.urlopen(req, timeout=timeout) as resp:
+                    return json.loads(resp.read().decode("utf-8")), endpoint
+            except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+                print(
+                    f"  {endpoint.split('/')[2]} failed: {exc}", file=sys.stderr
+                )
+                last = exc
+                time.sleep(2)
+        if attempt + 1 < attempts:
+            wait = 10 * (attempt + 1)
+            print(f"  all mirrors busy, retrying in {wait}s", file=sys.stderr)
+            time.sleep(wait)
     raise RuntimeError(f"every Overpass mirror failed, last error: {last}")
 
 
@@ -232,10 +244,121 @@ def build_stops(cache_path, use_cache):
     return deduped
 
 
+def fold(s):
+    """Strip Albanian diacritics so a typed name matches the OSM spelling."""
+    import unicodedata
+
+    out = []
+    for ch in str(s or "").lower():
+        if "A" <= ch <= "Z":
+            ch = chr(ord(ch) + 32)
+        d = unicodedata.normalize("NFD", ch)
+        out.append(d[0] if d and d[0] != ch else ch)
+    return "".join(out)
+
+
+def verify_curated(places, use_cache, cache_path):
+    """Replace hand typed coordinates with real OpenStreetMap ones.
+
+    The curated names above exist so somebody can type "Skenderregu" or
+    "Pavarit Lindi" and get somewhere sensible. Approximate coordinates would
+    quietly send them to the wrong side of the city, so each name is looked up
+    and only the ones that cannot be resolved keep the typed fallback.
+    """
+    # Query terms come from the Albanian names, because those are the spellings
+    # OpenStreetMap actually uses. Using the English labels here fetched the
+    # wrong features and left most coordinates unverified. The term list is
+    # chunked because one long alternation makes Overpass time out.
+    wanted = [p.get("aliases") or p["name"] for p in places]
+    terms = sorted({w for p in wanted for w in fold(p).split() if len(w) > 3})
+
+    raw = []
+    if use_cache and cache_path.exists():
+        raw = json.loads(cache_path.read_text(encoding="utf-8"))
+        print(f"using cached place verification: {cache_path} ({len(raw)} elements)")
+    else:
+        print("verifying curated place coordinates against OpenStreetMap ...")
+        for i in range(0, len(terms), 6):
+            chunk = "|".join(terms[i:i + 6])
+            query = f"""[out:json][timeout:90];
+(
+  nwr["name"~"{chunk}",i]({BBOX});
+);
+out center tags;"""
+            payload, endpoint = http_get_json(query)
+            got = payload.get("elements", [])
+            print(f"  {len(got):>4} features for terms {terms[i:i + 6]}")
+            raw.extend(got)
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        cache_path.write_text(json.dumps(raw), encoding="utf-8")
+
+    # Index every fetched feature by its folded name, and keep a token set so a
+    # curated entry can be matched by overlap rather than by exact spelling.
+    # OSM spells these places inconsistently ("Pavarët e Lindit", "Pavarit Lindi",
+    # "Pavarët Lindi"), so exact matching alone verifies very few of them.
+    by_name, tokens = {}, {}
+    STOPWORDS = {"i", "e", "te", "ne", "e", "mbi", "per", "tirane", "tirana"}
+
+    def toks(text):
+        return {t for t in fold(text).split() if t and t not in STOPWORDS and len(t) > 2}
+
+    for el in raw:
+        tags = el.get("tags") or {}
+        name = tags.get("name")
+        if not name:
+            continue
+        lat = el.get("lat") or (el.get("center") or {}).get("lat")
+        lon = el.get("lon") or (el.get("center") or {}).get("lon")
+        if lat is None or lon is None:
+            continue
+        f = fold(name)
+        by_name.setdefault(f, (float(lat), float(lon)))
+        for t in toks(name):
+            tokens.setdefault(t, []).append((float(lat), float(lon), toks(name)))
+
+    verified, fallback = 0, []
+    for p in places:
+        # The tuple stores the OSM name in `aliases` and the English label in
+        # `name`. OpenStreetMap only knows the former, so that is the key.
+        hit = by_name.get(fold(p.get("aliases"))) or by_name.get(fold(p["name"]))
+
+        if not hit:
+            want = toks(p.get("aliases")) | toks(p["name"])
+            if want:
+                # Score by how much of the wanted name each candidate covers.
+                best, best_score = None, 0.0
+                for t in want:
+                    for lat, lon, have in tokens.get(t, ()):
+                        shared = len(want & have)
+                        # Require most of the name to match, so "Parku Rinia"
+                        # cannot be satisfied by some unrelated "Park".
+                        score = shared / len(want)
+                        if score > best_score:
+                            best, best_score = (lat, lon), score
+                if best_score >= 0.75:
+                    hit = best
+
+        if hit:
+            p["lat"], p["lon"] = round(hit[0], 6), round(hit[1], 6)
+            p["verified"] = True
+            verified += 1
+        else:
+            p["verified"] = False
+            fallback.append(p["name"])
+
+    print(f"  verified {verified} of {len(places)} curated coordinates")
+    if fallback:
+        print("  keeping typed coordinates for:", ", ".join(fallback))
+    return places
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default=str(ROOT / "data" / "places.json"))
     ap.add_argument("--cache", default=str(HERE / "osm_stops.cache.json"))
+    ap.add_argument(
+        "--place-cache", default=str(HERE / "osm_places.cache.json")
+    )
     ap.add_argument(
         "--no-cache", action="store_true", help="always re-query Overpass"
     )
@@ -246,6 +369,7 @@ def main():
         {"name": label, "aliases": alias, "lat": lat, "lon": lon, "kind": kind, "system": "Tirana"}
         for alias, label, lat, lon, kind in CURATED_PLACES
     ]
+    places = verify_curated(places, not args.no_cache, pathlib.Path(args.place_cache))
 
     systems = {}
     for s in stops:

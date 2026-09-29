@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-09-29T11:22:41+00:00",
+ "generated_at": "2026-09-29T12:32:43+00:00",
  "source": "OpenStreetMap (Overpass) for stops, curated for places",
  "license": "Open Database License (ODbL) 1.0 - data (c) OpenStreetMap contributors",
  "stops": [
@@ -24,7 +24,7 @@
    "bench": "yes"
   },
   {
-   "name": "15 kat\u00ebshi",
+   "name": "15 katëshi",
    "lat": 41.330481,
    "lon": 19.819044,
    "kind": "bus_stop",
@@ -44,7 +44,7 @@
    "bench": "no"
   },
   {
-   "name": "9 kat\u00ebshet",
+   "name": "9 katëshet",
    "lat": 41.329411,
    "lon": 19.821428,
    "kind": "bus_stop",
@@ -54,7 +54,7 @@
    "bench": null
   },
   {
-   "name": "abedin pash\u00eb dino",
+   "name": "abedin pashë dino",
    "lat": 41.322083,
    "lon": 19.839936,
    "kind": "bus_stop",
@@ -154,7 +154,7 @@
    "bench": "yes"
   },
   {
-   "name": "andon zako \u00e7ajupi",
+   "name": "andon zako çajupi",
    "lat": 41.337553,
    "lon": 19.832422,
    "kind": "bus_stop",
@@ -164,7 +164,7 @@
    "bench": "no"
   },
   {
-   "name": "arban\u00eb",
+   "name": "arbanë",
    "lat": 41.266906,
    "lon": 19.794172,
    "kind": "bus_stop",
@@ -194,7 +194,7 @@
    "bench": "yes"
   },
   {
-   "name": "at ze p\u00ebllumbi",
+   "name": "at ze pëllumbi",
    "lat": 41.347972,
    "lon": 19.762152,
    "kind": "bus_stop",
@@ -264,7 +264,7 @@
    "bench": null
   },
   {
-   "name": "banka shqip\u00ebris\u00eb",
+   "name": "banka shqipërisë",
    "lat": 41.328077,
    "lon": 19.815588,
    "kind": "bus_stop",
@@ -404,7 +404,7 @@
    "bench": "yes"
   },
   {
-   "name": "bultic\u00eb",
+   "name": "bulticë",
    "lat": 41.273496,
    "lon": 19.780616,
    "kind": "bus_stop",
@@ -424,7 +424,7 @@
    "bench": "no"
   },
   {
-   "name": "bus to tiran\u00eb, durres, vlor\u00eb",
+   "name": "bus to tiranë, durres, vlorë",
    "lat": 41.41706,
    "lon": 19.71378,
    "kind": "bus_stop",
@@ -474,7 +474,7 @@
    "bench": "no"
   },
   {
-   "name": "dhimit\u00ebr kamarda",
+   "name": "dhimitër kamarda",
    "lat": 41.331421,
    "lon": 19.844555,
    "kind": "bus_stop",
@@ -574,7 +574,7 @@
    "bench": "no"
   },
   {
-   "name": "drejtoria policis\u00eb",
+   "name": "drejtoria policisë",
    "lat": 41.32462,
    "lon": 19.81285,
    "kind": "bus_stop",
@@ -584,7 +584,7 @@
    "bench": "no"
   },
   {
-   "name": "d\u00ebshmor\u00ebt",
+   "name": "dëshmorët",
    "lat": 41.311111,
    "lon": 19.83631,
    "kind": "bus_stop",
@@ -754,7 +754,7 @@
    "bench": "no"
   },
   {
-   "name": "garda e republik\u00ebs",
+   "name": "garda e republikës",
    "lat": 41.308607,
    "lon": 19.837135,
    "kind": "bus_stop",
@@ -854,7 +854,7 @@
    "bench": "no"
   },
   {
-   "name": "gryka ka\u00e7anikut",
+   "name": "gryka kaçanikut",
    "lat": 41.351565,
    "lon": 19.751772,
    "kind": "bus_stop",
@@ -914,7 +914,7 @@
    "bench": "no"
   },
   {
-   "name": "helikopter\u00ebt",
+   "name": "helikopterët",
    "lat": 41.331384,
    "lon": 19.794508,
    "kind": "bus_stop",
@@ -994,7 +994,7 @@
    "bench": null
   },
   {
-   "name": "instituti bujq\u00ebsor",
+   "name": "instituti bujqësor",
    "lat": 41.360874,
    "lon": 19.771782,
    "kind": "bus_stop",
@@ -1004,7 +1004,7 @@
    "bench": "yes"
   },
   {
-   "name": "instituti nd\u00ebrtimit",
+   "name": "instituti ndërtimit",
    "lat": 41.359696,
    "lon": 19.850223,
    "kind": "bus_stop",
@@ -1024,7 +1024,7 @@
    "bench": "yes"
   },
   {
-   "name": "irfan t\u00ebrshana",
+   "name": "irfan tërshana",
    "lat": 41.316471,
    "lon": 19.839959,
    "kind": "bus_stop",
@@ -1034,7 +1034,7 @@
    "bench": "no"
   },
   {
-   "name": "ish kombinati i autotraktor\u00ebve",
+   "name": "ish kombinati i autotraktorëve",
    "lat": 41.331829,
    "lon": 19.870386,
    "kind": "bus_stop",
@@ -1154,7 +1154,7 @@
    "bench": null
   },
   {
-   "name": "kod\u00ebr kam\u00ebz",
+   "name": "kodër kamëz",
    "lat": 41.357807,
    "lon": 19.773537,
    "kind": "bus_stop",
@@ -1264,7 +1264,7 @@
    "bench": "yes"
   },
   {
-   "name": "kostaq \u00e7ipo",
+   "name": "kostaq çipo",
    "lat": 41.32978,
    "lon": 19.845181,
    "kind": "bus_stop",
@@ -1304,7 +1304,7 @@
    "bench": "no"
   },
   {
-   "name": "kryq\u00ebzimi kashar",
+   "name": "kryqëzimi kashar",
    "lat": 41.328628,
    "lon": 19.785321,
    "kind": "bus_stop",
@@ -1314,7 +1314,7 @@
    "bench": "no"
   },
   {
-   "name": "kthehet n\u00eb arban\u00eb",
+   "name": "kthehet në arbanë",
    "lat": 41.29655,
    "lon": 19.734978,
    "kind": "bus_stop",
@@ -1324,7 +1324,7 @@
    "bench": "no"
   },
   {
-   "name": "kthesa kamz\u00ebs",
+   "name": "kthesa kamzës",
    "lat": 41.343569,
    "lon": 19.776434,
    "kind": "bus_stop",
@@ -1334,7 +1334,7 @@
    "bench": "yes"
   },
   {
-   "name": "kthesa sharr\u00eb",
+   "name": "kthesa sharrë",
    "lat": 41.306559,
    "lon": 19.757319,
    "kind": "bus_stop",
@@ -1374,7 +1374,7 @@
    "bench": null
   },
   {
-   "name": "kushtrimi liris\u00eb",
+   "name": "kushtrimi lirisë",
    "lat": 41.330591,
    "lon": 19.839506,
    "kind": "bus_stop",
@@ -1474,7 +1474,7 @@
    "bench": null
   },
   {
-   "name": "laprak\u00eb",
+   "name": "laprakë",
    "lat": 41.338408,
    "lon": 19.793411,
    "kind": "bus_stop",
@@ -1524,7 +1524,7 @@
    "bench": null
   },
   {
-   "name": "liqeni i that\u00eb",
+   "name": "liqeni i thatë",
    "lat": 41.305747,
    "lon": 19.814865,
    "kind": "bus_stop",
@@ -1534,7 +1534,7 @@
    "bench": "no"
   },
   {
-   "name": "liqeni that\u00eb",
+   "name": "liqeni thatë",
    "lat": 41.305332,
    "lon": 19.815808,
    "kind": "bus_stop",
@@ -1564,7 +1564,7 @@
    "bench": "yes"
   },
   {
-   "name": "lumi lan\u00eb",
+   "name": "lumi lanë",
    "lat": 41.335023,
    "lon": 19.783358,
    "kind": "bus_stop",
@@ -1734,7 +1734,7 @@
    "bench": "yes"
   },
   {
-   "name": "ministria sh\u00ebndet\u00ebsis\u00eb",
+   "name": "ministria shëndetësisë",
    "lat": 41.329267,
    "lon": 19.832337,
    "kind": "bus_stop",
@@ -1754,7 +1754,7 @@
    "bench": "no"
   },
   {
-   "name": "mjek\u00ebsia",
+   "name": "mjekësia",
    "lat": 41.341813,
    "lon": 19.832472,
    "kind": "bus_stop",
@@ -1774,7 +1774,7 @@
    "bench": "yes"
   },
   {
-   "name": "muzeu komb\u00ebtar",
+   "name": "muzeu kombëtar",
    "lat": 41.330132,
    "lon": 19.816549,
    "kind": "bus_stop",
@@ -1784,7 +1784,7 @@
    "bench": "yes"
   },
   {
-   "name": "m\u00ebzez",
+   "name": "mëzez",
    "lat": 41.338313,
    "lon": 19.763774,
    "kind": "bus_stop",
@@ -1854,7 +1854,7 @@
    "bench": "no"
   },
   {
-   "name": "nj\u00ebsia 2",
+   "name": "njësia 2",
    "lat": 41.325593,
    "lon": 19.829897,
    "kind": "bus_stop",
@@ -1864,7 +1864,7 @@
    "bench": null
   },
   {
-   "name": "nj\u00ebsia kashar",
+   "name": "njësia kashar",
    "lat": 41.33119,
    "lon": 19.780231,
    "kind": "bus_stop",
@@ -1894,7 +1894,7 @@
    "bench": "no"
   },
   {
-   "name": "n\u00ebnkalimi",
+   "name": "nënkalimi",
    "lat": 41.312123,
    "lon": 19.804566,
    "kind": "bus_stop",
@@ -1904,7 +1904,7 @@
    "bench": "no"
   },
   {
-   "name": "n\u00ebnstacioni elektrik",
+   "name": "nënstacioni elektrik",
    "lat": 41.345738,
    "lon": 19.814569,
    "kind": "bus_stop",
@@ -1954,7 +1954,7 @@
    "bench": "yes"
   },
   {
-   "name": "pal \u00ebngj\u00eblli",
+   "name": "pal ëngjëlli",
    "lat": 41.327542,
    "lon": 19.848805,
    "kind": "bus_stop",
@@ -2014,7 +2014,7 @@
    "bench": null
   },
   {
-   "name": "pallati i kultur\u00ebs",
+   "name": "pallati i kulturës",
    "lat": 41.329332,
    "lon": 19.820176,
    "kind": "bus_stop",
@@ -2164,7 +2164,7 @@
    "bench": "yes"
   },
   {
-   "name": "policis\u00eb shkencore",
+   "name": "policisë shkencore",
    "lat": 41.305279,
    "lon": 19.843507,
    "kind": "bus_stop",
@@ -2264,7 +2264,7 @@
    "bench": "no"
   },
   {
-   "name": "qaf\u00eb kashar",
+   "name": "qafë kashar",
    "lat": 41.369682,
    "lon": 19.698028,
    "kind": "bus_stop",
@@ -2304,7 +2304,7 @@
    "bench": "no"
   },
   {
-   "name": "qendra shendet\u00ebsore",
+   "name": "qendra shendetësore",
    "lat": 41.346871,
    "lon": 19.858787,
    "kind": "bus_stop",
@@ -2314,7 +2314,7 @@
    "bench": "no"
   },
   {
-   "name": "qend\u00ebr kam\u00ebz",
+   "name": "qendër kamëz",
    "lat": 41.382796,
    "lon": 19.760899,
    "kind": "bus_stop",
@@ -2464,7 +2464,7 @@
    "bench": "no"
   },
   {
-   "name": "rruga arb\u00ebrit",
+   "name": "rruga arbërit",
    "lat": 41.370018,
    "lon": 19.855083,
    "kind": "bus_stop",
@@ -2614,7 +2614,7 @@
    "bench": "no"
   },
   {
-   "name": "sauk i vjet\u00ebr",
+   "name": "sauk i vjetër",
    "lat": 41.299479,
    "lon": 19.830236,
    "kind": "bus_stop",
@@ -2634,7 +2634,7 @@
    "bench": "no"
   },
   {
-   "name": "selit\u00eb",
+   "name": "selitë",
    "lat": 41.315399,
    "lon": 19.797513,
    "kind": "bus_stop",
@@ -2744,7 +2744,7 @@
    "bench": "yes"
   },
   {
-   "name": "sheshi \u00e7am\u00ebria",
+   "name": "sheshi çamëria",
    "lat": 41.327681,
    "lon": 19.835474,
    "kind": "bus_stop",
@@ -2774,7 +2774,7 @@
    "bench": null
   },
   {
-   "name": "shkencat e natyr\u00ebs",
+   "name": "shkencat e natyrës",
    "lat": 41.33523,
    "lon": 19.816355,
    "kind": "bus_stop",
@@ -2814,7 +2814,7 @@
    "bench": "no"
   },
   {
-   "name": "shkoz\u00eb",
+   "name": "shkozë",
    "lat": 41.334408,
    "lon": 19.848352,
    "kind": "bus_stop",
@@ -2864,7 +2864,7 @@
    "bench": "no"
   },
   {
-   "name": "sk\u00ebnder luarasi",
+   "name": "skënder luarasi",
    "lat": 41.345968,
    "lon": 19.78375,
    "kind": "bus_stop",
@@ -2894,7 +2894,7 @@
    "bench": "no"
   },
   {
-   "name": "spitali traum\u00ebs",
+   "name": "spitali traumës",
    "lat": 41.341767,
    "lon": 19.795022,
    "kind": "bus_stop",
@@ -3014,7 +3014,7 @@
    "bench": null
   },
   {
-   "name": "terminali i autobusave t\u00eb jugut dhe veriut",
+   "name": "terminali i autobusave të jugut dhe veriut",
    "lat": 41.344404,
    "lon": 19.7761,
    "kind": "bus_stop",
@@ -3084,7 +3084,7 @@
    "bench": "no"
   },
   {
-   "name": "to sh\u00ebngjergj",
+   "name": "to shëngjergj",
    "lat": 41.346935,
    "lon": 19.846258,
    "kind": "bus_stop",
@@ -3094,7 +3094,7 @@
    "bench": null
   },
   {
-   "name": "to sh\u00ebngjergj (iris trans)",
+   "name": "to shëngjergj (iris trans)",
    "lat": 41.336778,
    "lon": 19.842544,
    "kind": "bus_stop",
@@ -3154,7 +3154,7 @@
    "bench": "no"
   },
   {
-   "name": "tre kat\u00ebshet",
+   "name": "tre katëshet",
    "lat": 41.380699,
    "lon": 19.761983,
    "kind": "bus_stop",
@@ -3314,7 +3314,7 @@
    "bench": "no"
   },
   {
-   "name": "ura gjiroz\u00ebs",
+   "name": "ura gjirozës",
    "lat": 41.350125,
    "lon": 19.843983,
    "kind": "bus_stop",
@@ -3354,7 +3354,7 @@
    "bench": null
   },
   {
-   "name": "ura shkoz\u00eb",
+   "name": "ura shkozë",
    "lat": 41.333971,
    "lon": 19.851653,
    "kind": "bus_stop",
@@ -3424,7 +3424,7 @@
    "bench": null
   },
   {
-   "name": "varrezat sharr\u00eb",
+   "name": "varrezat sharrë",
    "lat": 41.310516,
    "lon": 19.759781,
    "kind": "bus_stop",
@@ -3434,7 +3434,7 @@
    "bench": "no"
   },
   {
-   "name": "varrezat tufin\u00eb",
+   "name": "varrezat tufinë",
    "lat": 41.361604,
    "lon": 19.851938,
    "kind": "bus_stop",
@@ -3484,7 +3484,7 @@
    "bench": "yes"
   },
   {
-   "name": "v\u00ebllezerit kondi",
+   "name": "vëllezerit kondi",
    "lat": 41.316942,
    "lon": 19.834316,
    "kind": "bus_stop",
@@ -3494,7 +3494,7 @@
    "bench": "no"
   },
   {
-   "name": "v\u00ebllez\u00ebrit frash\u00ebri",
+   "name": "vëllezërit frashëri",
    "lat": 41.323355,
    "lon": 19.818814,
    "kind": "bus_stop",
@@ -3514,7 +3514,7 @@
    "bench": "no"
   },
   {
-   "name": "xhamia namazgjas\u00eb",
+   "name": "xhamia namazgjasë",
    "lat": 41.325133,
    "lon": 19.824395,
    "kind": "bus_stop",
@@ -3564,7 +3564,7 @@
    "bench": null
   },
   {
-   "name": "zjarrfik\u00ebsja",
+   "name": "zjarrfikësja",
    "lat": 41.32814,
    "lon": 19.800514,
    "kind": "bus_stop",
@@ -3574,7 +3574,7 @@
    "bench": "no"
   },
   {
-   "name": "\u00e7ajupi",
+   "name": "çajupi",
    "lat": 41.337978,
    "lon": 19.830657,
    "kind": "bus_stop",
@@ -3584,7 +3584,7 @@
    "bench": "no"
   },
   {
-   "name": "\u00e7ekrezi metal",
+   "name": "çekrezi metal",
    "lat": 41.303994,
    "lon": 19.747155,
    "kind": "bus_stop",
@@ -3594,7 +3594,7 @@
    "bench": "no"
   },
   {
-   "name": "\u00e7ollak\u00ebt",
+   "name": "çollakët",
    "lat": 41.320678,
    "lon": 19.854817,
    "kind": "bus_stop",
@@ -3611,15 +3611,17 @@
    "lat": 41.3265,
    "lon": 19.8183,
    "kind": "landmark",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "New Bazaar",
    "aliases": "Pazari i Ri",
-   "lat": 41.3272,
-   "lon": 19.8188,
+   "lat": 41.329054,
+   "lon": 19.823864,
    "kind": "market",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Et'hem Bey Mosque",
@@ -3627,7 +3629,8 @@
    "lat": 41.3251,
    "lon": 19.8184,
    "kind": "landmark",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Wilson Square",
@@ -3635,23 +3638,26 @@
    "lat": 41.3256,
    "lon": 19.8206,
    "kind": "square",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Blloku",
    "aliases": "Blloku",
-   "lat": 41.3212,
-   "lon": 19.8246,
+   "lat": 41.338021,
+   "lon": 19.789859,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Rinia Park",
    "aliases": "Parku Rinia",
-   "lat": 41.3247,
-   "lon": 19.8128,
+   "lat": 41.325397,
+   "lon": 19.819036,
    "kind": "park",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "National Stadium",
@@ -3659,7 +3665,8 @@
    "lat": 41.3281,
    "lon": 19.808,
    "kind": "stadium",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Tirana North Gate",
@@ -3667,7 +3674,8 @@
    "lat": 41.3449,
    "lon": 19.867,
    "kind": "gate",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Tirana East Gate",
@@ -3675,7 +3683,8 @@
    "lat": 41.3352,
    "lon": 19.8728,
    "kind": "gate",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "House of Youth",
@@ -3683,15 +3692,17 @@
    "lat": 41.325,
    "lon": 19.809,
    "kind": "landmark",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "National Palace of Culture",
-   "aliases": "Godina e Kultur\u00ebs",
+   "aliases": "Godina e Kulturës",
    "lat": 41.3272,
    "lon": 19.8117,
    "kind": "landmark",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Catholic Cathedral",
@@ -3699,47 +3710,53 @@
    "lat": 41.325,
    "lon": 19.8256,
    "kind": "landmark",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Post Office Clock Tower",
-   "aliases": "Xhura e Post\u00ebs",
+   "aliases": "Xhura e Postës",
    "lat": 41.3272,
    "lon": 19.818,
    "kind": "landmark",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "University of Tirana",
-   "aliases": "Universiteti i Tiran\u00ebs",
+   "aliases": "Universiteti i Tiranës",
    "lat": 41.32,
    "lon": 19.812,
    "kind": "university",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Agricultural University",
-   "aliases": "Universiteti Bujsko\u00ebsi",
+   "aliases": "Universiteti Bujskoësi",
    "lat": 41.3203,
    "lon": 19.7753,
    "kind": "university",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "University of Medicine Tirana",
-   "aliases": "Universiteti Mjek\u00ebsis\u00eb",
+   "aliases": "Universiteti Mjekësisë",
    "lat": 41.3246,
    "lon": 19.833,
    "kind": "university",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Mother Teresa University Hospital",
    "aliases": "QSUT",
-   "lat": 41.3252,
-   "lon": 19.8185,
+   "lat": 41.340804,
+   "lon": 19.83079,
    "kind": "hospital",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Regional Hospital",
@@ -3747,31 +3764,35 @@
    "lat": 41.334,
    "lon": 19.813,
    "kind": "hospital",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Tirana Railway Station",
    "aliases": "Stacioni i Trenit",
-   "lat": 41.3271,
-   "lon": 19.8117,
+   "lat": 41.335786,
+   "lon": 19.814767,
    "kind": "transport",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Tirana East Terminal",
-   "aliases": "Autostaza Komb\u00ebtare",
+   "aliases": "Autostaza Kombëtare",
    "lat": 41.3256,
    "lon": 19.848,
    "kind": "transport",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Tirana West Terminal",
-   "aliases": "Autostaza Per\u00ebndimor\u00eb",
+   "aliases": "Autostaza Perëndimorë",
    "lat": 41.325,
    "lon": 19.794,
    "kind": "transport",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Toptani Shopping Center",
@@ -3779,15 +3800,17 @@
    "lat": 41.3272,
    "lon": 19.8208,
    "kind": "shopping",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "QTU Shopping Center",
    "aliases": "QTU",
-   "lat": 41.326,
-   "lon": 19.836,
+   "lat": 41.352825,
+   "lon": 19.748453,
    "kind": "shopping",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Citypark Albania",
@@ -3795,7 +3818,8 @@
    "lat": 41.328,
    "lon": 19.82,
    "kind": "shopping",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Tirana East Gate",
@@ -3803,7 +3827,8 @@
    "lat": 41.3352,
    "lon": 19.8728,
    "kind": "shopping",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Lana River",
@@ -3811,15 +3836,17 @@
    "lat": 41.3256,
    "lon": 19.815,
    "kind": "landmark",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Selita",
-   "aliases": "Selit\u00eb",
-   "lat": 41.339,
-   "lon": 19.825,
+   "aliases": "Selitë",
+   "lat": 41.320354,
+   "lon": 19.799699,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Mazel",
@@ -3827,23 +3854,26 @@
    "lat": 41.329,
    "lon": 19.83,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Bajram Curri",
    "aliases": "Bajram Curri",
-   "lat": 41.333,
-   "lon": 19.818,
+   "lat": 41.346181,
+   "lon": 19.838371,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Vasil Shanto",
    "aliases": "Vasil Shanto",
-   "lat": 41.334,
-   "lon": 19.821,
+   "lat": 41.320767,
+   "lon": 19.805509,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Paskuqan",
@@ -3851,55 +3881,62 @@
    "lat": 41.326,
    "lon": 19.875,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Kombinat",
    "aliases": "Kombinat",
-   "lat": 41.332,
-   "lon": 19.833,
+   "lat": 41.314265,
+   "lon": 19.768044,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Sauk",
    "aliases": "Sauk",
-   "lat": 41.318,
-   "lon": 19.825,
+   "lat": 41.299421,
+   "lon": 19.830017,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Laprake",
-   "aliases": "Laprak\u00eb",
-   "lat": 41.324,
-   "lon": 19.826,
+   "aliases": "Laprakë",
+   "lat": 41.339011,
+   "lon": 19.793865,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Medrese",
    "aliases": "Medreseja",
-   "lat": 41.326,
-   "lon": 19.834,
+   "lat": 41.338209,
+   "lon": 19.82606,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Ali Demi",
    "aliases": "Ali Demi",
-   "lat": 41.32,
-   "lon": 19.819,
+   "lat": 41.327683,
+   "lon": 19.831991,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Bathore",
    "aliases": "Bathore",
-   "lat": 41.332,
-   "lon": 19.818,
+   "lat": 41.370682,
+   "lon": 19.767771,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Dajt",
@@ -3907,15 +3944,17 @@
    "lat": 41.322,
    "lon": 19.79,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Tufina",
-   "aliases": "Tufin\u00eb",
+   "aliases": "Tufinë",
    "lat": 41.323,
    "lon": 19.783,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Zogu i Zi",
@@ -3923,39 +3962,44 @@
    "lat": 41.328,
    "lon": 19.804,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Kodra e Diellit",
    "aliases": "Kodra e Diellit",
-   "lat": 41.329,
-   "lon": 19.798,
+   "lat": 41.306957,
+   "lon": 19.798403,
    "kind": "district",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Kamez",
-   "aliases": "Kam\u00ebz",
-   "lat": 41.38,
-   "lon": 19.76,
+   "aliases": "Kamëz",
+   "lat": 41.357832,
+   "lon": 19.773826,
    "kind": "town",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Qender",
-   "aliases": "Qend\u00ebr",
-   "lat": 41.362,
-   "lon": 19.79,
+   "aliases": "Qendër",
+   "lat": 41.392522,
+   "lon": 19.829736,
    "kind": "town",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Kashar",
    "aliases": "Kashar",
-   "lat": 41.36,
-   "lon": 19.76,
+   "lat": 41.328628,
+   "lon": 19.785321,
    "kind": "town",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Mamurras",
@@ -3963,15 +4007,17 @@
    "lat": 41.34,
    "lon": 19.76,
    "kind": "town",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Domje",
    "aliases": "Domje",
-   "lat": 41.34,
-   "lon": 19.74,
+   "lat": 41.358491,
+   "lon": 19.731842,
    "kind": "town",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Fshat",
@@ -3979,39 +4025,44 @@
    "lat": 41.37,
    "lon": 19.75,
    "kind": "town",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Tuze",
-   "aliases": "Tuz\u00eb",
+   "aliases": "Tuzë",
    "lat": 41.35,
    "lon": 19.75,
    "kind": "town",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Koder",
-   "aliases": "Kod\u00ebr",
-   "lat": 41.38,
-   "lon": 19.73,
+   "aliases": "Kodër",
+   "lat": 41.357832,
+   "lon": 19.773826,
    "kind": "town",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": true
   },
   {
    "name": "Durres",
-   "aliases": "Durr\u00ebs",
+   "aliases": "Durrës",
    "lat": 41.3231,
    "lon": 19.4414,
    "kind": "city",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Tirana Lake",
-   "aliases": "Liqeni i Tiran\u00ebs",
+   "aliases": "Liqeni i Tiranës",
    "lat": 41.316,
    "lon": 19.82,
    "kind": "park",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Grand Park",
@@ -4019,15 +4070,17 @@
    "lat": 41.36,
    "lon": 19.82,
    "kind": "park",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "National Park Dajt",
-   "aliases": "Parku Komb\u00ebtar",
+   "aliases": "Parku Kombëtar",
    "lat": 41.31,
    "lon": 19.78,
    "kind": "park",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Kodra e Kuqe",
@@ -4035,32 +4088,26 @@
    "lat": 41.3,
    "lon": 19.8,
    "kind": "landmark",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Kamez Terminal",
-   "aliases": "Terminali i Kamz\u00ebs",
+   "aliases": "Terminali i Kamzës",
    "lat": 41.383,
    "lon": 19.756,
    "kind": "transport",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   },
   {
    "name": "Kamez Market",
-   "aliases": "Tregu Kamz\u00ebs",
+   "aliases": "Tregu Kamzës",
    "lat": 41.38,
    "lon": 19.759,
    "kind": "market",
-   "system": "Tirana"
+   "system": "Tirana",
+   "verified": false
   }
- ],
- "41.40,19.75": "Rruga Argjinatura, Nj\u00ebsia Administrative Nr. 2 Bashkia Kam\u00ebz",
- "41.38,19.76": "Bulevardi N\u00ebn\u00eb Tereza, Nj\u00ebsia Administrative Nr. 2 Bashkia Kam\u00ebz",
- "41.33,19.82": "Rruga Ismail Ndroqi, Nj\u00ebsia Bashkiake Nr. 2",
- "41.34,19.78": "GRID 41.3434, 19.7765",
- "41.36,19.77": "Bulevardi N\u00ebn\u00eb Tereza, Nj\u00ebsia Bashkiake Nr. 11",
- "41.33,19.80": "Rruga Dritan Hoxha, Nj\u00ebsia Bashkiake Nr. 11",
- "41.35,19.77": "Rruga Kastriot\u00ebt",
- "41.33,19.81": "Rruga Mine Peza, Nj\u00ebsia Bashkiake Nr. 9",
- "41.34,19.83": "Rruga e Dibr\u00ebs, Nj\u00ebsia Bashkiake Nr. 8"
+ ]
 }

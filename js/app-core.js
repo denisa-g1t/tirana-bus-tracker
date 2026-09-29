@@ -203,103 +203,100 @@
 
       const plannable = Buses.plannable();
 
-      // How much service each kerb actually has right now, measured in metres of
-      // walking. A stop 700 m away with four buses on it is a better place to
-      // finish the journey than the closest stop, which may be served by nothing.
+      // How much service each kerb has right now, expressed in metres of walking,
+      // so the walk totals below stay comparable.
       const service = new Map();
       for (const item of plannable) {
-        for (const stop of Places.stopsNear(item.bus.lat, item.bus.lng, 900, 1)) {
-          service.set(stop.stop.key, (service.get(stop.stop.key) || 0) + 1);
+        for (const s of Places.stopsNear(item.bus.lat, item.bus.lng, 900, 1)) {
+          service.set(s.stop.key, (service.get(s.stop.key) || 0) + 1);
         }
       }
       const serviceBonus = key => Math.min(service.get(key) || 0, 6) * 60;
 
-      // Choose the pair of stops that minimises total walking, not the stop that
-      // happens to be closest to each end. Picking the nearest kerb on both sides
-      // routinely produces a plan that walks you past your own destination.
       const nearOrigin = Places.stopsNear(origin.lat, origin.lon, 1200, 6);
       const nearDest = Places.stopsNear(destination.lat, destination.lon, 1500, 8);
       if (!nearOrigin.length || !nearDest.length) {
         return { ok: false, reason: !nearOrigin.length ? 'no_stop_near_origin' : 'no_stop_near_destination' };
       }
 
-      let board = null, alight = null, walkToStopM = 0, walkToDestM = 0, bestScore = Infinity;
-      for (const b of nearOrigin) {
-        for (const a of nearDest) {
-          if (b.stop.key === a.stop.key) continue;
-          const toStop = b.metres * WINDING;
-          const fromStop = a.metres * WINDING;
-          const score = toStop + fromStop - serviceBonus(a.stop.key);
-          if (score < bestScore) {
-            bestScore = score;
-            board = b; alight = a;
-            walkToStopM = toStop; walkToDestM = fromStop;
-          }
-        }
-      }
-      if (!board) return { ok: false, reason: 'no_stop_pair' };
-
-      // A bus is useful if getting to it, then riding it, beats the walk. The
-      // search radius is generous because a bus two kilometres out at 20 km/h
-      // is still under ten minutes away.
-      const candidates = [];
-      for (const item of plannable) {
-        const b = item.bus;
-        const toBoardKm = haversineKm(b.lat, b.lng, board.stop.lat, board.stop.lon);
-        if (toBoardKm * 1000 > BUS_PICKUP_RADIUS_M) continue;
-
-        const toAlightKm = haversineKm(b.lat, b.lng, alight.stop.lat, alight.stop.lon);
-        const aim = alignment(b.lat, b.lng, b.heading, alight.stop.lat, alight.stop.lon);
-
-        /* Is this vehicle any use? There is no route graph, so the only honest
-           signals are how close it is and which way it is pointing. Keep it if
-           it is closing on the alighting stop, or if it is pointing that way.
-           Rejecting on heading alone would throw away every stationary bus,
-           which still holds a usable bearing. */
-        const closing = toAlightKm <= toBoardKm;
-        if (!closing && (aim === null || aim <= 0)) continue;
-
-        const speed = Buses.planningSpeed(item);
-        const waitMin = (toBoardKm * WINDING) / speed * 60;
-        const rideMin = (toAlightKm * WINDING) / speed * 60;
-        const align = alignment(b.lat, b.lng, b.heading, destination.lat, destination.lon);
-        const moving = b.speed_kmh >= BUS_MIN_KMH;
-
-        let score = waitMin + rideMin;
-        if (moving) score -= 2.5;                        // a bus in motion beats a parked one
-        if (aim !== null && aim > 0) score -= aim * 3.0; // and one pointing the right way
-        if (closing) score -= 2.0;                       // and one getting closer
-        if (b.ignition === false) score += 4;            // engine off, probably not running
-
-        candidates.push({
-          item, waitMin, rideMin, toBoardKm, toAlightKm, align, aim, speed, score,
-          totalMin: waitMin + rideMin
-            + walkToStopM / 1000 / WALK_KMH * 60
-            + walkToDestM / 1000 / WALK_KMH * 60
-        });
-      }
-      candidates.sort((a, b) => a.score - b.score);
-
-      /* The baseline is walking straight from where you are to where you are
-         going. It must not be measured stop to stop, or a boarding kerb in the
-         centre and an alighting kerb seven kilometres away would report as a
+      /* The direct walk, which is the baseline any bus has to beat. It has to be
+         measured origin to destination, never stop to stop, or a boarding kerb in
+         the centre and an alighting kerb seven kilometres away would report as a
          three hundred metre walk. */
       const directWalkM = haversineKm(origin.lat, origin.lon, destination.lat, destination.lon) * 1000 * WINDING;
       const walkAllMin = directWalkM / 1000 / WALK_KMH * 60;
 
-      /* Only recommend a bus when it genuinely helps. Two things disqualify it:
-         it does not beat walking, or the whole trip is so short that standing at
-         a kerb waiting for a bus is worse than walking. Telling someone to wait
-         for a bus for a three hundred metre hop would be true and useless. */
-      const WORTH_TRAIN_MIN = 8;      // below this, walking is the better answer
-      const SAVES_MIN = 3;            // a bus must save at least this many minutes
-      const viable = candidates.filter(
-        c => walkAllMin >= WORTH_TRAIN_MIN && c.totalMin <= walkAllMin - SAVES_MIN
+      /* Choose the boarding kerb, the alighting kerb and the vehicle together.
+
+         Picking the nearest stop and then the nearest bus separately produces
+         plans that contradict themselves: walk to this kerb, then catch a bus
+         that is nowhere near it. Searching the three at once means the stop
+         offered is one the chosen vehicle is actually near, so the wait estimate
+         and the guidance that follows describe the same journey. */
+      const options = [];
+      let walkBest = null, walkBestScore = Infinity;
+
+      for (const nb of nearOrigin) {
+        for (const na of nearDest) {
+          if (nb.stop.key === na.stop.key) continue;
+          const walkIn = nb.metres * WINDING;
+          const walkOut = na.metres * WINDING;
+          const walkScore = walkIn + walkOut - serviceBonus(na.stop.key);
+          if (walkScore < walkBestScore) {
+            walkBestScore = walkScore;
+            walkBest = { board: nb, alight: na, walkIn, walkOut };
+          }
+
+          for (const item of plannable) {
+            const b = item.bus;
+            const toBoardKm = haversineKm(b.lat, b.lng, nb.stop.lat, nb.stop.lon);
+            if (toBoardKm * 1000 > BUS_PICKUP_RADIUS_M) continue;
+
+            const toAlightKm = haversineKm(b.lat, b.lng, na.stop.lat, na.stop.lon);
+            // Keep the vehicle only if it is closing on the alighting kerb, or
+            // pointing that way. Rejecting on heading alone would discard every
+            // stationary bus, which still holds a usable bearing.
+            const aim = alignment(b.lat, b.lng, b.heading, na.stop.lat, na.stop.lon);
+            if (!(toAlightKm <= toBoardKm) && !(aim !== null && aim > 0)) continue;
+
+            const speed = Buses.planningSpeed(item);
+            const waitMin = (toBoardKm * WINDING) / speed * 60;
+            const rideMin = (toAlightKm * WINDING) / speed * 60;
+            const totalMin = waitMin + rideMin
+              + walkIn / 1000 / WALK_KMH * 60 + walkOut / 1000 / WALK_KMH * 60;
+
+            let score = totalMin;
+            if (b.speed_kmh >= BUS_MIN_KMH) score -= 2.0;      // moving beats parked
+            if (aim !== null && aim > 0) score -= aim * 2.0;   // heading the right way
+            if (b.ignition === false) score += 4;               // engine off, not running
+
+            options.push({
+              board: nb, alight: na, item, speed,
+              walkIn, walkOut, waitMin, rideMin, totalMin, score,
+              toBoardKm, toAlightKm, aim,
+              toDestinationKm: haversineKm(b.lat, b.lng, destination.lat, destination.lon)
+            });
+          }
+        }
+      }
+
+      /* Only suggest a bus when it genuinely helps: it has to beat walking, and
+         the trip has to be long enough that standing at a kerb is worth it.
+         Recommending a bus for a three hundred metre hop would be true and
+         completely useless. */
+      const WORTH_TRAIN_MIN = 8;
+      const SAVES_MIN = 3;
+      const viable = options.filter(
+        o => walkAllMin >= WORTH_TRAIN_MIN && o.totalMin <= walkAllMin - SAVES_MIN
       );
-      // Rank the ones we will actually offer by door-to-door time, so the
-      // heading bonus used for scoring can never put a slower bus first.
       viable.sort((a, b) => a.totalMin - b.totalMin);
       const best = viable[0] || null;
+
+      const use = best || walkBest;
+      const walkToStopM = use.walkIn;
+      const walkToDestM = use.walkOut;
+      const board = use.board;
+      const alight = use.alight;
 
       const steps = [];
       steps.push({
