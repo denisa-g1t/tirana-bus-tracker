@@ -581,11 +581,16 @@
         pill.innerHTML = `<span class="live-dot"></span>Feed ${esc(f.formatAge(age))}`;
         banner.hidden = false;
         banner.innerHTML = '<strong>The live feed was last updated ' + esc(f.formatAge(age)) + '.</strong> '
-          + 'The collector that mirrors the vehicle trackers is not running on schedule, '
-          + 'so the positions below are out of date.';
+          + 'The positions below are that old, not now. Vehicles stay on the map, dimmed, '
+          + 'with the time each was last seen, so it is clear what is being shown. '
+          + 'The live endpoint did not answer'
+          + (window.ATARA && ATARA.liveError ? ' (' + esc(String(ATARA.liveError)) + ')' : '')
+          + ', so this is the most recent mirror.';
       } else {
+        const live = window.ATARA && ATARA.feedSource === 'live';
         pill.className = 'live-pill';
-        pill.innerHTML = `<span class="live-dot"></span>${d.totals.online} of ${d.totals.buses} buses live`;
+        pill.innerHTML = `<span class="live-dot"></span>${d.totals.online} of ${d.totals.buses} buses live`
+          + (live ? '' : ' · mirrored');
         banner.hidden = true;
       }
     }

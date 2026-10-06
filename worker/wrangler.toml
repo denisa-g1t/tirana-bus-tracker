@@ -1,0 +1,23 @@
+# Live fleet endpoint for Atara.
+#
+# GitHub Pages can only serve committed files, so bus positions read from there
+# are as old as the last push. This worker reads them on demand instead.
+#
+# Setup:
+#   npx wrangler login
+#   npx wrangler deploy
+#   npx wrangler secret put FLEET_PASSWORD_BUS
+#   npx wrangler secret put FLEET_PASSWORD_BUSS
+#   npx wrangler secret put FLEET_PASSWORD_INSTITUTI
+#   npx wrangler secret put FLEET_PASSWORD_UNAZAPERENDIMORE
+#   npx wrangler secret put FLEET_PASSWORD_UNAZALINDORE
+#   npx wrangler secret put FLEET_PASSWORD_BATHOREZALLHERR
+#   npx wrangler secret put FLEET_PASSWORD_UNAZAPASKUQAN
+#
+# Then set ATARA_LIVE_URL in js/main.js to the workers.dev address.
+# Without the worker the site still works, off the committed snapshot.
+
+name = "atara-live"
+main = "live.js"
+compatibility_date = "2026-09-01"
+workers_dev = true

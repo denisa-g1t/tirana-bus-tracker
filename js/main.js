@@ -13,6 +13,12 @@ const ATARA_SCRIPT_URL = (document.currentScript && document.currentScript.src)
 const ATARA_DATA_URL = ATARA_SCRIPT_URL
   ? new URL('../data/live.json', ATARA_SCRIPT_URL).href
   : '../data/live.json';
+/* Positions pulled live from the fleet tracker, when the live endpoint is
+   deployed. It answers in exactly the shape of data/live.json, so the site can
+   use either. Left empty, the site reads the committed snapshot instead, which
+   is only as fresh as the last successful push, and says so on screen. */
+const ATARA_LIVE_URL = '';
+
 const ATARA_REFRESH_MS = 15000;
 const ATARA_MAP_CENTER = [41.355, 19.79];
 const ATARA_MAP_ZOOM = 11;
@@ -97,6 +103,12 @@ const ATARA = {
   data: null,
   error: null,
   loadedAt: null,
+  // 'live' when the positions came from the live endpoint, 'snapshot' when they
+  // came from the last committed mirror, 'bundled' from the offline copy. Named
+  // feedSource because ATARA already has a getter called source for the upstream
+  // descriptor, and a plain property with the same name would just be ignored.
+  feedSource: 'snapshot',
+  liveError: null,
   origin: null,
   destination: null,
   lineFilter: null,
@@ -233,11 +245,32 @@ const ATARA = {
     this.lineFilter = params.get('line');
   },
 
+  /* Live endpoint first, committed snapshot second.
+
+     The live endpoint is the only source that can be seconds old. If it is
+     unreachable the snapshot is still shown rather than an empty map, but the
+     source is recorded so the status line can tell the truth about how fresh
+     the positions on screen actually are. */
   async load() {
+    if (ATARA_LIVE_URL) {
+      try {
+        const res = await fetch(`${ATARA_LIVE_URL}?t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (Array.isArray(data.lines) && data.lines.length) {
+          this.setData(data, 'live');
+          return;
+        }
+        this.liveError = 'live endpoint returned no lines';
+      } catch (err) {
+        this.liveError = String((err && err.message) || err);
+      }
+    }
+
     try {
       const res = await fetch(`${ATARA_DATA_URL}?t=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      this.setData(await res.json());
+      this.setData(await res.json(), 'snapshot');
       return;
     } catch (err) {
       if (typeof window.ATARA_LIVE === 'undefined') {
@@ -246,13 +279,14 @@ const ATARA = {
         return;
       }
     }
-    this.setData(window.ATARA_LIVE);
+    this.setData(window.ATARA_LIVE, 'bundled');
   },
 
-  setData(data) {
+  setData(data, source) {
     this.data = data;
     this.error = null;
     this.loadedAt = Date.now();
+    this.feedSource = source || this.feedSource || 'snapshot';
     this.rebaseAges();
     this.emit();
   },
